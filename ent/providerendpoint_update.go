@@ -9,6 +9,7 @@ import (
 	"servicediscoverer/ent/endpointdata"
 	"servicediscoverer/ent/predicate"
 	"servicediscoverer/ent/providerendpoint"
+	"servicediscoverer/ent/providerregisterdata"
 
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
@@ -76,6 +77,25 @@ func (peu *ProviderEndpointUpdate) AddProvidedData(e ...*EndpointData) *Provider
 	return peu.AddProvidedDatumIDs(ids...)
 }
 
+// SetProviderID sets the "provider" edge to the ProviderRegisterData entity by ID.
+func (peu *ProviderEndpointUpdate) SetProviderID(id int) *ProviderEndpointUpdate {
+	peu.mutation.SetProviderID(id)
+	return peu
+}
+
+// SetNillableProviderID sets the "provider" edge to the ProviderRegisterData entity by ID if the given value is not nil.
+func (peu *ProviderEndpointUpdate) SetNillableProviderID(id *int) *ProviderEndpointUpdate {
+	if id != nil {
+		peu = peu.SetProviderID(*id)
+	}
+	return peu
+}
+
+// SetProvider sets the "provider" edge to the ProviderRegisterData entity.
+func (peu *ProviderEndpointUpdate) SetProvider(p *ProviderRegisterData) *ProviderEndpointUpdate {
+	return peu.SetProviderID(p.ID)
+}
+
 // Mutation returns the ProviderEndpointMutation object of the builder.
 func (peu *ProviderEndpointUpdate) Mutation() *ProviderEndpointMutation {
 	return peu.mutation
@@ -121,6 +141,12 @@ func (peu *ProviderEndpointUpdate) RemoveProvidedData(e ...*EndpointData) *Provi
 		ids[i] = e[i].ID
 	}
 	return peu.RemoveProvidedDatumIDs(ids...)
+}
+
+// ClearProvider clears the "provider" edge to the ProviderRegisterData entity.
+func (peu *ProviderEndpointUpdate) ClearProvider() *ProviderEndpointUpdate {
+	peu.mutation.ClearProvider()
+	return peu
 }
 
 // Save executes the query and returns the number of nodes affected by the update operation.
@@ -312,6 +338,41 @@ func (peu *ProviderEndpointUpdate) sqlSave(ctx context.Context) (n int, err erro
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
+	if peu.mutation.ProviderCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   providerendpoint.ProviderTable,
+			Columns: []string{providerendpoint.ProviderColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: providerregisterdata.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := peu.mutation.ProviderIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   providerendpoint.ProviderTable,
+			Columns: []string{providerendpoint.ProviderColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: providerregisterdata.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
 	if n, err = sqlgraph.UpdateNodes(ctx, peu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{providerendpoint.Label}
@@ -379,6 +440,25 @@ func (peuo *ProviderEndpointUpdateOne) AddProvidedData(e ...*EndpointData) *Prov
 	return peuo.AddProvidedDatumIDs(ids...)
 }
 
+// SetProviderID sets the "provider" edge to the ProviderRegisterData entity by ID.
+func (peuo *ProviderEndpointUpdateOne) SetProviderID(id int) *ProviderEndpointUpdateOne {
+	peuo.mutation.SetProviderID(id)
+	return peuo
+}
+
+// SetNillableProviderID sets the "provider" edge to the ProviderRegisterData entity by ID if the given value is not nil.
+func (peuo *ProviderEndpointUpdateOne) SetNillableProviderID(id *int) *ProviderEndpointUpdateOne {
+	if id != nil {
+		peuo = peuo.SetProviderID(*id)
+	}
+	return peuo
+}
+
+// SetProvider sets the "provider" edge to the ProviderRegisterData entity.
+func (peuo *ProviderEndpointUpdateOne) SetProvider(p *ProviderRegisterData) *ProviderEndpointUpdateOne {
+	return peuo.SetProviderID(p.ID)
+}
+
 // Mutation returns the ProviderEndpointMutation object of the builder.
 func (peuo *ProviderEndpointUpdateOne) Mutation() *ProviderEndpointMutation {
 	return peuo.mutation
@@ -424,6 +504,12 @@ func (peuo *ProviderEndpointUpdateOne) RemoveProvidedData(e ...*EndpointData) *P
 		ids[i] = e[i].ID
 	}
 	return peuo.RemoveProvidedDatumIDs(ids...)
+}
+
+// ClearProvider clears the "provider" edge to the ProviderRegisterData entity.
+func (peuo *ProviderEndpointUpdateOne) ClearProvider() *ProviderEndpointUpdateOne {
+	peuo.mutation.ClearProvider()
+	return peuo
 }
 
 // Select allows selecting one or more fields (columns) of the returned entity.
@@ -637,6 +723,41 @@ func (peuo *ProviderEndpointUpdateOne) sqlSave(ctx context.Context) (_node *Prov
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
 					Column: endpointdata.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if peuo.mutation.ProviderCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   providerendpoint.ProviderTable,
+			Columns: []string{providerendpoint.ProviderColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: providerregisterdata.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := peuo.mutation.ProviderIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   providerendpoint.ProviderTable,
+			Columns: []string{providerendpoint.ProviderColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: providerregisterdata.FieldID,
 				},
 			},
 		}

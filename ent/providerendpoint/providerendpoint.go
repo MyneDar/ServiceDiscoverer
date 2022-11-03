@@ -17,6 +17,8 @@ const (
 	EdgeRequiredData = "requiredData"
 	// EdgeProvidedData holds the string denoting the provideddata edge name in mutations.
 	EdgeProvidedData = "providedData"
+	// EdgeProvider holds the string denoting the provider edge name in mutations.
+	EdgeProvider = "provider"
 	// Table holds the table name of the providerendpoint in the database.
 	Table = "provider_endpoints"
 	// RequiredDataTable is the table that holds the requiredData relation/edge.
@@ -33,6 +35,13 @@ const (
 	ProvidedDataInverseTable = "endpoint_data"
 	// ProvidedDataColumn is the table column denoting the providedData relation/edge.
 	ProvidedDataColumn = "provider_endpoint_provided_data"
+	// ProviderTable is the table that holds the provider relation/edge.
+	ProviderTable = "provider_endpoints"
+	// ProviderInverseTable is the table name for the ProviderRegisterData entity.
+	// It exists in this package in order to avoid circular dependency with the "providerregisterdata" package.
+	ProviderInverseTable = "provider_register_data"
+	// ProviderColumn is the table column denoting the provider relation/edge.
+	ProviderColumn = "provider_register_data_endpoints"
 )
 
 // Columns holds all SQL columns for providerendpoint fields.
@@ -43,10 +52,21 @@ var Columns = []string{
 	FieldType,
 }
 
+// ForeignKeys holds the SQL foreign-keys that are owned by the "provider_endpoints"
+// table and are not defined as standalone fields in the schema.
+var ForeignKeys = []string{
+	"provider_register_data_endpoints",
+}
+
 // ValidColumn reports if the column name is valid (part of the table columns).
 func ValidColumn(column string) bool {
 	for i := range Columns {
 		if column == Columns[i] {
+			return true
+		}
+	}
+	for i := range ForeignKeys {
+		if column == ForeignKeys[i] {
 			return true
 		}
 	}

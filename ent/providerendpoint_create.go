@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"servicediscoverer/ent/endpointdata"
 	"servicediscoverer/ent/providerendpoint"
+	"servicediscoverer/ent/providerregisterdata"
 
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
@@ -66,6 +67,25 @@ func (pec *ProviderEndpointCreate) AddProvidedData(e ...*EndpointData) *Provider
 		ids[i] = e[i].ID
 	}
 	return pec.AddProvidedDatumIDs(ids...)
+}
+
+// SetProviderID sets the "provider" edge to the ProviderRegisterData entity by ID.
+func (pec *ProviderEndpointCreate) SetProviderID(id int) *ProviderEndpointCreate {
+	pec.mutation.SetProviderID(id)
+	return pec
+}
+
+// SetNillableProviderID sets the "provider" edge to the ProviderRegisterData entity by ID if the given value is not nil.
+func (pec *ProviderEndpointCreate) SetNillableProviderID(id *int) *ProviderEndpointCreate {
+	if id != nil {
+		pec = pec.SetProviderID(*id)
+	}
+	return pec
+}
+
+// SetProvider sets the "provider" edge to the ProviderRegisterData entity.
+func (pec *ProviderEndpointCreate) SetProvider(p *ProviderRegisterData) *ProviderEndpointCreate {
+	return pec.SetProviderID(p.ID)
 }
 
 // Mutation returns the ProviderEndpointMutation object of the builder.
@@ -228,6 +248,26 @@ func (pec *ProviderEndpointCreate) createSpec() (*ProviderEndpoint, *sqlgraph.Cr
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := pec.mutation.ProviderIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   providerendpoint.ProviderTable,
+			Columns: []string{providerendpoint.ProviderColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: providerregisterdata.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_node.provider_register_data_endpoints = &nodes[0]
 		_spec.Edges = append(_spec.Edges, edge)
 	}
 	return _node, _spec

@@ -4,9 +4,11 @@ package ent
 
 import (
 	"context"
+	"database/sql/driver"
 	"fmt"
 	"math"
 	"servicediscoverer/ent/predicate"
+	"servicediscoverer/ent/providerendpoint"
 	"servicediscoverer/ent/providerregisterdata"
 
 	"entgo.io/ent/dialect/sql"
@@ -17,12 +19,13 @@ import (
 // ProviderRegisterDataQuery is the builder for querying ProviderRegisterData entities.
 type ProviderRegisterDataQuery struct {
 	config
-	limit      *int
-	offset     *int
-	unique     *bool
-	order      []OrderFunc
-	fields     []string
-	predicates []predicate.ProviderRegisterData
+	limit         *int
+	offset        *int
+	unique        *bool
+	order         []OrderFunc
+	fields        []string
+	predicates    []predicate.ProviderRegisterData
+	withEndpoints *ProviderEndpointQuery
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -57,6 +60,28 @@ func (prdq *ProviderRegisterDataQuery) Unique(unique bool) *ProviderRegisterData
 func (prdq *ProviderRegisterDataQuery) Order(o ...OrderFunc) *ProviderRegisterDataQuery {
 	prdq.order = append(prdq.order, o...)
 	return prdq
+}
+
+// QueryEndpoints chains the current query on the "endpoints" edge.
+func (prdq *ProviderRegisterDataQuery) QueryEndpoints() *ProviderEndpointQuery {
+	query := &ProviderEndpointQuery{config: prdq.config}
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := prdq.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		selector := prdq.sqlQuery(ctx)
+		if err := selector.Err(); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(providerregisterdata.Table, providerregisterdata.FieldID, selector),
+			sqlgraph.To(providerendpoint.Table, providerendpoint.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, providerregisterdata.EndpointsTable, providerregisterdata.EndpointsColumn),
+		)
+		fromU = sqlgraph.SetNeighbors(prdq.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
 }
 
 // First returns the first ProviderRegisterData entity from the query.
@@ -235,16 +260,28 @@ func (prdq *ProviderRegisterDataQuery) Clone() *ProviderRegisterDataQuery {
 		return nil
 	}
 	return &ProviderRegisterDataQuery{
-		config:     prdq.config,
-		limit:      prdq.limit,
-		offset:     prdq.offset,
-		order:      append([]OrderFunc{}, prdq.order...),
-		predicates: append([]predicate.ProviderRegisterData{}, prdq.predicates...),
+		config:        prdq.config,
+		limit:         prdq.limit,
+		offset:        prdq.offset,
+		order:         append([]OrderFunc{}, prdq.order...),
+		predicates:    append([]predicate.ProviderRegisterData{}, prdq.predicates...),
+		withEndpoints: prdq.withEndpoints.Clone(),
 		// clone intermediate query.
 		sql:    prdq.sql.Clone(),
 		path:   prdq.path,
 		unique: prdq.unique,
 	}
+}
+
+// WithEndpoints tells the query-builder to eager-load the nodes that are connected to
+// the "endpoints" edge. The optional arguments are used to configure the query builder of the edge.
+func (prdq *ProviderRegisterDataQuery) WithEndpoints(opts ...func(*ProviderEndpointQuery)) *ProviderRegisterDataQuery {
+	query := &ProviderEndpointQuery{config: prdq.config}
+	for _, opt := range opts {
+		opt(query)
+	}
+	prdq.withEndpoints = query
+	return prdq
 }
 
 // GroupBy is used to group vertices by one or more fields/columns.
@@ -318,8 +355,11 @@ func (prdq *ProviderRegisterDataQuery) prepareQuery(ctx context.Context) error {
 
 func (prdq *ProviderRegisterDataQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*ProviderRegisterData, error) {
 	var (
-		nodes = []*ProviderRegisterData{}
-		_spec = prdq.querySpec()
+		nodes       = []*ProviderRegisterData{}
+		_spec       = prdq.querySpec()
+		loadedTypes = [1]bool{
+			prdq.withEndpoints != nil,
+		}
 	)
 	_spec.ScanValues = func(columns []string) ([]any, error) {
 		return (*ProviderRegisterData).scanValues(nil, columns)
@@ -327,6 +367,7 @@ func (prdq *ProviderRegisterDataQuery) sqlAll(ctx context.Context, hooks ...quer
 	_spec.Assign = func(columns []string, values []any) error {
 		node := &ProviderRegisterData{config: prdq.config}
 		nodes = append(nodes, node)
+		node.Edges.loadedTypes = loadedTypes
 		return node.assignValues(columns, values)
 	}
 	for i := range hooks {
@@ -338,7 +379,46 @@ func (prdq *ProviderRegisterDataQuery) sqlAll(ctx context.Context, hooks ...quer
 	if len(nodes) == 0 {
 		return nodes, nil
 	}
+	if query := prdq.withEndpoints; query != nil {
+		if err := prdq.loadEndpoints(ctx, query, nodes,
+			func(n *ProviderRegisterData) { n.Edges.Endpoints = []*ProviderEndpoint{} },
+			func(n *ProviderRegisterData, e *ProviderEndpoint) { n.Edges.Endpoints = append(n.Edges.Endpoints, e) }); err != nil {
+			return nil, err
+		}
+	}
 	return nodes, nil
+}
+
+func (prdq *ProviderRegisterDataQuery) loadEndpoints(ctx context.Context, query *ProviderEndpointQuery, nodes []*ProviderRegisterData, init func(*ProviderRegisterData), assign func(*ProviderRegisterData, *ProviderEndpoint)) error {
+	fks := make([]driver.Value, 0, len(nodes))
+	nodeids := make(map[int]*ProviderRegisterData)
+	for i := range nodes {
+		fks = append(fks, nodes[i].ID)
+		nodeids[nodes[i].ID] = nodes[i]
+		if init != nil {
+			init(nodes[i])
+		}
+	}
+	query.withFKs = true
+	query.Where(predicate.ProviderEndpoint(func(s *sql.Selector) {
+		s.Where(sql.InValues(providerregisterdata.EndpointsColumn, fks...))
+	}))
+	neighbors, err := query.All(ctx)
+	if err != nil {
+		return err
+	}
+	for _, n := range neighbors {
+		fk := n.provider_register_data_endpoints
+		if fk == nil {
+			return fmt.Errorf(`foreign-key "provider_register_data_endpoints" is nil for node %v`, n.ID)
+		}
+		node, ok := nodeids[*fk]
+		if !ok {
+			return fmt.Errorf(`unexpected foreign-key "provider_register_data_endpoints" returned %v for node %v`, *fk, n.ID)
+		}
+		assign(node, n)
+	}
+	return nil
 }
 
 func (prdq *ProviderRegisterDataQuery) sqlCount(ctx context.Context) (int, error) {

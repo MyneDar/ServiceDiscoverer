@@ -44,12 +44,21 @@ var (
 		{Name: "name", Type: field.TypeString},
 		{Name: "path", Type: field.TypeString},
 		{Name: "type", Type: field.TypeString},
+		{Name: "provider_register_data_endpoints", Type: field.TypeInt, Nullable: true},
 	}
 	// ProviderEndpointsTable holds the schema information for the "provider_endpoints" table.
 	ProviderEndpointsTable = &schema.Table{
 		Name:       "provider_endpoints",
 		Columns:    ProviderEndpointsColumns,
 		PrimaryKey: []*schema.Column{ProviderEndpointsColumns[0]},
+		ForeignKeys: []*schema.ForeignKey{
+			{
+				Symbol:     "provider_endpoints_provider_register_data_endpoints",
+				Columns:    []*schema.Column{ProviderEndpointsColumns[4]},
+				RefColumns: []*schema.Column{ProviderRegisterDataColumns[0]},
+				OnDelete:   schema.SetNull,
+			},
+		},
 	}
 	// ProviderRegisterDataColumns holds the columns for the "provider_register_data" table.
 	ProviderRegisterDataColumns = []*schema.Column{
@@ -78,4 +87,5 @@ var (
 func init() {
 	EndpointDataTable.ForeignKeys[0].RefTable = ProviderEndpointsTable
 	EndpointDataTable.ForeignKeys[1].RefTable = ProviderEndpointsTable
+	ProviderEndpointsTable.ForeignKeys[0].RefTable = ProviderRegisterDataTable
 }

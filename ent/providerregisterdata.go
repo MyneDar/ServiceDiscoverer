@@ -27,6 +27,27 @@ type ProviderRegisterData struct {
 	LiveInterval int `json:"liveInterval,omitempty"`
 	// LiveTimeout holds the value of the "liveTimeout" field.
 	LiveTimeout int `json:"liveTimeout,omitempty"`
+	// Edges holds the relations/edges for other nodes in the graph.
+	// The values are being populated by the ProviderRegisterDataQuery when eager-loading is set.
+	Edges ProviderRegisterDataEdges `json:"edges"`
+}
+
+// ProviderRegisterDataEdges holds the relations/edges for other nodes in the graph.
+type ProviderRegisterDataEdges struct {
+	// Endpoints holds the value of the endpoints edge.
+	Endpoints []*ProviderEndpoint `json:"endpoints,omitempty"`
+	// loadedTypes holds the information for reporting if a
+	// type was loaded (or requested) in eager-loading or not.
+	loadedTypes [1]bool
+}
+
+// EndpointsOrErr returns the Endpoints value or an error if the edge
+// was not loaded in eager-loading.
+func (e ProviderRegisterDataEdges) EndpointsOrErr() ([]*ProviderEndpoint, error) {
+	if e.loadedTypes[0] {
+		return e.Endpoints, nil
+	}
+	return nil, &NotLoadedError{edge: "endpoints"}
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -98,6 +119,11 @@ func (prd *ProviderRegisterData) assignValues(columns []string, values []any) er
 		}
 	}
 	return nil
+}
+
+// QueryEndpoints queries the "endpoints" edge of the ProviderRegisterData entity.
+func (prd *ProviderRegisterData) QueryEndpoints() *ProviderEndpointQuery {
+	return (&ProviderRegisterDataClient{config: prd.config}).QueryEndpoints(prd)
 }
 
 // Update returns a builder for updating this ProviderRegisterData.

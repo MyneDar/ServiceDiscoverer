@@ -6,6 +6,7 @@ import (
 	"servicediscoverer/ent/predicate"
 
 	"entgo.io/ent/dialect/sql"
+	"entgo.io/ent/dialect/sql/sqlgraph"
 )
 
 // ID filters vertices based on their ID field.
@@ -642,6 +643,34 @@ func LiveTimeoutLT(v int) predicate.ProviderRegisterData {
 func LiveTimeoutLTE(v int) predicate.ProviderRegisterData {
 	return predicate.ProviderRegisterData(func(s *sql.Selector) {
 		s.Where(sql.LTE(s.C(FieldLiveTimeout), v))
+	})
+}
+
+// HasEndpoints applies the HasEdge predicate on the "endpoints" edge.
+func HasEndpoints() predicate.ProviderRegisterData {
+	return predicate.ProviderRegisterData(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(EndpointsTable, FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, EndpointsTable, EndpointsColumn),
+		)
+		sqlgraph.HasNeighbors(s, step)
+	})
+}
+
+// HasEndpointsWith applies the HasEdge predicate on the "endpoints" edge with a given conditions (other predicates).
+func HasEndpointsWith(preds ...predicate.ProviderEndpoint) predicate.ProviderRegisterData {
+	return predicate.ProviderRegisterData(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(EndpointsInverseTable, FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, EndpointsTable, EndpointsColumn),
+		)
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
 	})
 }
 

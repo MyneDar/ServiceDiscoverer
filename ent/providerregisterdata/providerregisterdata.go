@@ -19,8 +19,17 @@ const (
 	FieldLiveInterval = "live_interval"
 	// FieldLiveTimeout holds the string denoting the livetimeout field in the database.
 	FieldLiveTimeout = "live_timeout"
+	// EdgeEndpoints holds the string denoting the endpoints edge name in mutations.
+	EdgeEndpoints = "endpoints"
 	// Table holds the table name of the providerregisterdata in the database.
 	Table = "provider_register_data"
+	// EndpointsTable is the table that holds the endpoints relation/edge.
+	EndpointsTable = "provider_endpoints"
+	// EndpointsInverseTable is the table name for the ProviderEndpoint entity.
+	// It exists in this package in order to avoid circular dependency with the "providerendpoint" package.
+	EndpointsInverseTable = "provider_endpoints"
+	// EndpointsColumn is the table column denoting the endpoints relation/edge.
+	EndpointsColumn = "provider_register_data_endpoints"
 )
 
 // Columns holds all SQL columns for providerregisterdata fields.

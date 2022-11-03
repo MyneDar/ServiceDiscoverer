@@ -5,6 +5,7 @@ package ent
 import (
 	"fmt"
 	"servicediscoverer/ent/providerendpoint"
+	"servicediscoverer/ent/providerregisterdata"
 	"strings"
 
 	"entgo.io/ent/dialect/sql"
@@ -23,7 +24,8 @@ type ProviderEndpoint struct {
 	Type string `json:"type,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the ProviderEndpointQuery when eager-loading is set.
-	Edges ProviderEndpointEdges `json:"edges"`
+	Edges                            ProviderEndpointEdges `json:"edges"`
+	provider_register_data_endpoints *int
 }
 
 // ProviderEndpointEdges holds the relations/edges for other nodes in the graph.
@@ -32,9 +34,11 @@ type ProviderEndpointEdges struct {
 	RequiredData []*EndpointData `json:"requiredData,omitempty"`
 	// ProvidedData holds the value of the providedData edge.
 	ProvidedData []*EndpointData `json:"providedData,omitempty"`
+	// Provider holds the value of the provider edge.
+	Provider *ProviderRegisterData `json:"provider,omitempty"`
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
-	loadedTypes [2]bool
+	loadedTypes [3]bool
 }
 
 // RequiredDataOrErr returns the RequiredData value or an error if the edge
@@ -55,6 +59,19 @@ func (e ProviderEndpointEdges) ProvidedDataOrErr() ([]*EndpointData, error) {
 	return nil, &NotLoadedError{edge: "providedData"}
 }
 
+// ProviderOrErr returns the Provider value or an error if the edge
+// was not loaded in eager-loading, or loaded but was not found.
+func (e ProviderEndpointEdges) ProviderOrErr() (*ProviderRegisterData, error) {
+	if e.loadedTypes[2] {
+		if e.Provider == nil {
+			// Edge was loaded but was not found.
+			return nil, &NotFoundError{label: providerregisterdata.Label}
+		}
+		return e.Provider, nil
+	}
+	return nil, &NotLoadedError{edge: "provider"}
+}
+
 // scanValues returns the types for scanning values from sql.Rows.
 func (*ProviderEndpoint) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
@@ -64,6 +81,8 @@ func (*ProviderEndpoint) scanValues(columns []string) ([]any, error) {
 			values[i] = new(sql.NullInt64)
 		case providerendpoint.FieldName, providerendpoint.FieldPath, providerendpoint.FieldType:
 			values[i] = new(sql.NullString)
+		case providerendpoint.ForeignKeys[0]: // provider_register_data_endpoints
+			values[i] = new(sql.NullInt64)
 		default:
 			return nil, fmt.Errorf("unexpected column %q for type ProviderEndpoint", columns[i])
 		}
@@ -103,6 +122,13 @@ func (pe *ProviderEndpoint) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				pe.Type = value.String
 			}
+		case providerendpoint.ForeignKeys[0]:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for edge-field provider_register_data_endpoints", value)
+			} else if value.Valid {
+				pe.provider_register_data_endpoints = new(int)
+				*pe.provider_register_data_endpoints = int(value.Int64)
+			}
 		}
 	}
 	return nil
@@ -116,6 +142,11 @@ func (pe *ProviderEndpoint) QueryRequiredData() *EndpointDataQuery {
 // QueryProvidedData queries the "providedData" edge of the ProviderEndpoint entity.
 func (pe *ProviderEndpoint) QueryProvidedData() *EndpointDataQuery {
 	return (&ProviderEndpointClient{config: pe.config}).QueryProvidedData(pe)
+}
+
+// QueryProvider queries the "provider" edge of the ProviderEndpoint entity.
+func (pe *ProviderEndpoint) QueryProvider() *ProviderRegisterDataQuery {
+	return (&ProviderEndpointClient{config: pe.config}).QueryProvider(pe)
 }
 
 // Update returns a builder for updating this ProviderEndpoint.

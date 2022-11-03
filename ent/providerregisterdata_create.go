@@ -6,6 +6,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"servicediscoverer/ent/providerendpoint"
 	"servicediscoverer/ent/providerregisterdata"
 
 	"entgo.io/ent/dialect/sql/sqlgraph"
@@ -53,6 +54,21 @@ func (prdc *ProviderRegisterDataCreate) SetLiveInterval(i int) *ProviderRegister
 func (prdc *ProviderRegisterDataCreate) SetLiveTimeout(i int) *ProviderRegisterDataCreate {
 	prdc.mutation.SetLiveTimeout(i)
 	return prdc
+}
+
+// AddEndpointIDs adds the "endpoints" edge to the ProviderEndpoint entity by IDs.
+func (prdc *ProviderRegisterDataCreate) AddEndpointIDs(ids ...int) *ProviderRegisterDataCreate {
+	prdc.mutation.AddEndpointIDs(ids...)
+	return prdc
+}
+
+// AddEndpoints adds the "endpoints" edges to the ProviderEndpoint entity.
+func (prdc *ProviderRegisterDataCreate) AddEndpoints(p ...*ProviderEndpoint) *ProviderRegisterDataCreate {
+	ids := make([]int, len(p))
+	for i := range p {
+		ids[i] = p[i].ID
+	}
+	return prdc.AddEndpointIDs(ids...)
 }
 
 // Mutation returns the ProviderRegisterDataMutation object of the builder.
@@ -199,6 +215,25 @@ func (prdc *ProviderRegisterDataCreate) createSpec() (*ProviderRegisterData, *sq
 	if value, ok := prdc.mutation.LiveTimeout(); ok {
 		_spec.SetField(providerregisterdata.FieldLiveTimeout, field.TypeInt, value)
 		_node.LiveTimeout = value
+	}
+	if nodes := prdc.mutation.EndpointsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   providerregisterdata.EndpointsTable,
+			Columns: []string{providerregisterdata.EndpointsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: providerendpoint.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
 	}
 	return _node, _spec
 }

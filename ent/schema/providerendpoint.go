@@ -25,5 +25,6 @@ func (ProviderEndpoint) Edges() []ent.Edge {
 	return []ent.Edge{
 		edge.To("requiredData", EndpointData.Type),
 		edge.To("providedData", EndpointData.Type),
+		edge.From("provider", ProviderRegisterData.Type).Ref("endpoints").Unique(),
 	}
 }

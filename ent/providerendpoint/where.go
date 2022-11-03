@@ -454,6 +454,34 @@ func HasProvidedDataWith(preds ...predicate.EndpointData) predicate.ProviderEndp
 	})
 }
 
+// HasProvider applies the HasEdge predicate on the "provider" edge.
+func HasProvider() predicate.ProviderEndpoint {
+	return predicate.ProviderEndpoint(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(ProviderTable, FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, ProviderTable, ProviderColumn),
+		)
+		sqlgraph.HasNeighbors(s, step)
+	})
+}
+
+// HasProviderWith applies the HasEdge predicate on the "provider" edge with a given conditions (other predicates).
+func HasProviderWith(preds ...predicate.ProviderRegisterData) predicate.ProviderEndpoint {
+	return predicate.ProviderEndpoint(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(ProviderInverseTable, FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, ProviderTable, ProviderColumn),
+		)
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
+	})
+}
+
 // And groups predicates with the AND operator between them.
 func And(predicates ...predicate.ProviderEndpoint) predicate.ProviderEndpoint {
 	return predicate.ProviderEndpoint(func(s *sql.Selector) {

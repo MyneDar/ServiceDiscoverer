@@ -376,6 +376,22 @@ func (c *ProviderEndpointClient) QueryProvidedData(pe *ProviderEndpoint) *Endpoi
 	return query
 }
 
+// QueryProvider queries the provider edge of a ProviderEndpoint.
+func (c *ProviderEndpointClient) QueryProvider(pe *ProviderEndpoint) *ProviderRegisterDataQuery {
+	query := &ProviderRegisterDataQuery{config: c.config}
+	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
+		id := pe.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(providerendpoint.Table, providerendpoint.FieldID, id),
+			sqlgraph.To(providerregisterdata.Table, providerregisterdata.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, providerendpoint.ProviderTable, providerendpoint.ProviderColumn),
+		)
+		fromV = sqlgraph.Neighbors(pe.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
 // Hooks returns the client hooks.
 func (c *ProviderEndpointClient) Hooks() []Hook {
 	return c.hooks.ProviderEndpoint
@@ -464,6 +480,22 @@ func (c *ProviderRegisterDataClient) GetX(ctx context.Context, id int) *Provider
 		panic(err)
 	}
 	return obj
+}
+
+// QueryEndpoints queries the endpoints edge of a ProviderRegisterData.
+func (c *ProviderRegisterDataClient) QueryEndpoints(prd *ProviderRegisterData) *ProviderEndpointQuery {
+	query := &ProviderEndpointQuery{config: c.config}
+	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
+		id := prd.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(providerregisterdata.Table, providerregisterdata.FieldID, id),
+			sqlgraph.To(providerendpoint.Table, providerendpoint.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, providerregisterdata.EndpointsTable, providerregisterdata.EndpointsColumn),
+		)
+		fromV = sqlgraph.Neighbors(prd.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
 }
 
 // Hooks returns the client hooks.

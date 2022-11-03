@@ -10,6 +10,7 @@ import (
 	"servicediscoverer/ent/endpointdata"
 	"servicediscoverer/ent/predicate"
 	"servicediscoverer/ent/providerendpoint"
+	"servicediscoverer/ent/providerregisterdata"
 
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
@@ -27,6 +28,8 @@ type ProviderEndpointQuery struct {
 	predicates       []predicate.ProviderEndpoint
 	withRequiredData *EndpointDataQuery
 	withProvidedData *EndpointDataQuery
+	withProvider     *ProviderRegisterDataQuery
+	withFKs          bool
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -100,6 +103,28 @@ func (peq *ProviderEndpointQuery) QueryProvidedData() *EndpointDataQuery {
 			sqlgraph.From(providerendpoint.Table, providerendpoint.FieldID, selector),
 			sqlgraph.To(endpointdata.Table, endpointdata.FieldID),
 			sqlgraph.Edge(sqlgraph.O2M, false, providerendpoint.ProvidedDataTable, providerendpoint.ProvidedDataColumn),
+		)
+		fromU = sqlgraph.SetNeighbors(peq.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
+}
+
+// QueryProvider chains the current query on the "provider" edge.
+func (peq *ProviderEndpointQuery) QueryProvider() *ProviderRegisterDataQuery {
+	query := &ProviderRegisterDataQuery{config: peq.config}
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := peq.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		selector := peq.sqlQuery(ctx)
+		if err := selector.Err(); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(providerendpoint.Table, providerendpoint.FieldID, selector),
+			sqlgraph.To(providerregisterdata.Table, providerregisterdata.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, providerendpoint.ProviderTable, providerendpoint.ProviderColumn),
 		)
 		fromU = sqlgraph.SetNeighbors(peq.driver.Dialect(), step)
 		return fromU, nil
@@ -290,6 +315,7 @@ func (peq *ProviderEndpointQuery) Clone() *ProviderEndpointQuery {
 		predicates:       append([]predicate.ProviderEndpoint{}, peq.predicates...),
 		withRequiredData: peq.withRequiredData.Clone(),
 		withProvidedData: peq.withProvidedData.Clone(),
+		withProvider:     peq.withProvider.Clone(),
 		// clone intermediate query.
 		sql:    peq.sql.Clone(),
 		path:   peq.path,
@@ -316,6 +342,17 @@ func (peq *ProviderEndpointQuery) WithProvidedData(opts ...func(*EndpointDataQue
 		opt(query)
 	}
 	peq.withProvidedData = query
+	return peq
+}
+
+// WithProvider tells the query-builder to eager-load the nodes that are connected to
+// the "provider" edge. The optional arguments are used to configure the query builder of the edge.
+func (peq *ProviderEndpointQuery) WithProvider(opts ...func(*ProviderRegisterDataQuery)) *ProviderEndpointQuery {
+	query := &ProviderRegisterDataQuery{config: peq.config}
+	for _, opt := range opts {
+		opt(query)
+	}
+	peq.withProvider = query
 	return peq
 }
 
@@ -391,12 +428,20 @@ func (peq *ProviderEndpointQuery) prepareQuery(ctx context.Context) error {
 func (peq *ProviderEndpointQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*ProviderEndpoint, error) {
 	var (
 		nodes       = []*ProviderEndpoint{}
+		withFKs     = peq.withFKs
 		_spec       = peq.querySpec()
-		loadedTypes = [2]bool{
+		loadedTypes = [3]bool{
 			peq.withRequiredData != nil,
 			peq.withProvidedData != nil,
+			peq.withProvider != nil,
 		}
 	)
+	if peq.withProvider != nil {
+		withFKs = true
+	}
+	if withFKs {
+		_spec.Node.Columns = append(_spec.Node.Columns, providerendpoint.ForeignKeys...)
+	}
 	_spec.ScanValues = func(columns []string) ([]any, error) {
 		return (*ProviderEndpoint).scanValues(nil, columns)
 	}
@@ -426,6 +471,12 @@ func (peq *ProviderEndpointQuery) sqlAll(ctx context.Context, hooks ...queryHook
 		if err := peq.loadProvidedData(ctx, query, nodes,
 			func(n *ProviderEndpoint) { n.Edges.ProvidedData = []*EndpointData{} },
 			func(n *ProviderEndpoint, e *EndpointData) { n.Edges.ProvidedData = append(n.Edges.ProvidedData, e) }); err != nil {
+			return nil, err
+		}
+	}
+	if query := peq.withProvider; query != nil {
+		if err := peq.loadProvider(ctx, query, nodes, nil,
+			func(n *ProviderEndpoint, e *ProviderRegisterData) { n.Edges.Provider = e }); err != nil {
 			return nil, err
 		}
 	}
@@ -491,6 +542,35 @@ func (peq *ProviderEndpointQuery) loadProvidedData(ctx context.Context, query *E
 			return fmt.Errorf(`unexpected foreign-key "provider_endpoint_provided_data" returned %v for node %v`, *fk, n.ID)
 		}
 		assign(node, n)
+	}
+	return nil
+}
+func (peq *ProviderEndpointQuery) loadProvider(ctx context.Context, query *ProviderRegisterDataQuery, nodes []*ProviderEndpoint, init func(*ProviderEndpoint), assign func(*ProviderEndpoint, *ProviderRegisterData)) error {
+	ids := make([]int, 0, len(nodes))
+	nodeids := make(map[int][]*ProviderEndpoint)
+	for i := range nodes {
+		if nodes[i].provider_register_data_endpoints == nil {
+			continue
+		}
+		fk := *nodes[i].provider_register_data_endpoints
+		if _, ok := nodeids[fk]; !ok {
+			ids = append(ids, fk)
+		}
+		nodeids[fk] = append(nodeids[fk], nodes[i])
+	}
+	query.Where(providerregisterdata.IDIn(ids...))
+	neighbors, err := query.All(ctx)
+	if err != nil {
+		return err
+	}
+	for _, n := range neighbors {
+		nodes, ok := nodeids[n.ID]
+		if !ok {
+			return fmt.Errorf(`unexpected foreign-key "provider_register_data_endpoints" returned %v`, n.ID)
+		}
+		for i := range nodes {
+			assign(nodes[i], n)
+		}
 	}
 	return nil
 }

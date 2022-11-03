@@ -644,6 +644,8 @@ type ProviderEndpointMutation struct {
 	providedData        map[int]struct{}
 	removedprovidedData map[int]struct{}
 	clearedprovidedData bool
+	provider            *int
+	clearedprovider     bool
 	done                bool
 	oldValue            func(context.Context) (*ProviderEndpoint, error)
 	predicates          []predicate.ProviderEndpoint
@@ -963,6 +965,45 @@ func (m *ProviderEndpointMutation) ResetProvidedData() {
 	m.removedprovidedData = nil
 }
 
+// SetProviderID sets the "provider" edge to the ProviderRegisterData entity by id.
+func (m *ProviderEndpointMutation) SetProviderID(id int) {
+	m.provider = &id
+}
+
+// ClearProvider clears the "provider" edge to the ProviderRegisterData entity.
+func (m *ProviderEndpointMutation) ClearProvider() {
+	m.clearedprovider = true
+}
+
+// ProviderCleared reports if the "provider" edge to the ProviderRegisterData entity was cleared.
+func (m *ProviderEndpointMutation) ProviderCleared() bool {
+	return m.clearedprovider
+}
+
+// ProviderID returns the "provider" edge ID in the mutation.
+func (m *ProviderEndpointMutation) ProviderID() (id int, exists bool) {
+	if m.provider != nil {
+		return *m.provider, true
+	}
+	return
+}
+
+// ProviderIDs returns the "provider" edge IDs in the mutation.
+// Note that IDs always returns len(IDs) <= 1 for unique edges, and you should use
+// ProviderID instead. It exists only for internal usage by the builders.
+func (m *ProviderEndpointMutation) ProviderIDs() (ids []int) {
+	if id := m.provider; id != nil {
+		ids = append(ids, *id)
+	}
+	return
+}
+
+// ResetProvider resets all changes to the "provider" edge.
+func (m *ProviderEndpointMutation) ResetProvider() {
+	m.provider = nil
+	m.clearedprovider = false
+}
+
 // Where appends a list predicates to the ProviderEndpointMutation builder.
 func (m *ProviderEndpointMutation) Where(ps ...predicate.ProviderEndpoint) {
 	m.predicates = append(m.predicates, ps...)
@@ -1115,12 +1156,15 @@ func (m *ProviderEndpointMutation) ResetField(name string) error {
 
 // AddedEdges returns all edge names that were set/added in this mutation.
 func (m *ProviderEndpointMutation) AddedEdges() []string {
-	edges := make([]string, 0, 2)
+	edges := make([]string, 0, 3)
 	if m.requiredData != nil {
 		edges = append(edges, providerendpoint.EdgeRequiredData)
 	}
 	if m.providedData != nil {
 		edges = append(edges, providerendpoint.EdgeProvidedData)
+	}
+	if m.provider != nil {
+		edges = append(edges, providerendpoint.EdgeProvider)
 	}
 	return edges
 }
@@ -1141,13 +1185,17 @@ func (m *ProviderEndpointMutation) AddedIDs(name string) []ent.Value {
 			ids = append(ids, id)
 		}
 		return ids
+	case providerendpoint.EdgeProvider:
+		if id := m.provider; id != nil {
+			return []ent.Value{*id}
+		}
 	}
 	return nil
 }
 
 // RemovedEdges returns all edge names that were removed in this mutation.
 func (m *ProviderEndpointMutation) RemovedEdges() []string {
-	edges := make([]string, 0, 2)
+	edges := make([]string, 0, 3)
 	if m.removedrequiredData != nil {
 		edges = append(edges, providerendpoint.EdgeRequiredData)
 	}
@@ -1179,12 +1227,15 @@ func (m *ProviderEndpointMutation) RemovedIDs(name string) []ent.Value {
 
 // ClearedEdges returns all edge names that were cleared in this mutation.
 func (m *ProviderEndpointMutation) ClearedEdges() []string {
-	edges := make([]string, 0, 2)
+	edges := make([]string, 0, 3)
 	if m.clearedrequiredData {
 		edges = append(edges, providerendpoint.EdgeRequiredData)
 	}
 	if m.clearedprovidedData {
 		edges = append(edges, providerendpoint.EdgeProvidedData)
+	}
+	if m.clearedprovider {
+		edges = append(edges, providerendpoint.EdgeProvider)
 	}
 	return edges
 }
@@ -1197,6 +1248,8 @@ func (m *ProviderEndpointMutation) EdgeCleared(name string) bool {
 		return m.clearedrequiredData
 	case providerendpoint.EdgeProvidedData:
 		return m.clearedprovidedData
+	case providerendpoint.EdgeProvider:
+		return m.clearedprovider
 	}
 	return false
 }
@@ -1205,6 +1258,9 @@ func (m *ProviderEndpointMutation) EdgeCleared(name string) bool {
 // if that edge is not defined in the schema.
 func (m *ProviderEndpointMutation) ClearEdge(name string) error {
 	switch name {
+	case providerendpoint.EdgeProvider:
+		m.ClearProvider()
+		return nil
 	}
 	return fmt.Errorf("unknown ProviderEndpoint unique edge %s", name)
 }
@@ -1219,6 +1275,9 @@ func (m *ProviderEndpointMutation) ResetEdge(name string) error {
 	case providerendpoint.EdgeProvidedData:
 		m.ResetProvidedData()
 		return nil
+	case providerendpoint.EdgeProvider:
+		m.ResetProvider()
+		return nil
 	}
 	return fmt.Errorf("unknown ProviderEndpoint edge %s", name)
 }
@@ -1226,21 +1285,24 @@ func (m *ProviderEndpointMutation) ResetEdge(name string) error {
 // ProviderRegisterDataMutation represents an operation that mutates the ProviderRegisterData nodes in the graph.
 type ProviderRegisterDataMutation struct {
 	config
-	op              Op
-	typ             string
-	id              *int
-	name            *string
-	port            *string
-	address         *string
-	description     *string
-	liveInterval    *int
-	addliveInterval *int
-	liveTimeout     *int
-	addliveTimeout  *int
-	clearedFields   map[string]struct{}
-	done            bool
-	oldValue        func(context.Context) (*ProviderRegisterData, error)
-	predicates      []predicate.ProviderRegisterData
+	op               Op
+	typ              string
+	id               *int
+	name             *string
+	port             *string
+	address          *string
+	description      *string
+	liveInterval     *int
+	addliveInterval  *int
+	liveTimeout      *int
+	addliveTimeout   *int
+	clearedFields    map[string]struct{}
+	endpoints        map[int]struct{}
+	removedendpoints map[int]struct{}
+	clearedendpoints bool
+	done             bool
+	oldValue         func(context.Context) (*ProviderRegisterData, error)
+	predicates       []predicate.ProviderRegisterData
 }
 
 var _ ent.Mutation = (*ProviderRegisterDataMutation)(nil)
@@ -1597,6 +1659,60 @@ func (m *ProviderRegisterDataMutation) ResetLiveTimeout() {
 	m.addliveTimeout = nil
 }
 
+// AddEndpointIDs adds the "endpoints" edge to the ProviderEndpoint entity by ids.
+func (m *ProviderRegisterDataMutation) AddEndpointIDs(ids ...int) {
+	if m.endpoints == nil {
+		m.endpoints = make(map[int]struct{})
+	}
+	for i := range ids {
+		m.endpoints[ids[i]] = struct{}{}
+	}
+}
+
+// ClearEndpoints clears the "endpoints" edge to the ProviderEndpoint entity.
+func (m *ProviderRegisterDataMutation) ClearEndpoints() {
+	m.clearedendpoints = true
+}
+
+// EndpointsCleared reports if the "endpoints" edge to the ProviderEndpoint entity was cleared.
+func (m *ProviderRegisterDataMutation) EndpointsCleared() bool {
+	return m.clearedendpoints
+}
+
+// RemoveEndpointIDs removes the "endpoints" edge to the ProviderEndpoint entity by IDs.
+func (m *ProviderRegisterDataMutation) RemoveEndpointIDs(ids ...int) {
+	if m.removedendpoints == nil {
+		m.removedendpoints = make(map[int]struct{})
+	}
+	for i := range ids {
+		delete(m.endpoints, ids[i])
+		m.removedendpoints[ids[i]] = struct{}{}
+	}
+}
+
+// RemovedEndpoints returns the removed IDs of the "endpoints" edge to the ProviderEndpoint entity.
+func (m *ProviderRegisterDataMutation) RemovedEndpointsIDs() (ids []int) {
+	for id := range m.removedendpoints {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// EndpointsIDs returns the "endpoints" edge IDs in the mutation.
+func (m *ProviderRegisterDataMutation) EndpointsIDs() (ids []int) {
+	for id := range m.endpoints {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// ResetEndpoints resets all changes to the "endpoints" edge.
+func (m *ProviderRegisterDataMutation) ResetEndpoints() {
+	m.endpoints = nil
+	m.clearedendpoints = false
+	m.removedendpoints = nil
+}
+
 // Where appends a list predicates to the ProviderRegisterDataMutation builder.
 func (m *ProviderRegisterDataMutation) Where(ps ...predicate.ProviderRegisterData) {
 	m.predicates = append(m.predicates, ps...)
@@ -1827,48 +1943,84 @@ func (m *ProviderRegisterDataMutation) ResetField(name string) error {
 
 // AddedEdges returns all edge names that were set/added in this mutation.
 func (m *ProviderRegisterDataMutation) AddedEdges() []string {
-	edges := make([]string, 0, 0)
+	edges := make([]string, 0, 1)
+	if m.endpoints != nil {
+		edges = append(edges, providerregisterdata.EdgeEndpoints)
+	}
 	return edges
 }
 
 // AddedIDs returns all IDs (to other nodes) that were added for the given edge
 // name in this mutation.
 func (m *ProviderRegisterDataMutation) AddedIDs(name string) []ent.Value {
+	switch name {
+	case providerregisterdata.EdgeEndpoints:
+		ids := make([]ent.Value, 0, len(m.endpoints))
+		for id := range m.endpoints {
+			ids = append(ids, id)
+		}
+		return ids
+	}
 	return nil
 }
 
 // RemovedEdges returns all edge names that were removed in this mutation.
 func (m *ProviderRegisterDataMutation) RemovedEdges() []string {
-	edges := make([]string, 0, 0)
+	edges := make([]string, 0, 1)
+	if m.removedendpoints != nil {
+		edges = append(edges, providerregisterdata.EdgeEndpoints)
+	}
 	return edges
 }
 
 // RemovedIDs returns all IDs (to other nodes) that were removed for the edge with
 // the given name in this mutation.
 func (m *ProviderRegisterDataMutation) RemovedIDs(name string) []ent.Value {
+	switch name {
+	case providerregisterdata.EdgeEndpoints:
+		ids := make([]ent.Value, 0, len(m.removedendpoints))
+		for id := range m.removedendpoints {
+			ids = append(ids, id)
+		}
+		return ids
+	}
 	return nil
 }
 
 // ClearedEdges returns all edge names that were cleared in this mutation.
 func (m *ProviderRegisterDataMutation) ClearedEdges() []string {
-	edges := make([]string, 0, 0)
+	edges := make([]string, 0, 1)
+	if m.clearedendpoints {
+		edges = append(edges, providerregisterdata.EdgeEndpoints)
+	}
 	return edges
 }
 
 // EdgeCleared returns a boolean which indicates if the edge with the given name
 // was cleared in this mutation.
 func (m *ProviderRegisterDataMutation) EdgeCleared(name string) bool {
+	switch name {
+	case providerregisterdata.EdgeEndpoints:
+		return m.clearedendpoints
+	}
 	return false
 }
 
 // ClearEdge clears the value of the edge with the given name. It returns an error
 // if that edge is not defined in the schema.
 func (m *ProviderRegisterDataMutation) ClearEdge(name string) error {
+	switch name {
+	}
 	return fmt.Errorf("unknown ProviderRegisterData unique edge %s", name)
 }
 
 // ResetEdge resets all changes to the edge with the given name in this mutation.
 // It returns an error if the edge is not defined in the schema.
 func (m *ProviderRegisterDataMutation) ResetEdge(name string) error {
+	switch name {
+	case providerregisterdata.EdgeEndpoints:
+		m.ResetEndpoints()
+		return nil
+	}
 	return fmt.Errorf("unknown ProviderRegisterData edge %s", name)
 }

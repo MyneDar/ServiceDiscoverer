@@ -7,6 +7,7 @@ import (
 	"errors"
 	"fmt"
 	"servicediscoverer/ent/predicate"
+	"servicediscoverer/ent/providerendpoint"
 	"servicediscoverer/ent/providerregisterdata"
 
 	"entgo.io/ent/dialect/sql"
@@ -77,9 +78,45 @@ func (prdu *ProviderRegisterDataUpdate) AddLiveTimeout(i int) *ProviderRegisterD
 	return prdu
 }
 
+// AddEndpointIDs adds the "endpoints" edge to the ProviderEndpoint entity by IDs.
+func (prdu *ProviderRegisterDataUpdate) AddEndpointIDs(ids ...int) *ProviderRegisterDataUpdate {
+	prdu.mutation.AddEndpointIDs(ids...)
+	return prdu
+}
+
+// AddEndpoints adds the "endpoints" edges to the ProviderEndpoint entity.
+func (prdu *ProviderRegisterDataUpdate) AddEndpoints(p ...*ProviderEndpoint) *ProviderRegisterDataUpdate {
+	ids := make([]int, len(p))
+	for i := range p {
+		ids[i] = p[i].ID
+	}
+	return prdu.AddEndpointIDs(ids...)
+}
+
 // Mutation returns the ProviderRegisterDataMutation object of the builder.
 func (prdu *ProviderRegisterDataUpdate) Mutation() *ProviderRegisterDataMutation {
 	return prdu.mutation
+}
+
+// ClearEndpoints clears all "endpoints" edges to the ProviderEndpoint entity.
+func (prdu *ProviderRegisterDataUpdate) ClearEndpoints() *ProviderRegisterDataUpdate {
+	prdu.mutation.ClearEndpoints()
+	return prdu
+}
+
+// RemoveEndpointIDs removes the "endpoints" edge to ProviderEndpoint entities by IDs.
+func (prdu *ProviderRegisterDataUpdate) RemoveEndpointIDs(ids ...int) *ProviderRegisterDataUpdate {
+	prdu.mutation.RemoveEndpointIDs(ids...)
+	return prdu
+}
+
+// RemoveEndpoints removes "endpoints" edges to ProviderEndpoint entities.
+func (prdu *ProviderRegisterDataUpdate) RemoveEndpoints(p ...*ProviderEndpoint) *ProviderRegisterDataUpdate {
+	ids := make([]int, len(p))
+	for i := range p {
+		ids[i] = p[i].ID
+	}
+	return prdu.RemoveEndpointIDs(ids...)
 }
 
 // Save executes the query and returns the number of nodes affected by the update operation.
@@ -178,6 +215,60 @@ func (prdu *ProviderRegisterDataUpdate) sqlSave(ctx context.Context) (n int, err
 	if value, ok := prdu.mutation.AddedLiveTimeout(); ok {
 		_spec.AddField(providerregisterdata.FieldLiveTimeout, field.TypeInt, value)
 	}
+	if prdu.mutation.EndpointsCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   providerregisterdata.EndpointsTable,
+			Columns: []string{providerregisterdata.EndpointsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: providerendpoint.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := prdu.mutation.RemovedEndpointsIDs(); len(nodes) > 0 && !prdu.mutation.EndpointsCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   providerregisterdata.EndpointsTable,
+			Columns: []string{providerregisterdata.EndpointsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: providerendpoint.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := prdu.mutation.EndpointsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   providerregisterdata.EndpointsTable,
+			Columns: []string{providerregisterdata.EndpointsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: providerendpoint.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
 	if n, err = sqlgraph.UpdateNodes(ctx, prdu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{providerregisterdata.Label}
@@ -247,9 +338,45 @@ func (prduo *ProviderRegisterDataUpdateOne) AddLiveTimeout(i int) *ProviderRegis
 	return prduo
 }
 
+// AddEndpointIDs adds the "endpoints" edge to the ProviderEndpoint entity by IDs.
+func (prduo *ProviderRegisterDataUpdateOne) AddEndpointIDs(ids ...int) *ProviderRegisterDataUpdateOne {
+	prduo.mutation.AddEndpointIDs(ids...)
+	return prduo
+}
+
+// AddEndpoints adds the "endpoints" edges to the ProviderEndpoint entity.
+func (prduo *ProviderRegisterDataUpdateOne) AddEndpoints(p ...*ProviderEndpoint) *ProviderRegisterDataUpdateOne {
+	ids := make([]int, len(p))
+	for i := range p {
+		ids[i] = p[i].ID
+	}
+	return prduo.AddEndpointIDs(ids...)
+}
+
 // Mutation returns the ProviderRegisterDataMutation object of the builder.
 func (prduo *ProviderRegisterDataUpdateOne) Mutation() *ProviderRegisterDataMutation {
 	return prduo.mutation
+}
+
+// ClearEndpoints clears all "endpoints" edges to the ProviderEndpoint entity.
+func (prduo *ProviderRegisterDataUpdateOne) ClearEndpoints() *ProviderRegisterDataUpdateOne {
+	prduo.mutation.ClearEndpoints()
+	return prduo
+}
+
+// RemoveEndpointIDs removes the "endpoints" edge to ProviderEndpoint entities by IDs.
+func (prduo *ProviderRegisterDataUpdateOne) RemoveEndpointIDs(ids ...int) *ProviderRegisterDataUpdateOne {
+	prduo.mutation.RemoveEndpointIDs(ids...)
+	return prduo
+}
+
+// RemoveEndpoints removes "endpoints" edges to ProviderEndpoint entities.
+func (prduo *ProviderRegisterDataUpdateOne) RemoveEndpoints(p ...*ProviderEndpoint) *ProviderRegisterDataUpdateOne {
+	ids := make([]int, len(p))
+	for i := range p {
+		ids[i] = p[i].ID
+	}
+	return prduo.RemoveEndpointIDs(ids...)
 }
 
 // Select allows selecting one or more fields (columns) of the returned entity.
@@ -377,6 +504,60 @@ func (prduo *ProviderRegisterDataUpdateOne) sqlSave(ctx context.Context) (_node 
 	}
 	if value, ok := prduo.mutation.AddedLiveTimeout(); ok {
 		_spec.AddField(providerregisterdata.FieldLiveTimeout, field.TypeInt, value)
+	}
+	if prduo.mutation.EndpointsCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   providerregisterdata.EndpointsTable,
+			Columns: []string{providerregisterdata.EndpointsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: providerendpoint.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := prduo.mutation.RemovedEndpointsIDs(); len(nodes) > 0 && !prduo.mutation.EndpointsCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   providerregisterdata.EndpointsTable,
+			Columns: []string{providerregisterdata.EndpointsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: providerendpoint.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := prduo.mutation.EndpointsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   providerregisterdata.EndpointsTable,
+			Columns: []string{providerregisterdata.EndpointsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: providerendpoint.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
 	_node = &ProviderRegisterData{config: prduo.config}
 	_spec.Assign = _node.assignValues
