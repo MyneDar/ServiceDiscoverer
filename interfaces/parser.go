@@ -1,5 +1,9 @@
 package interfaces
 
-type parser interface {
-	execute(token []string, commandMap *map[string]interface{})
+import (
+	"servicediscoverer/models"
+)
+
+type Parser interface {
+	Process(tok []models.Token, commandMap *map[string]interface{}) (error, interface{})
 }

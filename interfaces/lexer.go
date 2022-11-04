@@ -1,5 +1,7 @@
 package interfaces
 
-type lexer interface {
-	execute(command string)
+import "servicediscoverer/models"
+
+type Lexer interface {
+	Process(command *string) (error, []models.Token)
 }
