@@ -46,6 +46,7 @@ const (
 	RPAREN    // )
 	SEMICOLON // ;
 	PERIOD    // .
+	ASTERISK  // *
 	operatorEnd
 )
 
@@ -79,6 +80,7 @@ var tokens = [...]string{
 	RPAREN:    ")",
 	SEMICOLON: ";",
 	PERIOD:    ".",
+	ASTERISK:  "*",
 }
 
 func (tok ServiceToken) String() string {

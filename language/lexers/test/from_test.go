@@ -37,7 +37,7 @@ func TestProcessGood(t *testing.T) {
 
 func TestProcessMoreKeyWords(t *testing.T) {
 	fromLex := &lexers.FromLex{}
-	fromLex.Process(&queryMoreKeyWords)
+	_, _ = fromLex.Process(&queryMoreKeyWords)
 	if len(queryMoreKeyWords) != 2 {
 		t.Errorf("Wrong sliced command, got %s", queryMoreKeyWords)
 	}
