@@ -5,6 +5,6 @@ import "servicediscoverer/models"
 type InsertParser struct {
 }
 
-func (l *InsertParser) Process(tok []models.Token, commandMap *map[string]interface{}) (error, interface{}) {
+func (l *InsertParser) Process(tok []models.ServiceToken, commandMap *map[string]interface{}) (error, interface{}) {
 	return nil, nil
 }

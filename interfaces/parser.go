@@ -5,5 +5,5 @@ import (
 )
 
 type Parser interface {
-	Process(tok []models.Token, commandMap *map[string]interface{}) (error, interface{})
+	Process(tok []models.ServiceToken, commandMap *map[string]interface{}) (error, interface{})
 }

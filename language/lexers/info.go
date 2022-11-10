@@ -5,6 +5,6 @@ import "servicediscoverer/models"
 type InfoLex struct {
 }
 
-func (l *InfoLex) Process(command *string) (error, []models.Token) {
-	return nil, []models.Token{}
+func (l *InfoLex) Process(command *string) (error, []models.ServiceToken) {
+	return nil, []models.ServiceToken{}
 }
