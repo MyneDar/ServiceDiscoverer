@@ -4,28 +4,14 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
-	"servicediscoverer/interfaces"
-	"servicediscoverer/language/lexers"
 )
 
 type Service struct {
-	deleteLex interfaces.Lexer
-	fromLex   interfaces.Lexer
-	infoLex   interfaces.Lexer
-	insertLex interfaces.Lexer
-	selectLex interfaces.Lexer
-	updateLex interfaces.Lexer
-	whereLex  interfaces.Lexer
+	tokenizer *Tokenizer
 }
 
 func (s *Service) init() {
-	s.deleteLex = &lexers.DeleteLex{}
-	s.fromLex = &lexers.FromLex{}
-	s.infoLex = &lexers.InfoLex{}
-	s.insertLex = &lexers.InsertLex{}
-	s.selectLex = &lexers.SelectLex{}
-	s.updateLex = &lexers.UpdateLex{}
-	s.whereLex = &lexers.WhereLex{}
+	s.tokenizer = NewTokenizer()
 }
 
 func (s *Service) getDataHandler(w http.ResponseWriter, r *http.Request) {
@@ -43,21 +29,21 @@ func (s *Service) getDataHandler(w http.ResponseWriter, r *http.Request) {
 		}
 		//Use lexers, error handling
 
-		err, fromTok := s.fromLex.Process(&command)
+		/*err, fromTok := s.fromLex.Process(&commands)
 		if err != nil {
 			log.Printf("")
 			http.Error(w, "", http.StatusBadRequest)
 			return
 		}
 
-		err, selectTok := s.selectLex.Process(&command)
+		err, selectTok := s.selectLex.Process(&commands)
 		if err != nil {
 			log.Printf("")
 			http.Error(w, "", http.StatusBadRequest)
 			return
 		}
 
-		err, whereTok := s.whereLex.Process(&command)
+		err, whereTok := s.whereLex.Process(&commands)
 		if err != nil {
 			log.Printf("")
 			http.Error(w, "", http.StatusBadRequest)
@@ -68,7 +54,7 @@ func (s *Service) getDataHandler(w http.ResponseWriter, r *http.Request) {
 		s := len(fromTok)
 		s = len(selectTok)
 		s = len(whereTok)
-		print(s)
+		print(s)*/
 
 		//From, select, where parser initialization (maybe not here)
 

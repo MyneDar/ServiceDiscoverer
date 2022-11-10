@@ -32,7 +32,7 @@ func (l *InfoLex) Process(command *[]string) (err error, tokens []models.TokenSt
 	*command = (*command)[len(splitted):]
 
 	//["INFO","service.endpoint"], ["INFO","service.*"], ["INFO","*"]
-	tokens = append(tokens, models.TokenStruct{Name: models.FROM, Data: splitted[0]})
+	tokens = append(tokens, models.TokenStruct{Name: models.INFO, Data: splitted[0]})
 
 	target := strings.Split(splitted[1], models.PERIOD.String())
 	if len(target) == 2 {
