@@ -28,6 +28,9 @@ func (t *Tokenizer) CommandProcess(command string) (err error, tokens []models.T
 	commands := strings.Split(command, " ")
 
 	for _, lexer := range t.tokenizerLexers {
+		if len(commands) == 0 {
+			break
+		}
 		err, appendableTokens := lexer.Process(&commands)
 		if err != nil {
 			return err, nil
