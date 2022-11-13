@@ -5,13 +5,21 @@ import (
 	"testing"
 )
 
-var TokenizerTest = "FROM Human.Add INFO Human.Add"
+var TokenizerTestFromAndDelete = "FROM Human.Add DELETE"
+var TokenizerTestIrrationalButCorrectKeywords = "FROM Human.Add INFO Human.Add DELETE INSERT UPDATE SELECT Something"
 
-func TestNewTokenizer(t *testing.T) {
+func TestNewTokenizerWithFromAndDelete(t *testing.T) {
 	var tokenizer = service.NewTokenizer()
-	err, tokens := tokenizer.CommandProcess(TokenizerTest)
+	err, _ := tokenizer.CommandProcess(TokenizerTestFromAndDelete)
 	if err != nil {
-		return
+		t.Errorf("Something happened on the tokenizing process, %s", err)
 	}
-	println(len(tokens))
+}
+
+func TestNewTokenizerIrrationalButCorrect(t *testing.T) {
+	var tokenizer = service.NewTokenizer()
+	err, _ := tokenizer.CommandProcess(TokenizerTestIrrationalButCorrectKeywords)
+	if err != nil {
+		t.Errorf("Something happened on the tokenizing process, %s", err)
+	}
 }

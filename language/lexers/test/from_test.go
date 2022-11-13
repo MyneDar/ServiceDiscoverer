@@ -27,7 +27,7 @@ var wrongTarget = []string{
 	"HumanAdd",
 }
 
-func TestProcessGood(t *testing.T) {
+func TestFromProcessGood(t *testing.T) {
 	fromLex := &lexers.FromLex{}
 	err, got := fromLex.Process(&query)
 	if l := len(got); l != 3 {
@@ -35,7 +35,7 @@ func TestProcessGood(t *testing.T) {
 	}
 }
 
-func TestProcessMoreKeyWords(t *testing.T) {
+func TestFromProcessMoreKeyWords(t *testing.T) {
 	fromLex := &lexers.FromLex{}
 	_, _ = fromLex.Process(&queryMoreKeyWords)
 	if len(queryMoreKeyWords) != 2 {
@@ -43,14 +43,14 @@ func TestProcessMoreKeyWords(t *testing.T) {
 	}
 }
 
-func TestProcessWrongCommand(t *testing.T) {
+func TestFromProcessWrongCommand(t *testing.T) {
 	fromLex := &lexers.FromLex{}
 	err, got := fromLex.Process(&wrongCommandWord)
 	if err != nil && len(got) != 0 {
 		t.Errorf("No error on wrong command : %s", wrongCommandWord)
 	}
 }
-func TestProcessWrongTaget(t *testing.T) {
+func TestFromProcessWrongTaget(t *testing.T) {
 	fromLex := &lexers.FromLex{}
 	err, got := fromLex.Process(&wrongTarget)
 	if err != nil && len(got) != 0 {

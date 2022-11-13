@@ -1,6 +1,7 @@
 package service
 
 import (
+	"errors"
 	"servicediscoverer/interfaces"
 	"servicediscoverer/language/lexers"
 	"servicediscoverer/models"
@@ -15,6 +16,10 @@ func NewTokenizer() *Tokenizer {
 	var appendLexers = []interfaces.Lexer{
 		&lexers.FromLex{},
 		&lexers.InfoLex{},
+		&lexers.DeleteLex{},
+		&lexers.InsertLex{},
+		&lexers.UpdateLex{},
+		&lexers.SelectLex{},
 	}
 	return &Tokenizer{tokenizerLexers: appendLexers}
 }
@@ -29,5 +34,10 @@ func (t *Tokenizer) CommandProcess(command string) (err error, tokens []models.T
 		}
 		tokens = append(tokens, appendableTokens...)
 	}
-	return nil, tokens
+	if len(commands) != 0 {
+		err = errors.New("not right command list, cant recognize: " + strings.Join(commands, ""))
+		return err, nil
+	} else {
+		return nil, tokens
+	}
 }
