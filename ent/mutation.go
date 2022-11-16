@@ -38,7 +38,6 @@ type EndpointDataMutation struct {
 	dataName                *string
 	discription             *string
 	_type                   *string
-	_path                   *string
 	clearedFields           map[string]struct{}
 	endpointRequired        *int
 	clearedendpointRequired bool
@@ -255,42 +254,6 @@ func (m *EndpointDataMutation) ResetType() {
 	m._type = nil
 }
 
-// SetPath sets the "path" field.
-func (m *EndpointDataMutation) SetPath(s string) {
-	m._path = &s
-}
-
-// Path returns the value of the "path" field in the mutation.
-func (m *EndpointDataMutation) Path() (r string, exists bool) {
-	v := m._path
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldPath returns the old "path" field's value of the EndpointData entity.
-// If the EndpointData object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *EndpointDataMutation) OldPath(ctx context.Context) (v string, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldPath is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldPath requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldPath: %w", err)
-	}
-	return oldValue.Path, nil
-}
-
-// ResetPath resets all changes to the "path" field.
-func (m *EndpointDataMutation) ResetPath() {
-	m._path = nil
-}
-
 // SetEndpointRequiredID sets the "endpointRequired" edge to the ProviderEndpoint entity by id.
 func (m *EndpointDataMutation) SetEndpointRequiredID(id int) {
 	m.endpointRequired = &id
@@ -388,7 +351,7 @@ func (m *EndpointDataMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *EndpointDataMutation) Fields() []string {
-	fields := make([]string, 0, 4)
+	fields := make([]string, 0, 3)
 	if m.dataName != nil {
 		fields = append(fields, endpointdata.FieldDataName)
 	}
@@ -397,9 +360,6 @@ func (m *EndpointDataMutation) Fields() []string {
 	}
 	if m._type != nil {
 		fields = append(fields, endpointdata.FieldType)
-	}
-	if m._path != nil {
-		fields = append(fields, endpointdata.FieldPath)
 	}
 	return fields
 }
@@ -415,8 +375,6 @@ func (m *EndpointDataMutation) Field(name string) (ent.Value, bool) {
 		return m.Discription()
 	case endpointdata.FieldType:
 		return m.GetType()
-	case endpointdata.FieldPath:
-		return m.Path()
 	}
 	return nil, false
 }
@@ -432,8 +390,6 @@ func (m *EndpointDataMutation) OldField(ctx context.Context, name string) (ent.V
 		return m.OldDiscription(ctx)
 	case endpointdata.FieldType:
 		return m.OldType(ctx)
-	case endpointdata.FieldPath:
-		return m.OldPath(ctx)
 	}
 	return nil, fmt.Errorf("unknown EndpointData field %s", name)
 }
@@ -463,13 +419,6 @@ func (m *EndpointDataMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetType(v)
-		return nil
-	case endpointdata.FieldPath:
-		v, ok := value.(string)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetPath(v)
 		return nil
 	}
 	return fmt.Errorf("unknown EndpointData field %s", name)
@@ -528,9 +477,6 @@ func (m *EndpointDataMutation) ResetField(name string) error {
 		return nil
 	case endpointdata.FieldType:
 		m.ResetType()
-		return nil
-	case endpointdata.FieldPath:
-		m.ResetPath()
 		return nil
 	}
 	return fmt.Errorf("unknown EndpointData field %s", name)

@@ -46,12 +46,6 @@ func (edu *EndpointDataUpdate) SetType(s string) *EndpointDataUpdate {
 	return edu
 }
 
-// SetPath sets the "path" field.
-func (edu *EndpointDataUpdate) SetPath(s string) *EndpointDataUpdate {
-	edu.mutation.SetPath(s)
-	return edu
-}
-
 // SetEndpointRequiredID sets the "endpointRequired" edge to the ProviderEndpoint entity by ID.
 func (edu *EndpointDataUpdate) SetEndpointRequiredID(id int) *EndpointDataUpdate {
 	edu.mutation.SetEndpointRequiredID(id)
@@ -188,9 +182,6 @@ func (edu *EndpointDataUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	if value, ok := edu.mutation.GetType(); ok {
 		_spec.SetField(endpointdata.FieldType, field.TypeString, value)
 	}
-	if value, ok := edu.mutation.Path(); ok {
-		_spec.SetField(endpointdata.FieldPath, field.TypeString, value)
-	}
 	if edu.mutation.EndpointRequiredCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
@@ -295,12 +286,6 @@ func (eduo *EndpointDataUpdateOne) SetDiscription(s string) *EndpointDataUpdateO
 // SetType sets the "type" field.
 func (eduo *EndpointDataUpdateOne) SetType(s string) *EndpointDataUpdateOne {
 	eduo.mutation.SetType(s)
-	return eduo
-}
-
-// SetPath sets the "path" field.
-func (eduo *EndpointDataUpdateOne) SetPath(s string) *EndpointDataUpdateOne {
-	eduo.mutation.SetPath(s)
 	return eduo
 }
 
@@ -469,9 +454,6 @@ func (eduo *EndpointDataUpdateOne) sqlSave(ctx context.Context) (_node *Endpoint
 	}
 	if value, ok := eduo.mutation.GetType(); ok {
 		_spec.SetField(endpointdata.FieldType, field.TypeString, value)
-	}
-	if value, ok := eduo.mutation.Path(); ok {
-		_spec.SetField(endpointdata.FieldPath, field.TypeString, value)
 	}
 	if eduo.mutation.EndpointRequiredCleared() {
 		edge := &sqlgraph.EdgeSpec{

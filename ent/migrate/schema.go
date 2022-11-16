@@ -14,7 +14,6 @@ var (
 		{Name: "data_name", Type: field.TypeString},
 		{Name: "discription", Type: field.TypeString},
 		{Name: "type", Type: field.TypeString},
-		{Name: "path", Type: field.TypeString},
 		{Name: "provider_endpoint_required_data", Type: field.TypeInt, Nullable: true},
 		{Name: "provider_endpoint_provided_data", Type: field.TypeInt, Nullable: true},
 	}
@@ -26,13 +25,13 @@ var (
 		ForeignKeys: []*schema.ForeignKey{
 			{
 				Symbol:     "endpoint_data_provider_endpoints_requiredData",
-				Columns:    []*schema.Column{EndpointDataColumns[5]},
+				Columns:    []*schema.Column{EndpointDataColumns[4]},
 				RefColumns: []*schema.Column{ProviderEndpointsColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
 			{
 				Symbol:     "endpoint_data_provider_endpoints_providedData",
-				Columns:    []*schema.Column{EndpointDataColumns[6]},
+				Columns:    []*schema.Column{EndpointDataColumns[5]},
 				RefColumns: []*schema.Column{ProviderEndpointsColumns[0]},
 				OnDelete:   schema.SetNull,
 			},

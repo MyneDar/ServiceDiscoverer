@@ -22,8 +22,6 @@ type EndpointData struct {
 	Discription string `json:"discription,omitempty"`
 	// Type holds the value of the "type" field.
 	Type string `json:"type,omitempty"`
-	// Path holds the value of the "path" field.
-	Path string `json:"path,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the EndpointDataQuery when eager-loading is set.
 	Edges                           EndpointDataEdges `json:"edges"`
@@ -75,7 +73,7 @@ func (*EndpointData) scanValues(columns []string) ([]any, error) {
 		switch columns[i] {
 		case endpointdata.FieldID:
 			values[i] = new(sql.NullInt64)
-		case endpointdata.FieldDataName, endpointdata.FieldDiscription, endpointdata.FieldType, endpointdata.FieldPath:
+		case endpointdata.FieldDataName, endpointdata.FieldDiscription, endpointdata.FieldType:
 			values[i] = new(sql.NullString)
 		case endpointdata.ForeignKeys[0]: // provider_endpoint_required_data
 			values[i] = new(sql.NullInt64)
@@ -119,12 +117,6 @@ func (ed *EndpointData) assignValues(columns []string, values []any) error {
 				return fmt.Errorf("unexpected type %T for field type", values[i])
 			} else if value.Valid {
 				ed.Type = value.String
-			}
-		case endpointdata.FieldPath:
-			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field path", values[i])
-			} else if value.Valid {
-				ed.Path = value.String
 			}
 		case endpointdata.ForeignKeys[0]:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
@@ -186,9 +178,6 @@ func (ed *EndpointData) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("type=")
 	builder.WriteString(ed.Type)
-	builder.WriteString(", ")
-	builder.WriteString("path=")
-	builder.WriteString(ed.Path)
 	builder.WriteByte(')')
 	return builder.String()
 }

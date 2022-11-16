@@ -17,7 +17,6 @@ func (EndpointData) Fields() []ent.Field {
 		field.String("dataName"),
 		field.String("discription"),
 		field.String("type"),
-		field.String("path"),
 	}
 }
 

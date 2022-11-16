@@ -38,12 +38,6 @@ func (edc *EndpointDataCreate) SetType(s string) *EndpointDataCreate {
 	return edc
 }
 
-// SetPath sets the "path" field.
-func (edc *EndpointDataCreate) SetPath(s string) *EndpointDataCreate {
-	edc.mutation.SetPath(s)
-	return edc
-}
-
 // SetEndpointRequiredID sets the "endpointRequired" edge to the ProviderEndpoint entity by ID.
 func (edc *EndpointDataCreate) SetEndpointRequiredID(id int) *EndpointDataCreate {
 	edc.mutation.SetEndpointRequiredID(id)
@@ -167,9 +161,6 @@ func (edc *EndpointDataCreate) check() error {
 	if _, ok := edc.mutation.GetType(); !ok {
 		return &ValidationError{Name: "type", err: errors.New(`ent: missing required field "EndpointData.type"`)}
 	}
-	if _, ok := edc.mutation.Path(); !ok {
-		return &ValidationError{Name: "path", err: errors.New(`ent: missing required field "EndpointData.path"`)}
-	}
 	return nil
 }
 
@@ -208,10 +199,6 @@ func (edc *EndpointDataCreate) createSpec() (*EndpointData, *sqlgraph.CreateSpec
 	if value, ok := edc.mutation.GetType(); ok {
 		_spec.SetField(endpointdata.FieldType, field.TypeString, value)
 		_node.Type = value
-	}
-	if value, ok := edc.mutation.Path(); ok {
-		_spec.SetField(endpointdata.FieldPath, field.TypeString, value)
-		_node.Path = value
 	}
 	if nodes := edc.mutation.EndpointRequiredIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
