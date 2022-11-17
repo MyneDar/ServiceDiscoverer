@@ -5,6 +5,6 @@ import "servicediscoverer/models"
 type WhereLex struct {
 }
 
-func (l *WhereLex) Process(command *string) (error, []models.ServiceToken) {
-	return nil, []models.ServiceToken{}
+func (l *WhereLex) Process(command *[]string) (err error, tokens []models.TokenStruct) {
+	return nil, tokens
 }
