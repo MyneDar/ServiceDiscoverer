@@ -53,7 +53,7 @@ const (
 	NOT //not
 	LEQ // <=
 	GEQ // >=
-	MultipleRuneOperatorEnd
+	multipleRuneOperatorEnd
 )
 
 var tokens = [...]string{
@@ -72,7 +72,7 @@ var tokens = [...]string{
 	SELECT: "SELECT",
 	UPDATE: "UPDATE",
 	INFO:   "INFO",
-	WHERE:  "HERE",
+	WHERE:  "WHERE",
 
 	EQL:       "=",
 	LSS:       "<",
@@ -130,12 +130,13 @@ func init() {
 	for i := commandBeg + 1; i < commandEnd; i++ {
 		keywords[tokens[i]] = i
 	}
-
+	oneRuneOperators = make(map[string]ServiceToken, oneRuneOperatorEnd-(oneRuneOperatorBeg+1))
 	for i := oneRuneOperatorBeg + 1; i < oneRuneOperatorEnd; i++ {
 		oneRuneOperators[tokens[i]] = i
 	}
 
-	for i := multipleRuneOperatorBeg + 1; i < MultipleRuneOperatorEnd; i++ {
+	multipleRuneOperators = make(map[string]ServiceToken, multipleRuneOperatorEnd-(multipleRuneOperatorBeg+1))
+	for i := multipleRuneOperatorBeg + 1; i < multipleRuneOperatorEnd; i++ {
 		multipleRuneOperators[tokens[i]] = i
 	}
 
@@ -151,7 +152,7 @@ func Lookup(ident string) ServiceToken {
 
 func (tok ServiceToken) IsLiteral() bool { return literalBeg < tok && tok < literalEnd }
 func (tok ServiceToken) IsOperator() bool {
-	return oneRuneOperatorBeg < tok && tok < MultipleRuneOperatorEnd
+	return oneRuneOperatorBeg < tok && tok < multipleRuneOperatorEnd
 }
 func IsOperator(word string) (ServiceToken, bool) {
 	if indOne, okOne := oneRuneOperators[word]; okOne {
@@ -200,15 +201,15 @@ func RecRuneTokenizerIndex(index int, word string, tokenStruct []TokenStruct) []
 	if len(word) == 0 {
 		return tokenStruct
 	}
-	if index > len(word) {
+	if index == len(word) {
 		token := CheckWord(word)
 		return append(tokenStruct, token)
 	}
 
-	if index, ok := IsOneRuneOperator(rune(word[index])); ok {
+	if operatorIndex, ok := IsOneRuneOperator(rune(word[index])); ok && operatorIndex != PERIOD {
 		subWord := word[:index]
 		token := CheckWord(subWord)
-		newTokenStruct := append(tokenStruct, token, TokenStruct{Name: index, Data: string(word[index])})
+		newTokenStruct := append(tokenStruct, token, TokenStruct{Name: operatorIndex, Data: string(word[index])})
 		newWord := word[len(subWord)+1:]
 		return RecRuneTokenizer(newWord, newTokenStruct)
 	}
@@ -220,7 +221,7 @@ func CheckWord(word string) TokenStruct {
 	if subWord := strings.Split(word, "."); len(subWord) == 2 {
 		_, errFirst := strconv.Atoi(subWord[0])
 		_, errSec := strconv.Atoi(subWord[1])
-		if errFirst != nil && errSec != nil {
+		if errFirst == nil && errSec == nil {
 			return TokenStruct{Name: FLOAT, Data: word}
 		} else {
 			return TokenStruct{Name: IDENT, Data: word}
@@ -236,6 +237,7 @@ func CheckWord(word string) TokenStruct {
 	}
 
 	if word[0] == '"' && word[len(word)-1] == '"' {
+		word = word[1 : len(word)-1]
 		return TokenStruct{Name: STRING, Data: word}
 	}
 	return TokenStruct{Name: IDENT, Data: word}
