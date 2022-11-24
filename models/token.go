@@ -1,6 +1,9 @@
 package models
 
-import "strconv"
+import (
+	"strconv"
+	"strings"
+)
 
 type TokenStruct struct {
 	Name ServiceToken
@@ -33,21 +36,24 @@ const (
 	WHERE
 	commandEnd
 
-	operatorBeg
+	oneRuneOperatorBeg
 	EQL       // =
 	LSS       // <
 	GTR       // >
-	AND       //and
-	OR        //or
-	NOT       //not
-	LEQ       // <=
-	GEQ       // >=
 	LPAREN    // (
 	RPAREN    // )
 	SEMICOLON // ;
 	PERIOD    // .
 	ASTERISK  // *
-	operatorEnd
+	oneRuneOperatorEnd
+
+	multipleRuneOperatorBeg
+	AND //and
+	OR  //or
+	NOT //not
+	LEQ // <=
+	GEQ // >=
+	MultipleRuneOperatorEnd
 )
 
 var tokens = [...]string{
@@ -71,16 +77,17 @@ var tokens = [...]string{
 	EQL:       "=",
 	LSS:       "<",
 	GTR:       ">",
-	AND:       "AND",
-	OR:        "OR",
-	NOT:       "NOT",
-	LEQ:       "<=",
-	GEQ:       ">=",
 	LPAREN:    "(",
 	RPAREN:    ")",
 	SEMICOLON: ";",
 	PERIOD:    ".",
 	ASTERISK:  "*",
+
+	AND: "AND",
+	OR:  "OR",
+	NOT: "NOT",
+	LEQ: "<=",
+	GEQ: ">=",
 }
 
 func (tok ServiceToken) String() string {
@@ -95,7 +102,7 @@ func (tok ServiceToken) String() string {
 }
 
 const (
-	LowestPrec  = 0 // non-operators
+	LowestPrec  = 0 // non-oneRuneOperators
 	HighestPrec = 4
 )
 
@@ -115,12 +122,23 @@ func (tok ServiceToken) Precedence() int {
 }
 
 var keywords map[string]ServiceToken
+var oneRuneOperators map[string]ServiceToken
+var multipleRuneOperators map[string]ServiceToken
 
 func init() {
 	keywords = make(map[string]ServiceToken, commandEnd-(commandBeg+1))
 	for i := commandBeg + 1; i < commandEnd; i++ {
 		keywords[tokens[i]] = i
 	}
+
+	for i := oneRuneOperatorBeg + 1; i < oneRuneOperatorEnd; i++ {
+		oneRuneOperators[tokens[i]] = i
+	}
+
+	for i := multipleRuneOperatorBeg + 1; i < MultipleRuneOperatorEnd; i++ {
+		multipleRuneOperators[tokens[i]] = i
+	}
+
 }
 
 // Lookup maps an identifier to its keyword token or IDENT (if not a keyword).
@@ -133,13 +151,95 @@ func Lookup(ident string) ServiceToken {
 
 func (tok ServiceToken) IsLiteral() bool { return literalBeg < tok && tok < literalEnd }
 func (tok ServiceToken) IsOperator() bool {
-	return operatorBeg < tok && tok < operatorEnd
+	return oneRuneOperatorBeg < tok && tok < MultipleRuneOperatorEnd
+}
+func IsOperator(word string) (ServiceToken, bool) {
+	if indOne, okOne := oneRuneOperators[word]; okOne {
+		return indOne, okOne
+	}
+	if indMult, okMult := multipleRuneOperators[word]; okMult {
+		return indMult, okMult
+	}
+	return ILLEGAL, false
+}
+
+func IsOneRuneOperator(r rune) (ServiceToken, bool) {
+	index, ok := oneRuneOperators[string(r)]
+	return index, ok
 }
 
 func (tok ServiceToken) IsKeyword() bool { return commandBeg < tok && tok < commandEnd }
 func IsKeyword(name string) bool {
 	_, ok := keywords[name]
 	return ok
+}
+
+func RuneTokenizer(r rune) *TokenStruct {
+	if ind, ok := IsOneRuneOperator(r); ok {
+		return &TokenStruct{Name: ind, Data: string(r)}
+	}
+	return nil
+}
+
+func RecRuneTokenizer(word string, tokenStruct []TokenStruct) []TokenStruct {
+	if len(word) == 0 {
+		return tokenStruct
+	}
+	token := RuneTokenizer(rune(word[0]))
+	var newTokenStruct []TokenStruct
+	if token != nil {
+		newTokenStruct = append(tokenStruct, *token)
+		newWord := word[1:]
+		return RecRuneTokenizer(newWord, newTokenStruct)
+	}
+	return RecRuneTokenizerIndex(0, word, tokenStruct)
+}
+
+func RecRuneTokenizerIndex(index int, word string, tokenStruct []TokenStruct) []TokenStruct {
+	// Where ASD='ASD'
+	if len(word) == 0 {
+		return tokenStruct
+	}
+	if index > len(word) {
+		token := CheckWord(word)
+		return append(tokenStruct, token)
+	}
+
+	if index, ok := IsOneRuneOperator(rune(word[index])); ok {
+		subWord := word[:index]
+		token := CheckWord(subWord)
+		newTokenStruct := append(tokenStruct, token, TokenStruct{Name: index, Data: string(word[index])})
+		newWord := word[len(subWord)+1:]
+		return RecRuneTokenizer(newWord, newTokenStruct)
+	}
+	return RecRuneTokenizerIndex(index+1, word, tokenStruct)
+
+}
+
+func CheckWord(word string) TokenStruct {
+	if subWord := strings.Split(word, "."); len(subWord) == 2 {
+		_, errFirst := strconv.Atoi(subWord[0])
+		_, errSec := strconv.Atoi(subWord[1])
+		if errFirst != nil && errSec != nil {
+			return TokenStruct{Name: FLOAT, Data: word}
+		} else {
+			return TokenStruct{Name: IDENT, Data: word}
+		}
+	}
+
+	if _, err := strconv.Atoi(word); err == nil {
+		return TokenStruct{Name: INT, Data: word}
+	}
+
+	if len(word) == 3 && word[0] == '\'' && word[2] == '\'' {
+		return TokenStruct{Name: CHAR, Data: word}
+	}
+
+	if word[0] == '"' && word[len(word)-1] == '"' {
+		return TokenStruct{Name: STRING, Data: word}
+	}
+	return TokenStruct{Name: IDENT, Data: word}
+
 }
 
 func IsIdentifier(name string) bool {
