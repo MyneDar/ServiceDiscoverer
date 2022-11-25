@@ -5,26 +5,15 @@ import (
 	"testing"
 )
 
+//
+//
+// Good cases
+//
+//
+
 var query = []string{
 	"FROM",
 	"Human.Add",
-}
-
-var queryMoreKeyWords = []string{
-	"FROM",
-	"Human.Add",
-	"SELECT",
-	"INSERT",
-}
-
-var wrongCommandWord = []string{
-	"ASD",
-	"Human.Add",
-}
-
-var wrongTarget = []string{
-	"FROM",
-	"HumanAdd",
 }
 
 func TestFromProcessGood(t *testing.T) {
@@ -35,12 +24,32 @@ func TestFromProcessGood(t *testing.T) {
 	}
 }
 
+//
+//
+//
+
+var queryMoreKeyWords = []string{
+	"FROM",
+	"Human.Add",
+	"SELECT",
+	"INSERT",
+}
+
 func TestFromProcessMoreKeyWords(t *testing.T) {
 	fromLex := &lexers.FromLex{}
 	_, _ = fromLex.Process(&queryMoreKeyWords)
 	if len(queryMoreKeyWords) != 2 {
 		t.Errorf("Wrong sliced command, got %s", queryMoreKeyWords)
 	}
+}
+
+//
+//
+//
+
+var wrongCommandWord = []string{
+	"ASD",
+	"Human.Add",
 }
 
 func TestFromProcessWrongCommand(t *testing.T) {
@@ -50,6 +59,16 @@ func TestFromProcessWrongCommand(t *testing.T) {
 		t.Errorf("No error on wrong command : %s", wrongCommandWord)
 	}
 }
+
+//
+//
+//
+
+var wrongTarget = []string{
+	"FROM",
+	"HumanAdd",
+}
+
 func TestFromProcessWrongTaget(t *testing.T) {
 	fromLex := &lexers.FromLex{}
 	err, got := fromLex.Process(&wrongTarget)
@@ -57,3 +76,9 @@ func TestFromProcessWrongTaget(t *testing.T) {
 		t.Errorf("No error on target command : %s", wrongTarget)
 	}
 }
+
+//
+//
+// Error cases
+//
+//

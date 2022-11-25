@@ -5,13 +5,14 @@ import (
 	"testing"
 )
 
+//
+//
+// Good cases
+//
+//
+
 var deleteQuerySimple = []string{
 	"DELETE",
-}
-
-var deleteManyArguments = []string{
-	"DELETE",
-	"ASD",
 }
 
 func TestDeleteProcessSimple(t *testing.T) {
@@ -22,6 +23,15 @@ func TestDeleteProcessSimple(t *testing.T) {
 	}
 }
 
+//
+//
+//
+
+var deleteManyArguments = []string{
+	"DELETE",
+	"ASD",
+}
+
 func TestDeleteProcessManyArguments(t *testing.T) {
 	deleteLex := &lexers.DeleteLex{}
 	_, _ = deleteLex.Process(&deleteManyArguments)
@@ -29,3 +39,9 @@ func TestDeleteProcessManyArguments(t *testing.T) {
 		t.Errorf("Only one arguments")
 	}
 }
+
+//
+//
+// Error cases
+//
+//

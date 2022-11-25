@@ -1,25 +1,41 @@
 package test
 
 import (
+	"github.com/stretchr/testify/assert"
 	"servicediscoverer/language/lexers"
+	"servicediscoverer/models"
 	"testing"
 )
+
+//
+//
+// Good cases
+//
+//
 
 var updateQuerySimple = []string{
 	"UPDATE",
 }
 
-var updateManyArguments = []string{
-	"UPDATE",
-	"ASD",
+var updateSimpleOutput = []models.TokenStruct{
+	{models.UPDATE, "UPDATE"},
 }
 
 func TestUpdateProcessSimple(t *testing.T) {
 	insertLex := &lexers.UpdateLex{}
-	_, got := insertLex.Process(&updateQuerySimple)
-	if len(got) == 0 {
-		t.Errorf("Too many arguments on the test string")
-	}
+	err, got := insertLex.Process(&updateQuerySimple)
+
+	assert.Nilf(t, err, "Error is not nil: %s", err)
+	assert.Equal(t, len(updateSimpleOutput), len(got), "Wrong token number")
+}
+
+//
+//
+//
+
+var updateManyArguments = []string{
+	"UPDATE",
+	"ASD",
 }
 
 func TestUpdateProcessManyArguments(t *testing.T) {
@@ -29,3 +45,9 @@ func TestUpdateProcessManyArguments(t *testing.T) {
 		t.Errorf("Only one arguments")
 	}
 }
+
+//
+//
+// Error cases
+//
+//

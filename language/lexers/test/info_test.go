@@ -5,36 +5,15 @@ import (
 	"testing"
 )
 
+//
+//
+// Good cases
+//
+//
+
 var infoQueryAsterisk = []string{
 	"INFO",
 	"*",
-}
-
-var infoQueryIdentDotAsterisk = []string{
-	"INFO",
-	"Human.*",
-}
-
-var infoQueryIdentDotIdent = []string{
-	"INFO",
-	"Human.Add",
-}
-
-var infoQueryMoreKeyWords = []string{
-	"INFO",
-	"Human.Add",
-	"SELECT",
-	"INSERT",
-}
-
-var infoWrongCommandWord = []string{
-	"ASD",
-	"Human.Add",
-}
-
-var infoWrongTarget = []string{
-	"INFO",
-	"HumanAdd",
 }
 
 func TestInfoProcessGoodAsterisk(t *testing.T) {
@@ -45,12 +24,30 @@ func TestInfoProcessGoodAsterisk(t *testing.T) {
 	}
 }
 
+//
+//
+//
+
+var infoQueryIdentDotAsterisk = []string{
+	"INFO",
+	"Human.*",
+}
+
 func TestInfoProcessGoodIdentDotAsterisk(t *testing.T) {
 	infoLex := &lexers.InfoLex{}
 	err, got := infoLex.Process(&infoQueryIdentDotAsterisk)
 	if l := len(got); l != 3 {
 		t.Errorf("Wrong token number, got: %d, want 3. Err: %s", l, err)
 	}
+}
+
+//
+//
+//
+
+var infoQueryIdentDotIdent = []string{
+	"INFO",
+	"Human.Add",
 }
 
 func TestInfoProcessGoodIdentDotIdent(t *testing.T) {
@@ -61,12 +58,32 @@ func TestInfoProcessGoodIdentDotIdent(t *testing.T) {
 	}
 }
 
+//
+//
+//
+
+var infoQueryMoreKeyWords = []string{
+	"INFO",
+	"Human.Add",
+	"SELECT",
+	"INSERT",
+}
+
 func TestInfoProcessMoreKeyWords(t *testing.T) {
 	infoLex := &lexers.InfoLex{}
 	_, _ = infoLex.Process(&infoQueryMoreKeyWords)
 	if len(infoQueryMoreKeyWords) != 2 {
 		t.Errorf("Wrong sliced command, got %s", infoQueryMoreKeyWords)
 	}
+}
+
+//
+//
+//
+
+var infoWrongCommandWord = []string{
+	"ASD",
+	"Human.Add",
 }
 
 func TestInfoProcessWrongCommand(t *testing.T) {
@@ -76,6 +93,16 @@ func TestInfoProcessWrongCommand(t *testing.T) {
 		t.Errorf("No error on wrong command : %s", infoWrongCommandWord)
 	}
 }
+
+//
+//
+//
+
+var infoWrongTarget = []string{
+	"INFO",
+	"HumanAdd",
+}
+
 func TestInfoProcessWrongTaget(t *testing.T) {
 	infoLex := &lexers.InfoLex{}
 	err, got := infoLex.Process(&infoWrongTarget)
@@ -83,3 +110,9 @@ func TestInfoProcessWrongTaget(t *testing.T) {
 		t.Errorf("No error on target command : %s", infoWrongTarget)
 	}
 }
+
+//
+//
+// Error cases
+//
+//

@@ -5,13 +5,14 @@ import (
 	"testing"
 )
 
+//
+//
+// Good cases
+//
+//
+
 var insertQuerySimple = []string{
 	"INSERT",
-}
-
-var insertManyArguments = []string{
-	"INSERT",
-	"ASD",
 }
 
 func TestInsertProcessSimple(t *testing.T) {
@@ -22,6 +23,15 @@ func TestInsertProcessSimple(t *testing.T) {
 	}
 }
 
+//
+//
+//
+
+var insertManyArguments = []string{
+	"INSERT",
+	"ASD",
+}
+
 func TestInsertProcessManyArguments(t *testing.T) {
 	insertLex := &lexers.InsertLex{}
 	_, _ = insertLex.Process(&insertManyArguments)
@@ -29,3 +39,9 @@ func TestInsertProcessManyArguments(t *testing.T) {
 		t.Errorf("Only one arguments")
 	}
 }
+
+//
+//
+// Error cases
+//
+//
