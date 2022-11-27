@@ -29,8 +29,6 @@ func (l *InfoLex) Process(command *[]string) (err error, tokens []models.TokenSt
 		return nil, tokens
 	}
 
-	*command = (*command)[len(splitted):]
-
 	//["INFO","service.endpoint"], ["INFO","service.*"], ["INFO","*"]
 	tokens = append(tokens, models.TokenStruct{Name: models.INFO, Data: splitted[0]})
 
@@ -50,6 +48,6 @@ func (l *InfoLex) Process(command *[]string) (err error, tokens []models.TokenSt
 		err = errors.New("Bad Servicename.Endpoint squence")
 		return err, nil
 	}
-
+	*command = (*command)[len(splitted):]
 	return err, tokens
 }

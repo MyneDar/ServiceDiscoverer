@@ -29,8 +29,6 @@ func (l *FromLex) Process(command *[]string) (err error, tokens []models.TokenSt
 		return nil, tokens
 	}
 
-	*command = (*command)[len(splitted):]
-
 	//["FROM","service.endpoint"] 2
 	tokens = append(tokens, models.TokenStruct{Name: models.FROM, Data: splitted[0]})
 
@@ -42,6 +40,6 @@ func (l *FromLex) Process(command *[]string) (err error, tokens []models.TokenSt
 		err = errors.New("Bad Servicename.Endpoint squence")
 		return err, nil
 	}
-
+	*command = (*command)[len(splitted):]
 	return err, tokens
 }
