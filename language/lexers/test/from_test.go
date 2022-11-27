@@ -2,6 +2,7 @@ package test
 
 import (
 	"servicediscoverer/language/lexers"
+	"servicediscoverer/models"
 	"testing"
 )
 
@@ -18,13 +19,20 @@ func TestFromProcessSimpleQuery(t *testing.T) {
 		"Human.Add",
 	}
 
+	var fromSimpleOutput = []models.TokenStruct{
+		{models.FROM, "FROM"},
+		{models.IDENT, "Human"},
+		{models.IDENT, "Add"},
+	}
+
 	fromLex := &lexers.FromLex{}
+
+	expectedQuerySize := 0
 
 	//Running of the test
 	err, got := fromLex.Process(&fromSimpleQuery)
-	if l := len(got); l != 3 {
-		t.Errorf("Wrong token number, got: %d, want 3. Err: %s", l, err)
-	}
+
+	goodOutputCheck(t, err, fromSimpleQuery, expectedQuerySize, fromSimpleOutput, got)
 }
 
 //
@@ -40,13 +48,20 @@ func TestFromProcessMoreKeyWordsQuery(t *testing.T) {
 		"INSERT",
 	}
 
+	var fromMoreKeyWordsOutput = []models.TokenStruct{
+		{models.FROM, "FROM"},
+		{models.IDENT, "Human"},
+		{models.IDENT, "Add"},
+	}
+
 	fromLex := &lexers.FromLex{}
 
+	expectedQuerySize := 2
+
 	//Running of the test
-	_, _ = fromLex.Process(&fromMoreKeyWordsQuery)
-	if len(fromMoreKeyWordsQuery) != 2 {
-		t.Errorf("Wrong sliced command, got %s", fromMoreKeyWordsQuery)
-	}
+	err, got := fromLex.Process(&fromMoreKeyWordsQuery)
+
+	goodOutputCheck(t, err, fromMoreKeyWordsQuery, expectedQuerySize, fromMoreKeyWordsOutput, got)
 }
 
 //
@@ -60,16 +75,21 @@ func TestFromProcessOtherCommandWordQuery(t *testing.T) {
 		"Human.Add",
 	}
 
+	var fromOtherCommandWordOutput []models.TokenStruct
+
 	fromLex := &lexers.FromLex{}
+
+	expectedQuerySize := len(fromOtherCommandWordQuery)
 
 	//Running of the test
 	err, got := fromLex.Process(&fromOtherCommandWordQuery)
-	if err != nil && len(got) != 0 {
-		t.Errorf("No error on wrong command : %s", fromOtherCommandWordQuery)
-	}
+
+	goodNoOutputCheck(t, err, fromOtherCommandWordQuery, expectedQuerySize, fromOtherCommandWordOutput, got)
 }
 
 //
+//
+// Error cases
 //
 //
 
@@ -80,17 +100,18 @@ func TestFromProcessWrongTargetQuery(t *testing.T) {
 		"HumanAdd",
 	}
 
+	var fromWrongTargetOutput []models.TokenStruct
+
 	fromLex := &lexers.FromLex{}
+
+	expectedQuerySize := len(fromWrongTargetQuery)
 
 	//Running of the test
 	err, got := fromLex.Process(&fromWrongTargetQuery)
-	if err != nil && len(got) != 0 {
-		t.Errorf("No error on target command : %s", fromWrongTargetQuery)
-	}
+
+	errorCheck(t, err, fromWrongTargetQuery, expectedQuerySize, fromWrongTargetOutput, got)
 }
 
 //
-//
-// Error cases
 //
 //

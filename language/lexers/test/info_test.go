@@ -2,6 +2,7 @@ package test
 
 import (
 	"servicediscoverer/language/lexers"
+	"servicediscoverer/models"
 	"testing"
 )
 
@@ -11,40 +12,53 @@ import (
 //
 //
 
-func TestInfoProcessGoodAsterisk(t *testing.T) {
+func TestInfoProcessAsteriskQuery(t *testing.T) {
 	//test initialization
-	var infoQueryAsterisk = []string{
+	var infoAsteriskQuery = []string{
 		"INFO",
 		"*",
 	}
 
+	var infoAsteriskOutput = []models.TokenStruct{
+		{models.INFO, "INFO"},
+		{models.ASTERISK, "*"},
+	}
+
 	infoLex := &lexers.InfoLex{}
 
+	expectedQuerySize := 0
+
 	//Running of the test
-	err, got := infoLex.Process(&infoQueryAsterisk)
-	if l := len(got); l != 2 {
-		t.Errorf("Wrong token number, got: %d, want 3. Err: %s", l, err)
-	}
+	err, got := infoLex.Process(&infoAsteriskQuery)
+
+	goodOutputCheck(t, err, infoAsteriskQuery, expectedQuerySize, infoAsteriskOutput, got)
 }
 
 //
 //
 //
 
-func TestInfoProcessGoodIdentDotAsterisk(t *testing.T) {
+func TestInfoProcessIdentDotAsteriskQuery(t *testing.T) {
 	//test initialization
-	var infoQueryIdentDotAsterisk = []string{
+	var infoIdentDotAsteriskQuery = []string{
 		"INFO",
 		"Human.*",
 	}
 
+	var infoIdentDotAsteriskOutput = []models.TokenStruct{
+		{models.INFO, "INFO"},
+		{models.IDENT, "Human"},
+		{models.ASTERISK, "*"},
+	}
+
 	infoLex := &lexers.InfoLex{}
 
+	expectedQuerySize := 0
+
 	//Running of the test
-	err, got := infoLex.Process(&infoQueryIdentDotAsterisk)
-	if l := len(got); l != 3 {
-		t.Errorf("Wrong token number, got: %d, want 3. Err: %s", l, err)
-	}
+	err, got := infoLex.Process(&infoIdentDotAsteriskQuery)
+
+	goodOutputCheck(t, err, infoIdentDotAsteriskQuery, expectedQuerySize, infoIdentDotAsteriskOutput, got)
 }
 
 //
@@ -53,18 +67,25 @@ func TestInfoProcessGoodIdentDotAsterisk(t *testing.T) {
 
 func TestInfoProcessGoodIdentDotIdentQuery(t *testing.T) {
 	//test initialization
-	var infoQueryIdentDotIdentQuery = []string{
+	var infoIdentDotIdentQuery = []string{
 		"INFO",
 		"Human.Add",
 	}
 
+	var infoIdentDotIdentOutput = []models.TokenStruct{
+		{models.INFO, "INFO"},
+		{models.IDENT, "Human"},
+		{models.IDENT, "Add"},
+	}
+
 	infoLex := &lexers.InfoLex{}
 
+	expectedQuerySize := 0
+
 	//Running of the test
-	err, got := infoLex.Process(&infoQueryIdentDotIdentQuery)
-	if l := len(got); l != 3 {
-		t.Errorf("Wrong token number, got: %d, want 3. Err: %s", l, err)
-	}
+	err, got := infoLex.Process(&infoIdentDotIdentQuery)
+
+	goodOutputCheck(t, err, infoIdentDotIdentQuery, expectedQuerySize, infoIdentDotIdentOutput, got)
 }
 
 //
@@ -73,20 +94,27 @@ func TestInfoProcessGoodIdentDotIdentQuery(t *testing.T) {
 
 func TestInfoProcessMoreKeyWordsQuery(t *testing.T) {
 	//test initialization
-	var infoQueryMoreKeyWordsQuery = []string{
+	var infoMoreKeyWordsQuery = []string{
 		"INFO",
 		"Human.Add",
 		"SELECT",
 		"INSERT",
 	}
 
+	var infoMoreKeyWordsOutput = []models.TokenStruct{
+		{models.INFO, "INFO"},
+		{models.IDENT, "Human"},
+		{models.IDENT, "Add"},
+	}
+
 	infoLex := &lexers.InfoLex{}
 
+	expectedQuerySize := 2
+
 	//Running of the test
-	_, _ = infoLex.Process(&infoQueryMoreKeyWordsQuery)
-	if len(infoQueryMoreKeyWordsQuery) != 2 {
-		t.Errorf("Wrong sliced command, got %s", infoQueryMoreKeyWordsQuery)
-	}
+	err, got := infoLex.Process(&infoMoreKeyWordsQuery)
+
+	goodOutputCheck(t, err, infoMoreKeyWordsQuery, expectedQuerySize, infoMoreKeyWordsOutput, got)
 }
 
 //
@@ -100,16 +128,21 @@ func TestInfoProcessOtherCommandWordQuery(t *testing.T) {
 		"Human.Add",
 	}
 
+	var infoOtherCommandWordOutput []models.TokenStruct
+
 	infoLex := &lexers.InfoLex{}
+
+	expectedQuerySize := len(infoOtherCommandWordQuery)
 
 	//Running of the test
 	err, got := infoLex.Process(&infoOtherCommandWordQuery)
-	if err != nil && len(got) != 0 {
-		t.Errorf("No error on wrong command : %s", infoOtherCommandWordQuery)
-	}
+
+	goodNoOutputCheck(t, err, infoOtherCommandWordQuery, expectedQuerySize, infoOtherCommandWordOutput, got)
 }
 
 //
+//
+// Error cases
 //
 //
 
@@ -120,17 +153,18 @@ func TestInfoProcessWrongTargetQuery(t *testing.T) {
 		"HumanAdd",
 	}
 
+	var infoWrongTargetOutput []models.TokenStruct
+
 	infoLex := &lexers.InfoLex{}
+
+	expectedQuerySize := len(infoWrongTargetQuery)
 
 	//Running of the test
 	err, got := infoLex.Process(&infoWrongTargetQuery)
-	if err == nil && len(got) != 0 {
-		t.Errorf("No error on target command : %s", infoWrongTargetQuery)
-	}
+
+	errorCheck(t, err, infoWrongTargetQuery, expectedQuerySize, infoWrongTargetOutput, got)
 }
 
 //
-//
-// Error cases
 //
 //

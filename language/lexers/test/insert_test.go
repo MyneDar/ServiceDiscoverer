@@ -2,6 +2,7 @@ package test
 
 import (
 	"servicediscoverer/language/lexers"
+	"servicediscoverer/models"
 	"testing"
 )
 
@@ -17,13 +18,18 @@ func TestInsertProcessSimpleQuery(t *testing.T) {
 		"INSERT",
 	}
 
+	var insertSimpleOutput = []models.TokenStruct{
+		{models.INSERT, "INSERT"},
+	}
+
 	insertLex := &lexers.InsertLex{}
 
+	expectedQuerySize := 0
+
 	//Running of the test
-	_, got := insertLex.Process(&insertSimpleQuery)
-	if len(got) == 0 {
-		t.Errorf("Too many arguments on the test string")
-	}
+	err, got := insertLex.Process(&insertSimpleQuery)
+
+	goodOutputCheck(t, err, insertSimpleQuery, expectedQuerySize, insertSimpleOutput, got)
 }
 
 //
@@ -37,13 +43,18 @@ func TestInsertProcessManyArgumentsQuery(t *testing.T) {
 		"ASD",
 	}
 
+	var insertManyArgumentsOutput = []models.TokenStruct{
+		{models.INSERT, "INSERT"},
+	}
+
 	insertLex := &lexers.InsertLex{}
 
+	expectedQuerySize := 1
+
 	//Running of the test
-	_, _ = insertLex.Process(&insertManyArgumentsQuery)
-	if len(insertManyArgumentsQuery) == 0 {
-		t.Errorf("Only one arguments")
-	}
+	err, got := insertLex.Process(&insertManyArgumentsQuery)
+
+	goodOutputCheck(t, err, insertManyArgumentsQuery, expectedQuerySize, insertManyArgumentsOutput, got)
 }
 
 //

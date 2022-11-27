@@ -2,6 +2,7 @@ package test
 
 import (
 	"servicediscoverer/language/lexers"
+	"servicediscoverer/models"
 	"testing"
 )
 
@@ -17,13 +18,18 @@ func TestDeleteProcessSimpleQuery(t *testing.T) {
 		"DELETE",
 	}
 
+	var deleteSimpleOutput = []models.TokenStruct{
+		{models.DELETE, "DELETE"},
+	}
+
 	deleteLex := &lexers.DeleteLex{}
 
+	expectedQuerySize := 0
+
 	//Running of the test
-	_, got := deleteLex.Process(&deleteSimpleQuery)
-	if len(got) == 0 {
-		t.Errorf("Too many arguments on the test string")
-	}
+	err, got := deleteLex.Process(&deleteSimpleQuery)
+
+	goodOutputCheck(t, err, deleteSimpleQuery, expectedQuerySize, deleteSimpleOutput, got)
 }
 
 //
@@ -37,13 +43,18 @@ func TestDeleteProcessManyArgumentsQuery(t *testing.T) {
 		"ASD",
 	}
 
+	var deleteManyArgumentsOutput = []models.TokenStruct{
+		{models.DELETE, "DELETE"},
+	}
+
 	deleteLex := &lexers.DeleteLex{}
 
+	expectedQuerySize := 1
+
 	//Running of the test
-	_, _ = deleteLex.Process(&deleteManyArgumentsQuery)
-	if len(deleteManyArgumentsQuery) == 0 {
-		t.Errorf("Only one arguments")
-	}
+	err, got := deleteLex.Process(&deleteManyArgumentsQuery)
+
+	goodOutputCheck(t, err, deleteManyArgumentsQuery, expectedQuerySize, deleteManyArgumentsOutput, got)
 }
 
 //

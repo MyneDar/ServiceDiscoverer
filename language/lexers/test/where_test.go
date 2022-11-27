@@ -1,7 +1,6 @@
 package test
 
 import (
-	"github.com/stretchr/testify/assert"
 	"servicediscoverer/language/lexers"
 	"servicediscoverer/models"
 	"testing"
@@ -29,18 +28,12 @@ func TestWhereProcessSimpleQuery(t *testing.T) {
 
 	whereLex := &lexers.WhereLex{}
 
+	expectedQuerySize := 0
+
 	//Running of the test
 	err, got := whereLex.Process(&whereSimpleQuery)
 
-	assert.Nilf(t, err, "Error is not nil: %s", err)
-	assert.Equal(t, len(whereSimpleOutput), len(got), "Wrong token number")
-
-	for i, value := range whereSimpleOutput {
-		assert.Equal(t, value.Name, got[i].Name, "Name doesn't match")
-		assert.Equal(t, value.Data, got[i].Data, "Data doesn't match")
-	}
-
-	assert.Equal(t, 0, len(whereSimpleQuery), "The number of string is different in the Query")
+	goodOutputCheck(t, err, whereSimpleQuery, expectedQuerySize, whereSimpleOutput, got)
 }
 
 //
@@ -75,17 +68,12 @@ func TestWhereProcessParenthesisQuery(t *testing.T) {
 
 	whereLex := &lexers.WhereLex{}
 
+	expectedQuerySize := 0
+
 	//Running of the test
 	err, got := whereLex.Process(&whereParenthesisQuery)
 
-	assert.Nilf(t, err, "Error is not nil: %s", err)
-	assert.Equal(t, len(whereParenthesisOutput), len(got), "Wrong token number")
-
-	for i, value := range whereParenthesisOutput {
-		assert.Equal(t, value.Name, got[i].Name, "Name doesn't match")
-		assert.Equal(t, value.Data, got[i].Data, "Data doesn't match")
-	}
-
+	goodOutputCheck(t, err, whereParenthesisQuery, expectedQuerySize, whereParenthesisOutput, got)
 }
 
 //
@@ -109,16 +97,12 @@ func TestWhereProcessMultipleKeywordQuery(t *testing.T) {
 
 	whereLex := &lexers.WhereLex{}
 
+	expectedQuerySize := 1
+
 	//Running of the test
 	err, got := whereLex.Process(&whereMultipleKeywordQuery)
 
-	assert.Nilf(t, err, "Error is not nil: %s", err)
-	assert.Equal(t, len(whereMultipleKeywordOutput), len(got), "Wrong token number")
-
-	for i, value := range whereMultipleKeywordOutput {
-		assert.Equal(t, value.Name, got[i].Name, "Name doesn't match")
-		assert.Equal(t, value.Data, got[i].Data, "Data doesn't match")
-	}
+	goodOutputCheck(t, err, whereMultipleKeywordQuery, expectedQuerySize, whereMultipleKeywordOutput, got)
 }
 
 //
@@ -135,11 +119,12 @@ func TestWhereProcessNotWhereQuery(t *testing.T) {
 
 	whereLex := &lexers.WhereLex{}
 
+	expectedQuerySize := len(whereNotWhereQuery)
+
 	//Running of the test
 	err, got := whereLex.Process(&whereNotWhereQuery)
 
-	assert.Nilf(t, err, "Error is not nil: %s", err)
-	assert.Equal(t, len(whereNotWhereOutput), len(got), "Wrong token number")
+	goodNoOutputCheck(t, err, whereNotWhereQuery, expectedQuerySize, whereNotWhereOutput, got)
 }
 
 //
