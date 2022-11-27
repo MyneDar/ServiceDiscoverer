@@ -11,13 +11,16 @@ import (
 //
 //
 
-var deleteQuerySimple = []string{
-	"DELETE",
-}
+func TestDeleteProcessSimpleQuery(t *testing.T) {
+	//test initialization
+	var deleteSimpleQuery = []string{
+		"DELETE",
+	}
 
-func TestDeleteProcessSimple(t *testing.T) {
 	deleteLex := &lexers.DeleteLex{}
-	_, got := deleteLex.Process(&deleteQuerySimple)
+
+	//Running of the test
+	_, got := deleteLex.Process(&deleteSimpleQuery)
 	if len(got) == 0 {
 		t.Errorf("Too many arguments on the test string")
 	}
@@ -27,15 +30,18 @@ func TestDeleteProcessSimple(t *testing.T) {
 //
 //
 
-var deleteManyArguments = []string{
-	"DELETE",
-	"ASD",
-}
+func TestDeleteProcessManyArgumentsQuery(t *testing.T) {
+	//test initialization
+	var deleteManyArgumentsQuery = []string{
+		"DELETE",
+		"ASD",
+	}
 
-func TestDeleteProcessManyArguments(t *testing.T) {
 	deleteLex := &lexers.DeleteLex{}
-	_, _ = deleteLex.Process(&deleteManyArguments)
-	if len(deleteManyArguments) == 0 {
+
+	//Running of the test
+	_, _ = deleteLex.Process(&deleteManyArgumentsQuery)
+	if len(deleteManyArgumentsQuery) == 0 {
 		t.Errorf("Only one arguments")
 	}
 }

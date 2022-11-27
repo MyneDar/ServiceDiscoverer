@@ -11,14 +11,17 @@ import (
 //
 //
 
-var query = []string{
-	"FROM",
-	"Human.Add",
-}
+func TestFromProcessSimpleQuery(t *testing.T) {
+	//test initialization
+	var fromSimpleQuery = []string{
+		"FROM",
+		"Human.Add",
+	}
 
-func TestFromProcessGood(t *testing.T) {
 	fromLex := &lexers.FromLex{}
-	err, got := fromLex.Process(&query)
+
+	//Running of the test
+	err, got := fromLex.Process(&fromSimpleQuery)
 	if l := len(got); l != 3 {
 		t.Errorf("Wrong token number, got: %d, want 3. Err: %s", l, err)
 	}
@@ -28,18 +31,21 @@ func TestFromProcessGood(t *testing.T) {
 //
 //
 
-var queryMoreKeyWords = []string{
-	"FROM",
-	"Human.Add",
-	"SELECT",
-	"INSERT",
-}
+func TestFromProcessMoreKeyWordsQuery(t *testing.T) {
+	//test initialization
+	var fromMoreKeyWordsQuery = []string{
+		"FROM",
+		"Human.Add",
+		"SELECT",
+		"INSERT",
+	}
 
-func TestFromProcessMoreKeyWords(t *testing.T) {
 	fromLex := &lexers.FromLex{}
-	_, _ = fromLex.Process(&queryMoreKeyWords)
-	if len(queryMoreKeyWords) != 2 {
-		t.Errorf("Wrong sliced command, got %s", queryMoreKeyWords)
+
+	//Running of the test
+	_, _ = fromLex.Process(&fromMoreKeyWordsQuery)
+	if len(fromMoreKeyWordsQuery) != 2 {
+		t.Errorf("Wrong sliced command, got %s", fromMoreKeyWordsQuery)
 	}
 }
 
@@ -47,16 +53,19 @@ func TestFromProcessMoreKeyWords(t *testing.T) {
 //
 //
 
-var wrongCommandWord = []string{
-	"ASD",
-	"Human.Add",
-}
+func TestFromProcessOtherCommandWordQuery(t *testing.T) {
+	//test initialization
+	var fromOtherCommandWordQuery = []string{
+		"ASD",
+		"Human.Add",
+	}
 
-func TestFromProcessWrongCommand(t *testing.T) {
 	fromLex := &lexers.FromLex{}
-	err, got := fromLex.Process(&wrongCommandWord)
+
+	//Running of the test
+	err, got := fromLex.Process(&fromOtherCommandWordQuery)
 	if err != nil && len(got) != 0 {
-		t.Errorf("No error on wrong command : %s", wrongCommandWord)
+		t.Errorf("No error on wrong command : %s", fromOtherCommandWordQuery)
 	}
 }
 
@@ -64,16 +73,19 @@ func TestFromProcessWrongCommand(t *testing.T) {
 //
 //
 
-var wrongTarget = []string{
-	"FROM",
-	"HumanAdd",
-}
+func TestFromProcessWrongTargetQuery(t *testing.T) {
+	//test initialization
+	var fromWrongTargetQuery = []string{
+		"FROM",
+		"HumanAdd",
+	}
 
-func TestFromProcessWrongTaget(t *testing.T) {
 	fromLex := &lexers.FromLex{}
-	err, got := fromLex.Process(&wrongTarget)
+
+	//Running of the test
+	err, got := fromLex.Process(&fromWrongTargetQuery)
 	if err != nil && len(got) != 0 {
-		t.Errorf("No error on target command : %s", wrongTarget)
+		t.Errorf("No error on target command : %s", fromWrongTargetQuery)
 	}
 }
 

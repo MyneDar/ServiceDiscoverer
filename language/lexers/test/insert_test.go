@@ -11,13 +11,16 @@ import (
 //
 //
 
-var insertQuerySimple = []string{
-	"INSERT",
-}
+func TestInsertProcessSimpleQuery(t *testing.T) {
+	//test initialization
+	var insertSimpleQuery = []string{
+		"INSERT",
+	}
 
-func TestInsertProcessSimple(t *testing.T) {
 	insertLex := &lexers.InsertLex{}
-	_, got := insertLex.Process(&insertQuerySimple)
+
+	//Running of the test
+	_, got := insertLex.Process(&insertSimpleQuery)
 	if len(got) == 0 {
 		t.Errorf("Too many arguments on the test string")
 	}
@@ -27,15 +30,18 @@ func TestInsertProcessSimple(t *testing.T) {
 //
 //
 
-var insertManyArguments = []string{
-	"INSERT",
-	"ASD",
-}
+func TestInsertProcessManyArgumentsQuery(t *testing.T) {
+	//test initialization
+	var insertManyArgumentsQuery = []string{
+		"INSERT",
+		"ASD",
+	}
 
-func TestInsertProcessManyArguments(t *testing.T) {
 	insertLex := &lexers.InsertLex{}
-	_, _ = insertLex.Process(&insertManyArguments)
-	if len(insertManyArguments) == 0 {
+
+	//Running of the test
+	_, _ = insertLex.Process(&insertManyArgumentsQuery)
+	if len(insertManyArgumentsQuery) == 0 {
 		t.Errorf("Only one arguments")
 	}
 }

@@ -11,13 +11,16 @@ import (
 //
 //
 
-var infoQueryAsterisk = []string{
-	"INFO",
-	"*",
-}
-
 func TestInfoProcessGoodAsterisk(t *testing.T) {
+	//test initialization
+	var infoQueryAsterisk = []string{
+		"INFO",
+		"*",
+	}
+
 	infoLex := &lexers.InfoLex{}
+
+	//Running of the test
 	err, got := infoLex.Process(&infoQueryAsterisk)
 	if l := len(got); l != 2 {
 		t.Errorf("Wrong token number, got: %d, want 3. Err: %s", l, err)
@@ -28,13 +31,16 @@ func TestInfoProcessGoodAsterisk(t *testing.T) {
 //
 //
 
-var infoQueryIdentDotAsterisk = []string{
-	"INFO",
-	"Human.*",
-}
-
 func TestInfoProcessGoodIdentDotAsterisk(t *testing.T) {
+	//test initialization
+	var infoQueryIdentDotAsterisk = []string{
+		"INFO",
+		"Human.*",
+	}
+
 	infoLex := &lexers.InfoLex{}
+
+	//Running of the test
 	err, got := infoLex.Process(&infoQueryIdentDotAsterisk)
 	if l := len(got); l != 3 {
 		t.Errorf("Wrong token number, got: %d, want 3. Err: %s", l, err)
@@ -45,14 +51,17 @@ func TestInfoProcessGoodIdentDotAsterisk(t *testing.T) {
 //
 //
 
-var infoQueryIdentDotIdent = []string{
-	"INFO",
-	"Human.Add",
-}
+func TestInfoProcessGoodIdentDotIdentQuery(t *testing.T) {
+	//test initialization
+	var infoQueryIdentDotIdentQuery = []string{
+		"INFO",
+		"Human.Add",
+	}
 
-func TestInfoProcessGoodIdentDotIdent(t *testing.T) {
 	infoLex := &lexers.InfoLex{}
-	err, got := infoLex.Process(&infoQueryIdentDotIdent)
+
+	//Running of the test
+	err, got := infoLex.Process(&infoQueryIdentDotIdentQuery)
 	if l := len(got); l != 3 {
 		t.Errorf("Wrong token number, got: %d, want 3. Err: %s", l, err)
 	}
@@ -62,18 +71,21 @@ func TestInfoProcessGoodIdentDotIdent(t *testing.T) {
 //
 //
 
-var infoQueryMoreKeyWords = []string{
-	"INFO",
-	"Human.Add",
-	"SELECT",
-	"INSERT",
-}
+func TestInfoProcessMoreKeyWordsQuery(t *testing.T) {
+	//test initialization
+	var infoQueryMoreKeyWordsQuery = []string{
+		"INFO",
+		"Human.Add",
+		"SELECT",
+		"INSERT",
+	}
 
-func TestInfoProcessMoreKeyWords(t *testing.T) {
 	infoLex := &lexers.InfoLex{}
-	_, _ = infoLex.Process(&infoQueryMoreKeyWords)
-	if len(infoQueryMoreKeyWords) != 2 {
-		t.Errorf("Wrong sliced command, got %s", infoQueryMoreKeyWords)
+
+	//Running of the test
+	_, _ = infoLex.Process(&infoQueryMoreKeyWordsQuery)
+	if len(infoQueryMoreKeyWordsQuery) != 2 {
+		t.Errorf("Wrong sliced command, got %s", infoQueryMoreKeyWordsQuery)
 	}
 }
 
@@ -81,16 +93,19 @@ func TestInfoProcessMoreKeyWords(t *testing.T) {
 //
 //
 
-var infoWrongCommandWord = []string{
-	"ASD",
-	"Human.Add",
-}
+func TestInfoProcessOtherCommandWordQuery(t *testing.T) {
+	//test initialization
+	var infoOtherCommandWordQuery = []string{
+		"ASD",
+		"Human.Add",
+	}
 
-func TestInfoProcessWrongCommand(t *testing.T) {
 	infoLex := &lexers.InfoLex{}
-	err, got := infoLex.Process(&infoWrongCommandWord)
+
+	//Running of the test
+	err, got := infoLex.Process(&infoOtherCommandWordQuery)
 	if err != nil && len(got) != 0 {
-		t.Errorf("No error on wrong command : %s", infoWrongCommandWord)
+		t.Errorf("No error on wrong command : %s", infoOtherCommandWordQuery)
 	}
 }
 
@@ -98,16 +113,19 @@ func TestInfoProcessWrongCommand(t *testing.T) {
 //
 //
 
-var infoWrongTarget = []string{
-	"INFO",
-	"HumanAdd",
-}
+func TestInfoProcessWrongTargetQuery(t *testing.T) {
+	//test initialization
+	var infoWrongTargetQuery = []string{
+		"INFO",
+		"HumanAdd",
+	}
 
-func TestInfoProcessWrongTaget(t *testing.T) {
 	infoLex := &lexers.InfoLex{}
-	err, got := infoLex.Process(&infoWrongTarget)
-	if err != nil && len(got) != 0 {
-		t.Errorf("No error on target command : %s", infoWrongTarget)
+
+	//Running of the test
+	err, got := infoLex.Process(&infoWrongTargetQuery)
+	if err == nil && len(got) != 0 {
+		t.Errorf("No error on target command : %s", infoWrongTargetQuery)
 	}
 }
 

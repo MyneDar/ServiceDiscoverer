@@ -13,24 +13,27 @@ import (
 //
 //
 
-var selectQueryAsterisk = []string{
-	"SELECT",
-	"*",
-}
+func TestSelectProcessAsteriskQuery(t *testing.T) {
+	//test initialization
+	var selectAsteriskQuery = []string{
+		"SELECT",
+		"*",
+	}
 
-var selectQueryAsteriskOutput = []models.TokenStruct{
-	{models.SELECT, "SELECT"},
-	{models.ASTERISK, "*"},
-}
+	var selectAsteriskOutput = []models.TokenStruct{
+		{models.SELECT, "SELECT"},
+		{models.ASTERISK, "*"},
+	}
 
-func TestSelectProcessGoodAsterisk(t *testing.T) {
 	selectLex := &lexers.SelectLex{}
-	err, got := selectLex.Process(&selectQueryAsterisk)
+
+	//Running of the test
+	err, got := selectLex.Process(&selectAsteriskQuery)
 
 	assert.Nilf(t, err, "Error is not nil: %s", err)
-	assert.Equal(t, len(selectQueryAsteriskOutput), len(got), "Wrong token number")
+	assert.Equal(t, len(selectAsteriskOutput), len(got), "Wrong token number")
 
-	for i, value := range selectQueryAsteriskOutput {
+	for i, value := range selectAsteriskOutput {
 		assert.Equal(t, value.Name, got[i].Name, "Name doesn't match")
 		assert.Equal(t, value.Data, got[i].Data, "Data doesn't match")
 	}
@@ -40,24 +43,27 @@ func TestSelectProcessGoodAsterisk(t *testing.T) {
 //
 //
 
-var selectQueryOneIndentOnly = []string{
-	"SELECT",
-	"Age",
-}
+func TestSelectProcessOneIdentOnlyQuery(t *testing.T) {
+	//test initialization
+	var selectOneIndentOnlyQuery = []string{
+		"SELECT",
+		"Age",
+	}
 
-var selectQueryOneIdentOnlyOutput = []models.TokenStruct{
-	{models.SELECT, "SELECT"},
-	{models.IDENT, "Age"},
-}
+	var selectOneIdentOnlyOutput = []models.TokenStruct{
+		{models.SELECT, "SELECT"},
+		{models.IDENT, "Age"},
+	}
 
-func TestSelectProcessGoodIdent(t *testing.T) {
 	selectLex := &lexers.SelectLex{}
-	err, got := selectLex.Process(&selectQueryOneIndentOnly)
+
+	//Running of the test
+	err, got := selectLex.Process(&selectOneIndentOnlyQuery)
 
 	assert.Nilf(t, err, "Error is not nil: %s", err)
-	assert.Equal(t, len(selectQueryOneIdentOnlyOutput), len(got), "Wrong token number")
+	assert.Equal(t, len(selectOneIdentOnlyOutput), len(got), "Wrong token number")
 
-	for i, value := range selectQueryOneIdentOnlyOutput {
+	for i, value := range selectOneIdentOnlyOutput {
 		assert.Equal(t, value.Name, got[i].Name, "Name doesn't match")
 		assert.Equal(t, value.Data, got[i].Data, "Data doesn't match")
 	}
@@ -67,26 +73,29 @@ func TestSelectProcessGoodIdent(t *testing.T) {
 //
 //
 
-var selectQueryMultipleIndents = []string{
-	"SELECT",
-	"Age",
-	"Name",
-}
+func TestSelectProcessMultipleIndentsQuery(t *testing.T) {
+	//test initialization
+	var selectMultipleIndentsQuery = []string{
+		"SELECT",
+		"Age",
+		"Name",
+	}
 
-var selectQueryMultipleIdentsOutput = []models.TokenStruct{
-	{models.SELECT, "SELECT"},
-	{models.IDENT, "Age"},
-	{models.IDENT, "Name"},
-}
+	var selectMultipleIdentsOutput = []models.TokenStruct{
+		{models.SELECT, "SELECT"},
+		{models.IDENT, "Age"},
+		{models.IDENT, "Name"},
+	}
 
-func TestSelectProcessMultipleIndents(t *testing.T) {
 	selectLex := &lexers.SelectLex{}
-	err, got := selectLex.Process(&selectQueryMultipleIndents)
+
+	//Running of the test
+	err, got := selectLex.Process(&selectMultipleIndentsQuery)
 
 	assert.Nilf(t, err, "Error is not nil: %s", err)
-	assert.Equal(t, len(selectQueryMultipleIdentsOutput), len(got), "Wrong token number")
+	assert.Equal(t, len(selectMultipleIdentsOutput), len(got), "Wrong token number")
 
-	for i, value := range selectQueryMultipleIdentsOutput {
+	for i, value := range selectMultipleIdentsOutput {
 		assert.Equal(t, value.Name, got[i].Name, "Name doesn't match")
 		assert.Equal(t, value.Data, got[i].Data, "Data doesn't match")
 	}
@@ -96,49 +105,55 @@ func TestSelectProcessMultipleIndents(t *testing.T) {
 //
 //
 
-var selectQueryMultipleKeyWords = []string{
-	"INFO",
-	"*",
-	"SELECT",
-	"INSERT",
-}
+func TestSelectProcessMultipleKeyWordsQuery(t *testing.T) {
+	//test initialization
+	var selectMultipleKeyWordsQuery = []string{
+		"INFO",
+		"*",
+		"SELECT",
+		"INSERT",
+	}
 
-var selectQueryMultipleKeyWordsOutput []models.TokenStruct
+	var selectMultipleKeyWordsOutput []models.TokenStruct
 
-func TestSelectProcessMultipleKeyWords(t *testing.T) {
 	selectLex := &lexers.SelectLex{}
-	commandLength := len(selectQueryMultipleKeyWords)
 
-	err, got := selectLex.Process(&selectQueryMultipleKeyWords)
+	commandLength := len(selectMultipleKeyWordsQuery)
+
+	//Running of the test
+	err, got := selectLex.Process(&selectMultipleKeyWordsQuery)
 
 	assert.Nilf(t, err, "Error is not nil: %s", err)
-	assert.Equal(t, len(selectQueryMultipleKeyWordsOutput), len(got), "Wrong token number")
-	assert.Equal(t, commandLength, len(selectQueryMultipleKeyWords), "Doesn't equal with the initial value")
+	assert.Equal(t, len(selectMultipleKeyWordsOutput), len(got), "Wrong token number")
+	assert.Equal(t, commandLength, len(selectMultipleKeyWordsQuery), "Doesn't equal with the initial value")
 }
 
 //
 //
 //
 
-var selectQueryUntilKeyWord = []string{
-	"SELECT",
-	"*",
-	"WHERE",
-}
+func TestSelectProcessUntilKeyWordQuery(t *testing.T) {
+	//test initialization
+	var selectUntilKeyWordQuery = []string{
+		"SELECT",
+		"*",
+		"WHERE",
+	}
 
-var selectQueryUntilKeyWordOutput = []models.TokenStruct{
-	{models.SELECT, "SELECT"},
-	{models.ASTERISK, "*"},
-}
+	var selectUntilKeyWordOutput = []models.TokenStruct{
+		{models.SELECT, "SELECT"},
+		{models.ASTERISK, "*"},
+	}
 
-func TestSelectProcessUntilKeyWord(t *testing.T) {
 	selectLex := &lexers.SelectLex{}
-	err, got := selectLex.Process(&selectQueryUntilKeyWord)
+
+	//Running of the test
+	err, got := selectLex.Process(&selectUntilKeyWordQuery)
 
 	assert.Nilf(t, err, "Error is not nil: %s", err)
-	assert.Equal(t, len(selectQueryUntilKeyWordOutput), len(got), "Wrong token number")
+	assert.Equal(t, len(selectUntilKeyWordOutput), len(got), "Wrong token number")
 
-	for i, value := range selectQueryUntilKeyWordOutput {
+	for i, value := range selectUntilKeyWordOutput {
 		assert.Equal(t, value.Name, got[i].Name, "Name doesn't match")
 		assert.Equal(t, value.Data, got[i].Data, "Data doesn't match")
 	}
@@ -150,46 +165,52 @@ func TestSelectProcessUntilKeyWord(t *testing.T) {
 //
 //
 
-var selectQueryAsteriskWithIdent = []string{
-	"SELECT",
-	"*",
-	"Age",
-}
+func TestSelectProcessAsteriskWithIdentQuery(t *testing.T) {
+	//test initialization
+	var selectAsteriskWithIdentQuery = []string{
+		"SELECT",
+		"*",
+		"Age",
+	}
 
-var selectQueryAsteriskWithIdentOutput []models.TokenStruct
+	var selectAsteriskWithIdentOutput []models.TokenStruct
 
-func TestSelectProcessAsteriskWithIdent(t *testing.T) {
 	selectLex := &lexers.SelectLex{}
-	commandLength := len(selectQueryAsteriskWithIdent)
 
-	err, got := selectLex.Process(&selectQueryAsteriskWithIdent)
+	commandLength := len(selectAsteriskWithIdentQuery)
+
+	//Running of the test
+	err, got := selectLex.Process(&selectAsteriskWithIdentQuery)
 
 	assert.NotNil(t, err, "There should be an error")
 	assert.Nil(t, got, "Value should be nil")
-	assert.Equal(t, len(selectQueryAsteriskWithIdentOutput), len(got), "Wrong token number")
-	assert.Equal(t, commandLength, len(selectQueryAsteriskWithIdent), "Doesn't equal with the initial value")
+	assert.Equal(t, len(selectAsteriskWithIdentOutput), len(got), "Wrong token number")
+	assert.Equal(t, commandLength, len(selectAsteriskWithIdentQuery), "Doesn't equal with the initial value")
 }
 
 //
 //
 //
 
-var selectQueryOnlySelect = []string{
-	"SELECT",
-}
+func TestSelectProcessOnlySelectQuery(t *testing.T) {
+	//test initialization
+	var selectOnlySelectQuery = []string{
+		"SELECT",
+	}
 
-var selectQueryOnlySelectOutput []models.TokenStruct
+	var selectOnlySelectOutput []models.TokenStruct
 
-func TestSelectProcessOnlySelect(t *testing.T) {
 	selectLex := &lexers.SelectLex{}
-	commandLength := len(selectQueryOnlySelect)
 
-	err, got := selectLex.Process(&selectQueryOnlySelect)
+	commandLength := len(selectOnlySelectQuery)
+
+	//Running of the test
+	err, got := selectLex.Process(&selectOnlySelectQuery)
 
 	assert.NotNil(t, err, "There should be an error")
 	assert.Nil(t, got, "Value should be nil")
-	assert.Equal(t, len(selectQueryOnlySelectOutput), len(got), "Wrong token number")
-	assert.Equal(t, commandLength, len(selectQueryOnlySelect), "Doesn't equal with the initial value")
+	assert.Equal(t, len(selectOnlySelectOutput), len(got), "Wrong token number")
+	assert.Equal(t, commandLength, len(selectOnlySelectQuery), "Doesn't equal with the initial value")
 }
 
 //
