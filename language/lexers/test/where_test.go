@@ -16,12 +16,13 @@ func TestWhereProcessSimpleQuery(t *testing.T) {
 	//test initialization
 	var whereSimpleQuery = []string{
 		"WHERE",
-		"dogName=\"Buksi\"",
+		"dogName>=\"Buksi\"",
 	}
 
 	var whereSimpleOutput = []models.TokenStruct{
 		{models.WHERE, "WHERE"},
 		{models.IDENT, "dogName"},
+		{models.GTR, ">"},
 		{models.EQL, "="},
 		{models.STRING, "Buksi"},
 	}
