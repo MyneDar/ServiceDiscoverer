@@ -10,8 +10,8 @@ var TokenizerTestIrrationalButCorrectKeywords = "FROM Human.Add INFO Human.Add D
 
 func TestNewTokenizerWithFromAndDelete(t *testing.T) {
 	var tokenizer = service.NewTokenizer()
-	err, _ := tokenizer.CommandProcess(TokenizerTestFromAndDelete)
-	if err != nil {
+	err, got := tokenizer.CommandProcess(TokenizerTestFromAndDelete)
+	if err != nil && got != nil {
 		t.Errorf("Something happened on the tokenizing process, %s", err)
 	}
 }

@@ -1,10 +1,14 @@
-package lexers
+package parsers
 
 import "servicediscoverer/models"
 
 type DeleteParser struct {
 }
 
-func (l *DeleteParser) Process(tok []models.ServiceToken, commandMap *map[string]interface{}) (error, interface{}) {
-	return nil, nil
+func NewDeleteParser() *DeleteParser {
+	return &DeleteParser{}
+}
+
+func (l *DeleteParser) Process(tok []models.TokenStruct) error {
+	return nil
 }

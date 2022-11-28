@@ -1,10 +1,14 @@
-package lexers
+package parsers
 
 import "servicediscoverer/models"
 
 type UpdateParser struct {
 }
 
-func (l *UpdateParser) Process(tok []models.ServiceToken, commandMap *map[string]interface{}) (error, interface{}) {
-	return nil, nil
+func NewUpdateParser() *UpdateParser {
+	return &UpdateParser{}
+}
+
+func (l *UpdateParser) Process(tok []models.TokenStruct) error {
+	return nil
 }

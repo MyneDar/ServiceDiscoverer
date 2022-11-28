@@ -1,10 +1,14 @@
-package lexers
+package parsers
 
 import "servicediscoverer/models"
 
 type InfoParser struct {
 }
 
-func (l *InfoParser) Process(tok []models.ServiceToken, commandMap *map[string]interface{}) (error, interface{}) {
-	return nil, nil
+func NewInfoParser() *InfoParser {
+	return &InfoParser{}
+}
+
+func (l *InfoParser) Process(tok []models.TokenStruct) error {
+	return nil
 }

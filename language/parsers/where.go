@@ -1,10 +1,14 @@
-package lexers
+package parsers
 
 import "servicediscoverer/models"
 
 type WhereParser struct {
 }
 
-func (l *WhereParser) Process(tok []models.ServiceToken, commandMap *map[string]interface{}) (error, interface{}) {
-	return nil, nil
+func NewWhereParser() *WhereParser {
+	return &WhereParser{}
+}
+
+func (l *WhereParser) Process(tok []models.TokenStruct) error {
+	return nil
 }

@@ -1,10 +1,14 @@
-package lexers
+package parsers
 
 import "servicediscoverer/models"
 
 type FromParser struct {
 }
 
-func (l *FromParser) Process(tok []models.ServiceToken, commandMap *map[string]interface{}) (error, interface{}) {
-	return nil, nil
+func NewFromParser() *FromParser {
+	return &FromParser{}
+}
+
+func (l *FromParser) Process(tok []models.TokenStruct) error {
+	return nil
 }
