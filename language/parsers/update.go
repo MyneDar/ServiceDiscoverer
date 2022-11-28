@@ -9,6 +9,6 @@ func NewUpdateParser() *UpdateParser {
 	return &UpdateParser{}
 }
 
-func (l *UpdateParser) Process(tok []models.TokenStruct, information *map[string]interface{}) error {
+func (l *UpdateParser) Process(tok []models.TokenStruct, information map[string]interface{}) error {
 	return nil
 }

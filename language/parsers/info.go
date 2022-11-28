@@ -9,6 +9,6 @@ func NewInfoParser() *InfoParser {
 	return &InfoParser{}
 }
 
-func (l *InfoParser) Process(tok []models.TokenStruct, information *map[string]interface{}) error {
+func (l *InfoParser) Process(tok []models.TokenStruct, information map[string]interface{}) error {
 	return nil
 }

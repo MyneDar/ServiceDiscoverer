@@ -1,0 +1,22 @@
+services:
+  db.discoverer.internal:
+    container_name: db.discoverer.internal
+    hostname: discoverer_postgres
+    build: ./dev/ps_db
+    ports:
+      - "5432:5432"
+    env_file:
+      - config/db_conf.env
+    volumes:
+      - "./dev/ps_db/data:/var/lib/postgresql/data"
+
+ # cmd.discoverer.internal:
+ #   container_name: cmd.discoverer.internal
+ #   build: ./
+ #   ports:
+ #     - "10000:10000"
+ #   env_file:
+ #     - config/server_conf.env
+ #   volumes:
+ #     - "./cmd/data:/var/lib/cmd/data"
+ #   restart: always

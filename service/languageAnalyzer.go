@@ -29,7 +29,7 @@ func NewLanguageAnalyzer() *LanguageAnalyzer {
 func (l *LanguageAnalyzer) TokenProcess(tokens map[models.ServiceToken][]models.TokenStruct, json map[string]interface{}) (err error, response *http.Response) {
 	//get data to call
 	for key, value := range tokens {
-		err = l.analyzerParsers[key].Process(value, &l.information)
+		err = l.analyzerParsers[key].Process(value, l.information)
 		if err != nil {
 			return err, nil
 		}
