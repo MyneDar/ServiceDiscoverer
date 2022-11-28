@@ -1,6 +1,7 @@
 package service
 
 import (
+	"net/http"
 	"servicediscoverer/interfaces"
 	"servicediscoverer/language/parsers"
 	"servicediscoverer/models"
@@ -23,19 +24,19 @@ func NewLanguageAnalyzer() *LanguageAnalyzer {
 	return &LanguageAnalyzer{analyzerParsers: analyzerParserMap}
 }
 
-func (l *LanguageAnalyzer) TokenProcess(tokens map[models.ServiceToken][]models.TokenStruct, json map[string]interface{}) (err error) {
+func (l *LanguageAnalyzer) TokenProcess(tokens map[models.ServiceToken][]models.TokenStruct, json map[string]interface{}) (err error, response *http.Response) {
 	//get data to call
 	for key, value := range tokens {
 		err = l.analyzerParsers[key].Process(value)
 		if err != nil {
-			return err
+			return err, nil
 		}
 
 	}
 
-	//endpoint call
+	//endpoint call if needed
 
 	//Filtering if needed
 
-	return nil
+	return nil, nil
 }

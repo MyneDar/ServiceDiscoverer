@@ -2,16 +2,19 @@ package service
 
 import (
 	"encoding/json"
+	"io"
 	"log"
 	"net/http"
 )
 
 type Service struct {
-	tokenizer *Tokenizer
+	tokenizer        *Tokenizer
+	languageAnalyzer *LanguageAnalyzer
 }
 
 func (s *Service) init() {
 	s.tokenizer = NewTokenizer()
+	s.languageAnalyzer = NewLanguageAnalyzer()
 }
 
 func (s *Service) getDataHandler(w http.ResponseWriter, r *http.Request) {
@@ -20,6 +23,7 @@ func (s *Service) getDataHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodPost {
 		//get command from JSON
 		var command string
+		var Json map[string]interface{}
 
 		err := json.NewDecoder(r.Body).Decode(&command)
 		if err != nil {
@@ -27,42 +31,31 @@ func (s *Service) getDataHandler(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, "", http.StatusBadRequest)
 			return
 		}
-		//Use lexers, error handling
+		//Tokenizer
 
-		/*err, fromTok := s.fromLex.Process(&commands)
+		err, tokensMap := s.tokenizer.CommandProcess(command)
 		if err != nil {
-			log.Printf("")
-			http.Error(w, "", http.StatusBadRequest)
 			return
 		}
 
-		err, selectTok := s.selectLex.Process(&commands)
+		//Schema check and JSon empty check
+
+		//Language analyzer
+		err, response := s.languageAnalyzer.TokenProcess(tokensMap, Json)
 		if err != nil {
-			log.Printf("")
-			http.Error(w, "", http.StatusBadRequest)
 			return
 		}
-
-		err, whereTok := s.whereLex.Process(&commands)
-		if err != nil {
-			log.Printf("")
-			http.Error(w, "", http.StatusBadRequest)
-			return
-		}
-
-		//just fillers to not panic
-		s := len(fromTok)
-		s = len(selectTok)
-		s = len(whereTok)
-		print(s)*/
-
-		//From, select, where parser initialization (maybe not here)
-
-		//Use parsers, error handling
-
-		//Call endpoint and process data
 
 		//Send back data
+		body, err := io.ReadAll(response.Body)
+		if err != nil {
+			return
+		}
+
+		_, err = w.Write(body)
+		if err != nil {
+			return
+		}
 	} else {
 		log.Printf("")
 		http.Error(w, "", http.StatusBadRequest)
