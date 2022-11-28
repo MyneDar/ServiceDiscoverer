@@ -9,6 +9,6 @@ func NewDeleteParser() *DeleteParser {
 	return &DeleteParser{}
 }
 
-func (l *DeleteParser) Process(tok []models.TokenStruct) error {
+func (l *DeleteParser) Process(tok []models.TokenStruct, information *map[string]interface{}) error {
 	return nil
 }

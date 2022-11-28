@@ -9,6 +9,6 @@ func NewSelectParser() *SelectParser {
 	return &SelectParser{}
 }
 
-func (l *SelectParser) Process(tok []models.TokenStruct) error {
+func (l *SelectParser) Process(tok []models.TokenStruct, information *map[string]interface{}) error {
 	return nil
 }

@@ -5,5 +5,5 @@ import (
 )
 
 type Parser interface {
-	Process(tok []models.TokenStruct) error
+	Process(tok []models.TokenStruct, information *map[string]interface{}) error
 }
