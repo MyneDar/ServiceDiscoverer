@@ -5,6 +5,7 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"servicediscoverer/models"
 )
 
 type Service struct {
@@ -39,6 +40,31 @@ func (s *Service) getDataHandler(w http.ResponseWriter, r *http.Request) {
 		}
 
 		//Schema check and JSon empty check
+		ruleMap := map[models.ServiceToken][]models.ServiceToken{
+			models.INFO:   {},
+			models.FROM:   {models.SELECT, models.DELETE, models.INSERT, models.UPDATE},
+			models.SELECT: {models.WHERE},
+			models.WHERE:  {},
+			models.DELETE: {},
+			models.INSERT: {},
+			models.UPDATE: {},
+		}
+		possibilities := []models.ServiceToken{models.INFO, models.FROM}
+		for key, _ := range tokensMap {
+			goodSchema := false
+			if len(possibilities) == 0 {
+				break
+			}
+			for _, value := range possibilities {
+				if key == value {
+					goodSchema = true
+					possibilities = ruleMap[key]
+				}
+			}
+			if !goodSchema {
+				return //Todo: Give back Error message
+			}
+		}
 
 		//Language analyzer
 		err, response := s.languageAnalyzer.TokenProcess(tokensMap, Json)
