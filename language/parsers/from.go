@@ -21,6 +21,9 @@ func (l *FromParser) Process(tok []models.TokenStruct, information map[string]in
 		Query().
 		Where(providerregisterdata.Name(tok[0].Data)).
 		Only(context.Background())
+	if err != nil {
+		return err
+	}
 	endpoints, err := service.QueryEndpoints().Where(providerendpoint.Name(tok[1].Data)).All(context.Background())
 	if err != nil {
 		return err

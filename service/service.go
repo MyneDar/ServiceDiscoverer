@@ -121,6 +121,7 @@ func registerProviderHandler(w http.ResponseWriter, r *http.Request) {
 	//Authentication
 
 	//Process incoming data
+	//Under a name only one can be
 
 	//Safety checks
 
