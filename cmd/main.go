@@ -7,6 +7,9 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"servicediscoverer/dev"
+	"servicediscoverer/ent"
+	service2 "servicediscoverer/service"
 )
 
 type client struct {
@@ -39,8 +42,14 @@ func getTest(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
+	service := service2.Service{}
+	service.Init()
+	defer func(LocalClient *ent.Client) {
+		errDb := LocalClient.Close()
+		log.Fatal(errDb)
+	}(dev.LocalClient)
 	mux := http.NewServeMux()
-	mux.HandleFunc("/test", getTest)
+	mux.HandleFunc("/test", service.GetDataHandler)
 
 	err := http.ListenAndServe(":3333", mux)
 

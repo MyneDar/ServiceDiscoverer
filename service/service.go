@@ -5,7 +5,7 @@ import (
 	"io"
 	"log"
 	"net/http"
-	"servicediscoverer/models"
+	"servicediscoverer/dev"
 )
 
 type Service struct {
@@ -13,12 +13,16 @@ type Service struct {
 	languageAnalyzer *LanguageAnalyzer
 }
 
-func (s *Service) init() {
+func (s *Service) Init() {
+	err := dev.EntClientInit()
+	if err != nil {
+		log.Fatal()
+	}
 	s.tokenizer = NewTokenizer()
 	s.languageAnalyzer = NewLanguageAnalyzer()
 }
 
-func (s *Service) getDataHandler(w http.ResponseWriter, r *http.Request) {
+func (s *Service) GetDataHandler(w http.ResponseWriter, r *http.Request) {
 	//Authentication
 
 	if r.Method == http.MethodPost {
@@ -29,57 +33,41 @@ func (s *Service) getDataHandler(w http.ResponseWriter, r *http.Request) {
 		err := json.NewDecoder(r.Body).Decode(&command)
 		if err != nil {
 			log.Printf("")
-			http.Error(w, "", http.StatusBadRequest)
+			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
 		//Tokenizer
 
 		err, tokensMap := s.tokenizer.CommandProcess(command)
 		if err != nil {
+			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
 
 		//Schema check and JSon empty check
-		ruleMap := map[models.ServiceToken][]models.ServiceToken{
-			models.INFO:   {},
-			models.FROM:   {models.SELECT, models.DELETE, models.INSERT, models.UPDATE},
-			models.SELECT: {models.WHERE},
-			models.WHERE:  {},
-			models.DELETE: {},
-			models.INSERT: {},
-			models.UPDATE: {},
-		}
-		possibilities := []models.ServiceToken{models.INFO, models.FROM}
-		for key, _ := range tokensMap {
-			goodSchema := false
-			if len(possibilities) == 0 {
-				break
-			}
-			for _, value := range possibilities {
-				if key == value {
-					goodSchema = true
-					possibilities = ruleMap[key]
-				}
-			}
-			if !goodSchema {
-				return //Todo: Give back Error message
-			}
+		err = SchemaCheck(tokensMap)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
 		}
 
 		//Language analyzer
 		err, response := s.languageAnalyzer.TokenProcess(tokensMap, Json)
 		if err != nil {
+			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
 
 		//Send back data
 		body, err := io.ReadAll(response.Body)
 		if err != nil {
+			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
 
 		_, err = w.Write(body)
 		if err != nil {
+			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
 	} else {

@@ -15,7 +15,6 @@ func EntClientInit() (err error) {
 		return err
 	}
 	Ctx = context.Background()
-	defer LocalClient.Close()
 	// Run the auto migration tool.
 	if err = LocalClient.Schema.Create(Ctx); err != nil {
 		return err

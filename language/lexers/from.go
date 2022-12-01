@@ -32,6 +32,10 @@ func (l *FromLex) Process(command *[]string) (err error, tokens []models.TokenSt
 	//["FROM","service.endpoint"] 2
 	tokens = append(tokens, models.TokenStruct{Name: models.FROM, Data: splitted[0]})
 
+	if len(splitted) < 2 {
+		err = errors.New("Bad From command")
+		return err, nil
+	}
 	target := strings.Split(splitted[1], models.PERIOD.String())
 	if len(target) == 2 {
 		tokens = append(tokens, models.TokenStruct{Name: models.IDENT, Data: target[0]})

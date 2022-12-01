@@ -1,7 +1,6 @@
 package parsers
 
 import (
-	"context"
 	_ "github.com/lib/pq"
 	"servicediscoverer/dev"
 	"servicediscoverer/ent/providerendpoint"
@@ -20,11 +19,11 @@ func (l *FromParser) Process(tok []models.TokenStruct, information map[string]in
 	service, err := dev.LocalClient.ProviderRegisterData.
 		Query().
 		Where(providerregisterdata.Name(tok[0].Data)).
-		Only(context.Background())
+		Only(dev.Ctx)
 	if err != nil {
 		return err
 	}
-	endpoints, err := service.QueryEndpoints().Where(providerendpoint.Name(tok[1].Data)).All(context.Background())
+	endpoints, err := service.QueryEndpoints().Where(providerendpoint.Name(tok[1].Data)).All(dev.Ctx)
 	if err != nil {
 		return err
 	}
