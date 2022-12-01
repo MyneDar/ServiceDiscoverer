@@ -2,6 +2,7 @@ package schema
 
 import (
 	"entgo.io/ent"
+	"entgo.io/ent/dialect/entsql"
 	"entgo.io/ent/schema/edge"
 	"entgo.io/ent/schema/field"
 )
@@ -32,6 +33,8 @@ func (ProviderRegisterData) Fields() []ent.Field {
 // Edges of the ProviderRegisterData.
 func (ProviderRegisterData) Edges() []ent.Edge {
 	return []ent.Edge{
-		edge.To("endpoints", ProviderEndpoint.Type),
+		edge.To("endpoints", ProviderEndpoint.Type).Annotations(entsql.Annotation{
+			OnDelete: entsql.Cascade,
+		}),
 	}
 }

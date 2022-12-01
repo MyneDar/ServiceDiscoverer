@@ -46,13 +46,13 @@ func (edu *EndpointDataUpdate) SetType(s string) *EndpointDataUpdate {
 	return edu
 }
 
-// SetEndpointRequiredID sets the "endpointRequired" edge to the ProviderEndpoint entity by ID.
+// SetEndpointRequiredID sets the "endpoint_required" edge to the ProviderEndpoint entity by ID.
 func (edu *EndpointDataUpdate) SetEndpointRequiredID(id int) *EndpointDataUpdate {
 	edu.mutation.SetEndpointRequiredID(id)
 	return edu
 }
 
-// SetNillableEndpointRequiredID sets the "endpointRequired" edge to the ProviderEndpoint entity by ID if the given value is not nil.
+// SetNillableEndpointRequiredID sets the "endpoint_required" edge to the ProviderEndpoint entity by ID if the given value is not nil.
 func (edu *EndpointDataUpdate) SetNillableEndpointRequiredID(id *int) *EndpointDataUpdate {
 	if id != nil {
 		edu = edu.SetEndpointRequiredID(*id)
@@ -60,18 +60,18 @@ func (edu *EndpointDataUpdate) SetNillableEndpointRequiredID(id *int) *EndpointD
 	return edu
 }
 
-// SetEndpointRequired sets the "endpointRequired" edge to the ProviderEndpoint entity.
+// SetEndpointRequired sets the "endpoint_required" edge to the ProviderEndpoint entity.
 func (edu *EndpointDataUpdate) SetEndpointRequired(p *ProviderEndpoint) *EndpointDataUpdate {
 	return edu.SetEndpointRequiredID(p.ID)
 }
 
-// SetEndpointProvidedID sets the "endpointProvided" edge to the ProviderEndpoint entity by ID.
+// SetEndpointProvidedID sets the "endpoint_provided" edge to the ProviderEndpoint entity by ID.
 func (edu *EndpointDataUpdate) SetEndpointProvidedID(id int) *EndpointDataUpdate {
 	edu.mutation.SetEndpointProvidedID(id)
 	return edu
 }
 
-// SetNillableEndpointProvidedID sets the "endpointProvided" edge to the ProviderEndpoint entity by ID if the given value is not nil.
+// SetNillableEndpointProvidedID sets the "endpoint_provided" edge to the ProviderEndpoint entity by ID if the given value is not nil.
 func (edu *EndpointDataUpdate) SetNillableEndpointProvidedID(id *int) *EndpointDataUpdate {
 	if id != nil {
 		edu = edu.SetEndpointProvidedID(*id)
@@ -79,7 +79,7 @@ func (edu *EndpointDataUpdate) SetNillableEndpointProvidedID(id *int) *EndpointD
 	return edu
 }
 
-// SetEndpointProvided sets the "endpointProvided" edge to the ProviderEndpoint entity.
+// SetEndpointProvided sets the "endpoint_provided" edge to the ProviderEndpoint entity.
 func (edu *EndpointDataUpdate) SetEndpointProvided(p *ProviderEndpoint) *EndpointDataUpdate {
 	return edu.SetEndpointProvidedID(p.ID)
 }
@@ -89,13 +89,13 @@ func (edu *EndpointDataUpdate) Mutation() *EndpointDataMutation {
 	return edu.mutation
 }
 
-// ClearEndpointRequired clears the "endpointRequired" edge to the ProviderEndpoint entity.
+// ClearEndpointRequired clears the "endpoint_required" edge to the ProviderEndpoint entity.
 func (edu *EndpointDataUpdate) ClearEndpointRequired() *EndpointDataUpdate {
 	edu.mutation.ClearEndpointRequired()
 	return edu
 }
 
-// ClearEndpointProvided clears the "endpointProvided" edge to the ProviderEndpoint entity.
+// ClearEndpointProvided clears the "endpoint_provided" edge to the ProviderEndpoint entity.
 func (edu *EndpointDataUpdate) ClearEndpointProvided() *EndpointDataUpdate {
 	edu.mutation.ClearEndpointProvided()
 	return edu
@@ -289,13 +289,13 @@ func (eduo *EndpointDataUpdateOne) SetType(s string) *EndpointDataUpdateOne {
 	return eduo
 }
 
-// SetEndpointRequiredID sets the "endpointRequired" edge to the ProviderEndpoint entity by ID.
+// SetEndpointRequiredID sets the "endpoint_required" edge to the ProviderEndpoint entity by ID.
 func (eduo *EndpointDataUpdateOne) SetEndpointRequiredID(id int) *EndpointDataUpdateOne {
 	eduo.mutation.SetEndpointRequiredID(id)
 	return eduo
 }
 
-// SetNillableEndpointRequiredID sets the "endpointRequired" edge to the ProviderEndpoint entity by ID if the given value is not nil.
+// SetNillableEndpointRequiredID sets the "endpoint_required" edge to the ProviderEndpoint entity by ID if the given value is not nil.
 func (eduo *EndpointDataUpdateOne) SetNillableEndpointRequiredID(id *int) *EndpointDataUpdateOne {
 	if id != nil {
 		eduo = eduo.SetEndpointRequiredID(*id)
@@ -303,18 +303,18 @@ func (eduo *EndpointDataUpdateOne) SetNillableEndpointRequiredID(id *int) *Endpo
 	return eduo
 }
 
-// SetEndpointRequired sets the "endpointRequired" edge to the ProviderEndpoint entity.
+// SetEndpointRequired sets the "endpoint_required" edge to the ProviderEndpoint entity.
 func (eduo *EndpointDataUpdateOne) SetEndpointRequired(p *ProviderEndpoint) *EndpointDataUpdateOne {
 	return eduo.SetEndpointRequiredID(p.ID)
 }
 
-// SetEndpointProvidedID sets the "endpointProvided" edge to the ProviderEndpoint entity by ID.
+// SetEndpointProvidedID sets the "endpoint_provided" edge to the ProviderEndpoint entity by ID.
 func (eduo *EndpointDataUpdateOne) SetEndpointProvidedID(id int) *EndpointDataUpdateOne {
 	eduo.mutation.SetEndpointProvidedID(id)
 	return eduo
 }
 
-// SetNillableEndpointProvidedID sets the "endpointProvided" edge to the ProviderEndpoint entity by ID if the given value is not nil.
+// SetNillableEndpointProvidedID sets the "endpoint_provided" edge to the ProviderEndpoint entity by ID if the given value is not nil.
 func (eduo *EndpointDataUpdateOne) SetNillableEndpointProvidedID(id *int) *EndpointDataUpdateOne {
 	if id != nil {
 		eduo = eduo.SetEndpointProvidedID(*id)
@@ -322,7 +322,7 @@ func (eduo *EndpointDataUpdateOne) SetNillableEndpointProvidedID(id *int) *Endpo
 	return eduo
 }
 
-// SetEndpointProvided sets the "endpointProvided" edge to the ProviderEndpoint entity.
+// SetEndpointProvided sets the "endpoint_provided" edge to the ProviderEndpoint entity.
 func (eduo *EndpointDataUpdateOne) SetEndpointProvided(p *ProviderEndpoint) *EndpointDataUpdateOne {
 	return eduo.SetEndpointProvidedID(p.ID)
 }
@@ -332,13 +332,13 @@ func (eduo *EndpointDataUpdateOne) Mutation() *EndpointDataMutation {
 	return eduo.mutation
 }
 
-// ClearEndpointRequired clears the "endpointRequired" edge to the ProviderEndpoint entity.
+// ClearEndpointRequired clears the "endpoint_required" edge to the ProviderEndpoint entity.
 func (eduo *EndpointDataUpdateOne) ClearEndpointRequired() *EndpointDataUpdateOne {
 	eduo.mutation.ClearEndpointRequired()
 	return eduo
 }
 
-// ClearEndpointProvided clears the "endpointProvided" edge to the ProviderEndpoint entity.
+// ClearEndpointProvided clears the "endpoint_provided" edge to the ProviderEndpoint entity.
 func (eduo *EndpointDataUpdateOne) ClearEndpointProvided() *EndpointDataUpdateOne {
 	eduo.mutation.ClearEndpointProvided()
 	return eduo

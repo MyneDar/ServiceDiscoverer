@@ -38,13 +38,13 @@ func (edc *EndpointDataCreate) SetType(s string) *EndpointDataCreate {
 	return edc
 }
 
-// SetEndpointRequiredID sets the "endpointRequired" edge to the ProviderEndpoint entity by ID.
+// SetEndpointRequiredID sets the "endpoint_required" edge to the ProviderEndpoint entity by ID.
 func (edc *EndpointDataCreate) SetEndpointRequiredID(id int) *EndpointDataCreate {
 	edc.mutation.SetEndpointRequiredID(id)
 	return edc
 }
 
-// SetNillableEndpointRequiredID sets the "endpointRequired" edge to the ProviderEndpoint entity by ID if the given value is not nil.
+// SetNillableEndpointRequiredID sets the "endpoint_required" edge to the ProviderEndpoint entity by ID if the given value is not nil.
 func (edc *EndpointDataCreate) SetNillableEndpointRequiredID(id *int) *EndpointDataCreate {
 	if id != nil {
 		edc = edc.SetEndpointRequiredID(*id)
@@ -52,18 +52,18 @@ func (edc *EndpointDataCreate) SetNillableEndpointRequiredID(id *int) *EndpointD
 	return edc
 }
 
-// SetEndpointRequired sets the "endpointRequired" edge to the ProviderEndpoint entity.
+// SetEndpointRequired sets the "endpoint_required" edge to the ProviderEndpoint entity.
 func (edc *EndpointDataCreate) SetEndpointRequired(p *ProviderEndpoint) *EndpointDataCreate {
 	return edc.SetEndpointRequiredID(p.ID)
 }
 
-// SetEndpointProvidedID sets the "endpointProvided" edge to the ProviderEndpoint entity by ID.
+// SetEndpointProvidedID sets the "endpoint_provided" edge to the ProviderEndpoint entity by ID.
 func (edc *EndpointDataCreate) SetEndpointProvidedID(id int) *EndpointDataCreate {
 	edc.mutation.SetEndpointProvidedID(id)
 	return edc
 }
 
-// SetNillableEndpointProvidedID sets the "endpointProvided" edge to the ProviderEndpoint entity by ID if the given value is not nil.
+// SetNillableEndpointProvidedID sets the "endpoint_provided" edge to the ProviderEndpoint entity by ID if the given value is not nil.
 func (edc *EndpointDataCreate) SetNillableEndpointProvidedID(id *int) *EndpointDataCreate {
 	if id != nil {
 		edc = edc.SetEndpointProvidedID(*id)
@@ -71,7 +71,7 @@ func (edc *EndpointDataCreate) SetNillableEndpointProvidedID(id *int) *EndpointD
 	return edc
 }
 
-// SetEndpointProvided sets the "endpointProvided" edge to the ProviderEndpoint entity.
+// SetEndpointProvided sets the "endpoint_provided" edge to the ProviderEndpoint entity.
 func (edc *EndpointDataCreate) SetEndpointProvided(p *ProviderEndpoint) *EndpointDataCreate {
 	return edc.SetEndpointProvidedID(p.ID)
 }

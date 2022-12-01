@@ -15,7 +15,7 @@ import (
 type EndpointData struct {
 	config `json:"-"`
 	// ID of the ent.
-	ID int `json:"id,omitempty"`
+	ID int `json:"-"`
 	// DataName holds the value of the "dataName" field.
 	DataName string `json:"dataName,omitempty"`
 	// Discription holds the value of the "discription" field.
@@ -24,17 +24,17 @@ type EndpointData struct {
 	Type string `json:"type,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the EndpointDataQuery when eager-loading is set.
-	Edges                           EndpointDataEdges `json:"edges"`
+	Edges                           EndpointDataEdges `json:"-"`
 	provider_endpoint_required_data *int
 	provider_endpoint_provided_data *int
 }
 
 // EndpointDataEdges holds the relations/edges for other nodes in the graph.
 type EndpointDataEdges struct {
-	// EndpointRequired holds the value of the endpointRequired edge.
-	EndpointRequired *ProviderEndpoint `json:"endpointRequired,omitempty"`
-	// EndpointProvided holds the value of the endpointProvided edge.
-	EndpointProvided *ProviderEndpoint `json:"endpointProvided,omitempty"`
+	// EndpointRequired holds the value of the endpoint_required edge.
+	EndpointRequired *ProviderEndpoint `json:"endpoint_required,omitempty"`
+	// EndpointProvided holds the value of the endpoint_provided edge.
+	EndpointProvided *ProviderEndpoint `json:"endpoint_provided,omitempty"`
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
 	loadedTypes [2]bool
@@ -50,7 +50,7 @@ func (e EndpointDataEdges) EndpointRequiredOrErr() (*ProviderEndpoint, error) {
 		}
 		return e.EndpointRequired, nil
 	}
-	return nil, &NotLoadedError{edge: "endpointRequired"}
+	return nil, &NotLoadedError{edge: "endpoint_required"}
 }
 
 // EndpointProvidedOrErr returns the EndpointProvided value or an error if the edge
@@ -63,7 +63,7 @@ func (e EndpointDataEdges) EndpointProvidedOrErr() (*ProviderEndpoint, error) {
 		}
 		return e.EndpointProvided, nil
 	}
-	return nil, &NotLoadedError{edge: "endpointProvided"}
+	return nil, &NotLoadedError{edge: "endpoint_provided"}
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -137,12 +137,12 @@ func (ed *EndpointData) assignValues(columns []string, values []any) error {
 	return nil
 }
 
-// QueryEndpointRequired queries the "endpointRequired" edge of the EndpointData entity.
+// QueryEndpointRequired queries the "endpoint_required" edge of the EndpointData entity.
 func (ed *EndpointData) QueryEndpointRequired() *ProviderEndpointQuery {
 	return (&EndpointDataClient{config: ed.config}).QueryEndpointRequired(ed)
 }
 
-// QueryEndpointProvided queries the "endpointProvided" edge of the EndpointData entity.
+// QueryEndpointProvided queries the "endpoint_provided" edge of the EndpointData entity.
 func (ed *EndpointData) QueryEndpointProvided() *ProviderEndpointQuery {
 	return (&EndpointDataClient{config: ed.config}).QueryEndpointProvided(ed)
 }

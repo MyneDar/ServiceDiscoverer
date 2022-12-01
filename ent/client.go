@@ -222,7 +222,7 @@ func (c *EndpointDataClient) GetX(ctx context.Context, id int) *EndpointData {
 	return obj
 }
 
-// QueryEndpointRequired queries the endpointRequired edge of a EndpointData.
+// QueryEndpointRequired queries the endpoint_required edge of a EndpointData.
 func (c *EndpointDataClient) QueryEndpointRequired(ed *EndpointData) *ProviderEndpointQuery {
 	query := &ProviderEndpointQuery{config: c.config}
 	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
@@ -238,7 +238,7 @@ func (c *EndpointDataClient) QueryEndpointRequired(ed *EndpointData) *ProviderEn
 	return query
 }
 
-// QueryEndpointProvided queries the endpointProvided edge of a EndpointData.
+// QueryEndpointProvided queries the endpoint_provided edge of a EndpointData.
 func (c *EndpointDataClient) QueryEndpointProvided(ed *EndpointData) *ProviderEndpointQuery {
 	query := &ProviderEndpointQuery{config: c.config}
 	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
@@ -344,7 +344,7 @@ func (c *ProviderEndpointClient) GetX(ctx context.Context, id int) *ProviderEndp
 	return obj
 }
 
-// QueryRequiredData queries the requiredData edge of a ProviderEndpoint.
+// QueryRequiredData queries the required_data edge of a ProviderEndpoint.
 func (c *ProviderEndpointClient) QueryRequiredData(pe *ProviderEndpoint) *EndpointDataQuery {
 	query := &EndpointDataQuery{config: c.config}
 	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
@@ -360,7 +360,7 @@ func (c *ProviderEndpointClient) QueryRequiredData(pe *ProviderEndpoint) *Endpoi
 	return query
 }
 
-// QueryProvidedData queries the providedData edge of a ProviderEndpoint.
+// QueryProvidedData queries the provided_data edge of a ProviderEndpoint.
 func (c *ProviderEndpointClient) QueryProvidedData(pe *ProviderEndpoint) *EndpointDataQuery {
 	query := &EndpointDataQuery{config: c.config}
 	query.path = func(context.Context) (fromV *sql.Selector, _ error) {

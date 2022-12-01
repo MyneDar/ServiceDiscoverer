@@ -398,7 +398,7 @@ func TypeContainsFold(v string) predicate.ProviderEndpoint {
 	})
 }
 
-// HasRequiredData applies the HasEdge predicate on the "requiredData" edge.
+// HasRequiredData applies the HasEdge predicate on the "required_data" edge.
 func HasRequiredData() predicate.ProviderEndpoint {
 	return predicate.ProviderEndpoint(func(s *sql.Selector) {
 		step := sqlgraph.NewStep(
@@ -410,7 +410,7 @@ func HasRequiredData() predicate.ProviderEndpoint {
 	})
 }
 
-// HasRequiredDataWith applies the HasEdge predicate on the "requiredData" edge with a given conditions (other predicates).
+// HasRequiredDataWith applies the HasEdge predicate on the "required_data" edge with a given conditions (other predicates).
 func HasRequiredDataWith(preds ...predicate.EndpointData) predicate.ProviderEndpoint {
 	return predicate.ProviderEndpoint(func(s *sql.Selector) {
 		step := sqlgraph.NewStep(
@@ -426,7 +426,7 @@ func HasRequiredDataWith(preds ...predicate.EndpointData) predicate.ProviderEndp
 	})
 }
 
-// HasProvidedData applies the HasEdge predicate on the "providedData" edge.
+// HasProvidedData applies the HasEdge predicate on the "provided_data" edge.
 func HasProvidedData() predicate.ProviderEndpoint {
 	return predicate.ProviderEndpoint(func(s *sql.Selector) {
 		step := sqlgraph.NewStep(
@@ -438,7 +438,7 @@ func HasProvidedData() predicate.ProviderEndpoint {
 	})
 }
 
-// HasProvidedDataWith applies the HasEdge predicate on the "providedData" edge with a given conditions (other predicates).
+// HasProvidedDataWith applies the HasEdge predicate on the "provided_data" edge with a given conditions (other predicates).
 func HasProvidedDataWith(preds ...predicate.EndpointData) predicate.ProviderEndpoint {
 	return predicate.ProviderEndpoint(func(s *sql.Selector) {
 		step := sqlgraph.NewStep(

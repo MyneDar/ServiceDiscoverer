@@ -23,7 +23,7 @@ func (EndpointData) Fields() []ent.Field {
 // Edges of the EndpointData.
 func (EndpointData) Edges() []ent.Edge {
 	return []ent.Edge{
-		edge.From("endpointRequired", ProviderEndpoint.Type).Ref("requiredData").Unique(),
-		edge.From("endpointProvided", ProviderEndpoint.Type).Ref("providedData").Unique(),
+		edge.From("endpoint_required", ProviderEndpoint.Type).Ref("required_data").Unique(),
+		edge.From("endpoint_provided", ProviderEndpoint.Type).Ref("provided_data").Unique(),
 	}
 }

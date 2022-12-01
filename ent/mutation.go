@@ -32,20 +32,20 @@ const (
 // EndpointDataMutation represents an operation that mutates the EndpointData nodes in the graph.
 type EndpointDataMutation struct {
 	config
-	op                      Op
-	typ                     string
-	id                      *int
-	dataName                *string
-	discription             *string
-	_type                   *string
-	clearedFields           map[string]struct{}
-	endpointRequired        *int
-	clearedendpointRequired bool
-	endpointProvided        *int
-	clearedendpointProvided bool
-	done                    bool
-	oldValue                func(context.Context) (*EndpointData, error)
-	predicates              []predicate.EndpointData
+	op                       Op
+	typ                      string
+	id                       *int
+	dataName                 *string
+	discription              *string
+	_type                    *string
+	clearedFields            map[string]struct{}
+	endpoint_required        *int
+	clearedendpoint_required bool
+	endpoint_provided        *int
+	clearedendpoint_provided bool
+	done                     bool
+	oldValue                 func(context.Context) (*EndpointData, error)
+	predicates               []predicate.EndpointData
 }
 
 var _ ent.Mutation = (*EndpointDataMutation)(nil)
@@ -254,82 +254,82 @@ func (m *EndpointDataMutation) ResetType() {
 	m._type = nil
 }
 
-// SetEndpointRequiredID sets the "endpointRequired" edge to the ProviderEndpoint entity by id.
+// SetEndpointRequiredID sets the "endpoint_required" edge to the ProviderEndpoint entity by id.
 func (m *EndpointDataMutation) SetEndpointRequiredID(id int) {
-	m.endpointRequired = &id
+	m.endpoint_required = &id
 }
 
-// ClearEndpointRequired clears the "endpointRequired" edge to the ProviderEndpoint entity.
+// ClearEndpointRequired clears the "endpoint_required" edge to the ProviderEndpoint entity.
 func (m *EndpointDataMutation) ClearEndpointRequired() {
-	m.clearedendpointRequired = true
+	m.clearedendpoint_required = true
 }
 
-// EndpointRequiredCleared reports if the "endpointRequired" edge to the ProviderEndpoint entity was cleared.
+// EndpointRequiredCleared reports if the "endpoint_required" edge to the ProviderEndpoint entity was cleared.
 func (m *EndpointDataMutation) EndpointRequiredCleared() bool {
-	return m.clearedendpointRequired
+	return m.clearedendpoint_required
 }
 
-// EndpointRequiredID returns the "endpointRequired" edge ID in the mutation.
+// EndpointRequiredID returns the "endpoint_required" edge ID in the mutation.
 func (m *EndpointDataMutation) EndpointRequiredID() (id int, exists bool) {
-	if m.endpointRequired != nil {
-		return *m.endpointRequired, true
+	if m.endpoint_required != nil {
+		return *m.endpoint_required, true
 	}
 	return
 }
 
-// EndpointRequiredIDs returns the "endpointRequired" edge IDs in the mutation.
+// EndpointRequiredIDs returns the "endpoint_required" edge IDs in the mutation.
 // Note that IDs always returns len(IDs) <= 1 for unique edges, and you should use
 // EndpointRequiredID instead. It exists only for internal usage by the builders.
 func (m *EndpointDataMutation) EndpointRequiredIDs() (ids []int) {
-	if id := m.endpointRequired; id != nil {
+	if id := m.endpoint_required; id != nil {
 		ids = append(ids, *id)
 	}
 	return
 }
 
-// ResetEndpointRequired resets all changes to the "endpointRequired" edge.
+// ResetEndpointRequired resets all changes to the "endpoint_required" edge.
 func (m *EndpointDataMutation) ResetEndpointRequired() {
-	m.endpointRequired = nil
-	m.clearedendpointRequired = false
+	m.endpoint_required = nil
+	m.clearedendpoint_required = false
 }
 
-// SetEndpointProvidedID sets the "endpointProvided" edge to the ProviderEndpoint entity by id.
+// SetEndpointProvidedID sets the "endpoint_provided" edge to the ProviderEndpoint entity by id.
 func (m *EndpointDataMutation) SetEndpointProvidedID(id int) {
-	m.endpointProvided = &id
+	m.endpoint_provided = &id
 }
 
-// ClearEndpointProvided clears the "endpointProvided" edge to the ProviderEndpoint entity.
+// ClearEndpointProvided clears the "endpoint_provided" edge to the ProviderEndpoint entity.
 func (m *EndpointDataMutation) ClearEndpointProvided() {
-	m.clearedendpointProvided = true
+	m.clearedendpoint_provided = true
 }
 
-// EndpointProvidedCleared reports if the "endpointProvided" edge to the ProviderEndpoint entity was cleared.
+// EndpointProvidedCleared reports if the "endpoint_provided" edge to the ProviderEndpoint entity was cleared.
 func (m *EndpointDataMutation) EndpointProvidedCleared() bool {
-	return m.clearedendpointProvided
+	return m.clearedendpoint_provided
 }
 
-// EndpointProvidedID returns the "endpointProvided" edge ID in the mutation.
+// EndpointProvidedID returns the "endpoint_provided" edge ID in the mutation.
 func (m *EndpointDataMutation) EndpointProvidedID() (id int, exists bool) {
-	if m.endpointProvided != nil {
-		return *m.endpointProvided, true
+	if m.endpoint_provided != nil {
+		return *m.endpoint_provided, true
 	}
 	return
 }
 
-// EndpointProvidedIDs returns the "endpointProvided" edge IDs in the mutation.
+// EndpointProvidedIDs returns the "endpoint_provided" edge IDs in the mutation.
 // Note that IDs always returns len(IDs) <= 1 for unique edges, and you should use
 // EndpointProvidedID instead. It exists only for internal usage by the builders.
 func (m *EndpointDataMutation) EndpointProvidedIDs() (ids []int) {
-	if id := m.endpointProvided; id != nil {
+	if id := m.endpoint_provided; id != nil {
 		ids = append(ids, *id)
 	}
 	return
 }
 
-// ResetEndpointProvided resets all changes to the "endpointProvided" edge.
+// ResetEndpointProvided resets all changes to the "endpoint_provided" edge.
 func (m *EndpointDataMutation) ResetEndpointProvided() {
-	m.endpointProvided = nil
-	m.clearedendpointProvided = false
+	m.endpoint_provided = nil
+	m.clearedendpoint_provided = false
 }
 
 // Where appends a list predicates to the EndpointDataMutation builder.
@@ -485,10 +485,10 @@ func (m *EndpointDataMutation) ResetField(name string) error {
 // AddedEdges returns all edge names that were set/added in this mutation.
 func (m *EndpointDataMutation) AddedEdges() []string {
 	edges := make([]string, 0, 2)
-	if m.endpointRequired != nil {
+	if m.endpoint_required != nil {
 		edges = append(edges, endpointdata.EdgeEndpointRequired)
 	}
-	if m.endpointProvided != nil {
+	if m.endpoint_provided != nil {
 		edges = append(edges, endpointdata.EdgeEndpointProvided)
 	}
 	return edges
@@ -499,11 +499,11 @@ func (m *EndpointDataMutation) AddedEdges() []string {
 func (m *EndpointDataMutation) AddedIDs(name string) []ent.Value {
 	switch name {
 	case endpointdata.EdgeEndpointRequired:
-		if id := m.endpointRequired; id != nil {
+		if id := m.endpoint_required; id != nil {
 			return []ent.Value{*id}
 		}
 	case endpointdata.EdgeEndpointProvided:
-		if id := m.endpointProvided; id != nil {
+		if id := m.endpoint_provided; id != nil {
 			return []ent.Value{*id}
 		}
 	}
@@ -525,10 +525,10 @@ func (m *EndpointDataMutation) RemovedIDs(name string) []ent.Value {
 // ClearedEdges returns all edge names that were cleared in this mutation.
 func (m *EndpointDataMutation) ClearedEdges() []string {
 	edges := make([]string, 0, 2)
-	if m.clearedendpointRequired {
+	if m.clearedendpoint_required {
 		edges = append(edges, endpointdata.EdgeEndpointRequired)
 	}
-	if m.clearedendpointProvided {
+	if m.clearedendpoint_provided {
 		edges = append(edges, endpointdata.EdgeEndpointProvided)
 	}
 	return edges
@@ -539,9 +539,9 @@ func (m *EndpointDataMutation) ClearedEdges() []string {
 func (m *EndpointDataMutation) EdgeCleared(name string) bool {
 	switch name {
 	case endpointdata.EdgeEndpointRequired:
-		return m.clearedendpointRequired
+		return m.clearedendpoint_required
 	case endpointdata.EdgeEndpointProvided:
-		return m.clearedendpointProvided
+		return m.clearedendpoint_provided
 	}
 	return false
 }
@@ -577,24 +577,24 @@ func (m *EndpointDataMutation) ResetEdge(name string) error {
 // ProviderEndpointMutation represents an operation that mutates the ProviderEndpoint nodes in the graph.
 type ProviderEndpointMutation struct {
 	config
-	op                  Op
-	typ                 string
-	id                  *int
-	name                *string
-	_path               *string
-	_type               *string
-	clearedFields       map[string]struct{}
-	requiredData        map[int]struct{}
-	removedrequiredData map[int]struct{}
-	clearedrequiredData bool
-	providedData        map[int]struct{}
-	removedprovidedData map[int]struct{}
-	clearedprovidedData bool
-	provider            *int
-	clearedprovider     bool
-	done                bool
-	oldValue            func(context.Context) (*ProviderEndpoint, error)
-	predicates          []predicate.ProviderEndpoint
+	op                   Op
+	typ                  string
+	id                   *int
+	name                 *string
+	_path                *string
+	_type                *string
+	clearedFields        map[string]struct{}
+	required_data        map[int]struct{}
+	removedrequired_data map[int]struct{}
+	clearedrequired_data bool
+	provided_data        map[int]struct{}
+	removedprovided_data map[int]struct{}
+	clearedprovided_data bool
+	provider             *int
+	clearedprovider      bool
+	done                 bool
+	oldValue             func(context.Context) (*ProviderEndpoint, error)
+	predicates           []predicate.ProviderEndpoint
 }
 
 var _ ent.Mutation = (*ProviderEndpointMutation)(nil)
@@ -803,112 +803,112 @@ func (m *ProviderEndpointMutation) ResetType() {
 	m._type = nil
 }
 
-// AddRequiredDatumIDs adds the "requiredData" edge to the EndpointData entity by ids.
+// AddRequiredDatumIDs adds the "required_data" edge to the EndpointData entity by ids.
 func (m *ProviderEndpointMutation) AddRequiredDatumIDs(ids ...int) {
-	if m.requiredData == nil {
-		m.requiredData = make(map[int]struct{})
+	if m.required_data == nil {
+		m.required_data = make(map[int]struct{})
 	}
 	for i := range ids {
-		m.requiredData[ids[i]] = struct{}{}
+		m.required_data[ids[i]] = struct{}{}
 	}
 }
 
-// ClearRequiredData clears the "requiredData" edge to the EndpointData entity.
+// ClearRequiredData clears the "required_data" edge to the EndpointData entity.
 func (m *ProviderEndpointMutation) ClearRequiredData() {
-	m.clearedrequiredData = true
+	m.clearedrequired_data = true
 }
 
-// RequiredDataCleared reports if the "requiredData" edge to the EndpointData entity was cleared.
+// RequiredDataCleared reports if the "required_data" edge to the EndpointData entity was cleared.
 func (m *ProviderEndpointMutation) RequiredDataCleared() bool {
-	return m.clearedrequiredData
+	return m.clearedrequired_data
 }
 
-// RemoveRequiredDatumIDs removes the "requiredData" edge to the EndpointData entity by IDs.
+// RemoveRequiredDatumIDs removes the "required_data" edge to the EndpointData entity by IDs.
 func (m *ProviderEndpointMutation) RemoveRequiredDatumIDs(ids ...int) {
-	if m.removedrequiredData == nil {
-		m.removedrequiredData = make(map[int]struct{})
+	if m.removedrequired_data == nil {
+		m.removedrequired_data = make(map[int]struct{})
 	}
 	for i := range ids {
-		delete(m.requiredData, ids[i])
-		m.removedrequiredData[ids[i]] = struct{}{}
+		delete(m.required_data, ids[i])
+		m.removedrequired_data[ids[i]] = struct{}{}
 	}
 }
 
-// RemovedRequiredData returns the removed IDs of the "requiredData" edge to the EndpointData entity.
+// RemovedRequiredData returns the removed IDs of the "required_data" edge to the EndpointData entity.
 func (m *ProviderEndpointMutation) RemovedRequiredDataIDs() (ids []int) {
-	for id := range m.removedrequiredData {
+	for id := range m.removedrequired_data {
 		ids = append(ids, id)
 	}
 	return
 }
 
-// RequiredDataIDs returns the "requiredData" edge IDs in the mutation.
+// RequiredDataIDs returns the "required_data" edge IDs in the mutation.
 func (m *ProviderEndpointMutation) RequiredDataIDs() (ids []int) {
-	for id := range m.requiredData {
+	for id := range m.required_data {
 		ids = append(ids, id)
 	}
 	return
 }
 
-// ResetRequiredData resets all changes to the "requiredData" edge.
+// ResetRequiredData resets all changes to the "required_data" edge.
 func (m *ProviderEndpointMutation) ResetRequiredData() {
-	m.requiredData = nil
-	m.clearedrequiredData = false
-	m.removedrequiredData = nil
+	m.required_data = nil
+	m.clearedrequired_data = false
+	m.removedrequired_data = nil
 }
 
-// AddProvidedDatumIDs adds the "providedData" edge to the EndpointData entity by ids.
+// AddProvidedDatumIDs adds the "provided_data" edge to the EndpointData entity by ids.
 func (m *ProviderEndpointMutation) AddProvidedDatumIDs(ids ...int) {
-	if m.providedData == nil {
-		m.providedData = make(map[int]struct{})
+	if m.provided_data == nil {
+		m.provided_data = make(map[int]struct{})
 	}
 	for i := range ids {
-		m.providedData[ids[i]] = struct{}{}
+		m.provided_data[ids[i]] = struct{}{}
 	}
 }
 
-// ClearProvidedData clears the "providedData" edge to the EndpointData entity.
+// ClearProvidedData clears the "provided_data" edge to the EndpointData entity.
 func (m *ProviderEndpointMutation) ClearProvidedData() {
-	m.clearedprovidedData = true
+	m.clearedprovided_data = true
 }
 
-// ProvidedDataCleared reports if the "providedData" edge to the EndpointData entity was cleared.
+// ProvidedDataCleared reports if the "provided_data" edge to the EndpointData entity was cleared.
 func (m *ProviderEndpointMutation) ProvidedDataCleared() bool {
-	return m.clearedprovidedData
+	return m.clearedprovided_data
 }
 
-// RemoveProvidedDatumIDs removes the "providedData" edge to the EndpointData entity by IDs.
+// RemoveProvidedDatumIDs removes the "provided_data" edge to the EndpointData entity by IDs.
 func (m *ProviderEndpointMutation) RemoveProvidedDatumIDs(ids ...int) {
-	if m.removedprovidedData == nil {
-		m.removedprovidedData = make(map[int]struct{})
+	if m.removedprovided_data == nil {
+		m.removedprovided_data = make(map[int]struct{})
 	}
 	for i := range ids {
-		delete(m.providedData, ids[i])
-		m.removedprovidedData[ids[i]] = struct{}{}
+		delete(m.provided_data, ids[i])
+		m.removedprovided_data[ids[i]] = struct{}{}
 	}
 }
 
-// RemovedProvidedData returns the removed IDs of the "providedData" edge to the EndpointData entity.
+// RemovedProvidedData returns the removed IDs of the "provided_data" edge to the EndpointData entity.
 func (m *ProviderEndpointMutation) RemovedProvidedDataIDs() (ids []int) {
-	for id := range m.removedprovidedData {
+	for id := range m.removedprovided_data {
 		ids = append(ids, id)
 	}
 	return
 }
 
-// ProvidedDataIDs returns the "providedData" edge IDs in the mutation.
+// ProvidedDataIDs returns the "provided_data" edge IDs in the mutation.
 func (m *ProviderEndpointMutation) ProvidedDataIDs() (ids []int) {
-	for id := range m.providedData {
+	for id := range m.provided_data {
 		ids = append(ids, id)
 	}
 	return
 }
 
-// ResetProvidedData resets all changes to the "providedData" edge.
+// ResetProvidedData resets all changes to the "provided_data" edge.
 func (m *ProviderEndpointMutation) ResetProvidedData() {
-	m.providedData = nil
-	m.clearedprovidedData = false
-	m.removedprovidedData = nil
+	m.provided_data = nil
+	m.clearedprovided_data = false
+	m.removedprovided_data = nil
 }
 
 // SetProviderID sets the "provider" edge to the ProviderRegisterData entity by id.
@@ -1103,10 +1103,10 @@ func (m *ProviderEndpointMutation) ResetField(name string) error {
 // AddedEdges returns all edge names that were set/added in this mutation.
 func (m *ProviderEndpointMutation) AddedEdges() []string {
 	edges := make([]string, 0, 3)
-	if m.requiredData != nil {
+	if m.required_data != nil {
 		edges = append(edges, providerendpoint.EdgeRequiredData)
 	}
-	if m.providedData != nil {
+	if m.provided_data != nil {
 		edges = append(edges, providerendpoint.EdgeProvidedData)
 	}
 	if m.provider != nil {
@@ -1120,14 +1120,14 @@ func (m *ProviderEndpointMutation) AddedEdges() []string {
 func (m *ProviderEndpointMutation) AddedIDs(name string) []ent.Value {
 	switch name {
 	case providerendpoint.EdgeRequiredData:
-		ids := make([]ent.Value, 0, len(m.requiredData))
-		for id := range m.requiredData {
+		ids := make([]ent.Value, 0, len(m.required_data))
+		for id := range m.required_data {
 			ids = append(ids, id)
 		}
 		return ids
 	case providerendpoint.EdgeProvidedData:
-		ids := make([]ent.Value, 0, len(m.providedData))
-		for id := range m.providedData {
+		ids := make([]ent.Value, 0, len(m.provided_data))
+		for id := range m.provided_data {
 			ids = append(ids, id)
 		}
 		return ids
@@ -1142,10 +1142,10 @@ func (m *ProviderEndpointMutation) AddedIDs(name string) []ent.Value {
 // RemovedEdges returns all edge names that were removed in this mutation.
 func (m *ProviderEndpointMutation) RemovedEdges() []string {
 	edges := make([]string, 0, 3)
-	if m.removedrequiredData != nil {
+	if m.removedrequired_data != nil {
 		edges = append(edges, providerendpoint.EdgeRequiredData)
 	}
-	if m.removedprovidedData != nil {
+	if m.removedprovided_data != nil {
 		edges = append(edges, providerendpoint.EdgeProvidedData)
 	}
 	return edges
@@ -1156,14 +1156,14 @@ func (m *ProviderEndpointMutation) RemovedEdges() []string {
 func (m *ProviderEndpointMutation) RemovedIDs(name string) []ent.Value {
 	switch name {
 	case providerendpoint.EdgeRequiredData:
-		ids := make([]ent.Value, 0, len(m.removedrequiredData))
-		for id := range m.removedrequiredData {
+		ids := make([]ent.Value, 0, len(m.removedrequired_data))
+		for id := range m.removedrequired_data {
 			ids = append(ids, id)
 		}
 		return ids
 	case providerendpoint.EdgeProvidedData:
-		ids := make([]ent.Value, 0, len(m.removedprovidedData))
-		for id := range m.removedprovidedData {
+		ids := make([]ent.Value, 0, len(m.removedprovided_data))
+		for id := range m.removedprovided_data {
 			ids = append(ids, id)
 		}
 		return ids
@@ -1174,10 +1174,10 @@ func (m *ProviderEndpointMutation) RemovedIDs(name string) []ent.Value {
 // ClearedEdges returns all edge names that were cleared in this mutation.
 func (m *ProviderEndpointMutation) ClearedEdges() []string {
 	edges := make([]string, 0, 3)
-	if m.clearedrequiredData {
+	if m.clearedrequired_data {
 		edges = append(edges, providerendpoint.EdgeRequiredData)
 	}
-	if m.clearedprovidedData {
+	if m.clearedprovided_data {
 		edges = append(edges, providerendpoint.EdgeProvidedData)
 	}
 	if m.clearedprovider {
@@ -1191,9 +1191,9 @@ func (m *ProviderEndpointMutation) ClearedEdges() []string {
 func (m *ProviderEndpointMutation) EdgeCleared(name string) bool {
 	switch name {
 	case providerendpoint.EdgeRequiredData:
-		return m.clearedrequiredData
+		return m.clearedrequired_data
 	case providerendpoint.EdgeProvidedData:
-		return m.clearedprovidedData
+		return m.clearedprovided_data
 	case providerendpoint.EdgeProvider:
 		return m.clearedprovider
 	}

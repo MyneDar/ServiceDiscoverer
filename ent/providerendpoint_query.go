@@ -66,7 +66,7 @@ func (peq *ProviderEndpointQuery) Order(o ...OrderFunc) *ProviderEndpointQuery {
 	return peq
 }
 
-// QueryRequiredData chains the current query on the "requiredData" edge.
+// QueryRequiredData chains the current query on the "required_data" edge.
 func (peq *ProviderEndpointQuery) QueryRequiredData() *EndpointDataQuery {
 	query := &EndpointDataQuery{config: peq.config}
 	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
@@ -88,7 +88,7 @@ func (peq *ProviderEndpointQuery) QueryRequiredData() *EndpointDataQuery {
 	return query
 }
 
-// QueryProvidedData chains the current query on the "providedData" edge.
+// QueryProvidedData chains the current query on the "provided_data" edge.
 func (peq *ProviderEndpointQuery) QueryProvidedData() *EndpointDataQuery {
 	query := &EndpointDataQuery{config: peq.config}
 	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
@@ -324,7 +324,7 @@ func (peq *ProviderEndpointQuery) Clone() *ProviderEndpointQuery {
 }
 
 // WithRequiredData tells the query-builder to eager-load the nodes that are connected to
-// the "requiredData" edge. The optional arguments are used to configure the query builder of the edge.
+// the "required_data" edge. The optional arguments are used to configure the query builder of the edge.
 func (peq *ProviderEndpointQuery) WithRequiredData(opts ...func(*EndpointDataQuery)) *ProviderEndpointQuery {
 	query := &EndpointDataQuery{config: peq.config}
 	for _, opt := range opts {
@@ -335,7 +335,7 @@ func (peq *ProviderEndpointQuery) WithRequiredData(opts ...func(*EndpointDataQue
 }
 
 // WithProvidedData tells the query-builder to eager-load the nodes that are connected to
-// the "providedData" edge. The optional arguments are used to configure the query builder of the edge.
+// the "provided_data" edge. The optional arguments are used to configure the query builder of the edge.
 func (peq *ProviderEndpointQuery) WithProvidedData(opts ...func(*EndpointDataQuery)) *ProviderEndpointQuery {
 	query := &EndpointDataQuery{config: peq.config}
 	for _, opt := range opts {

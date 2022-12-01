@@ -13,27 +13,27 @@ const (
 	FieldPath = "path"
 	// FieldType holds the string denoting the type field in the database.
 	FieldType = "type"
-	// EdgeRequiredData holds the string denoting the requireddata edge name in mutations.
-	EdgeRequiredData = "requiredData"
-	// EdgeProvidedData holds the string denoting the provideddata edge name in mutations.
-	EdgeProvidedData = "providedData"
+	// EdgeRequiredData holds the string denoting the required_data edge name in mutations.
+	EdgeRequiredData = "required_data"
+	// EdgeProvidedData holds the string denoting the provided_data edge name in mutations.
+	EdgeProvidedData = "provided_data"
 	// EdgeProvider holds the string denoting the provider edge name in mutations.
 	EdgeProvider = "provider"
 	// Table holds the table name of the providerendpoint in the database.
 	Table = "provider_endpoints"
-	// RequiredDataTable is the table that holds the requiredData relation/edge.
+	// RequiredDataTable is the table that holds the required_data relation/edge.
 	RequiredDataTable = "endpoint_data"
 	// RequiredDataInverseTable is the table name for the EndpointData entity.
 	// It exists in this package in order to avoid circular dependency with the "endpointdata" package.
 	RequiredDataInverseTable = "endpoint_data"
-	// RequiredDataColumn is the table column denoting the requiredData relation/edge.
+	// RequiredDataColumn is the table column denoting the required_data relation/edge.
 	RequiredDataColumn = "provider_endpoint_required_data"
-	// ProvidedDataTable is the table that holds the providedData relation/edge.
+	// ProvidedDataTable is the table that holds the provided_data relation/edge.
 	ProvidedDataTable = "endpoint_data"
 	// ProvidedDataInverseTable is the table name for the EndpointData entity.
 	// It exists in this package in order to avoid circular dependency with the "endpointdata" package.
 	ProvidedDataInverseTable = "endpoint_data"
-	// ProvidedDataColumn is the table column denoting the providedData relation/edge.
+	// ProvidedDataColumn is the table column denoting the provided_data relation/edge.
 	ProvidedDataColumn = "provider_endpoint_provided_data"
 	// ProviderTable is the table that holds the provider relation/edge.
 	ProviderTable = "provider_endpoints"

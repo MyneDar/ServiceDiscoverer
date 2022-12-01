@@ -15,7 +15,7 @@ import (
 type ProviderEndpoint struct {
 	config `json:"-"`
 	// ID of the ent.
-	ID int `json:"id,omitempty"`
+	ID int `json:"-"`
 	// Name holds the value of the "name" field.
 	Name string `json:"name,omitempty"`
 	// Path holds the value of the "path" field.
@@ -24,16 +24,16 @@ type ProviderEndpoint struct {
 	Type string `json:"type,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the ProviderEndpointQuery when eager-loading is set.
-	Edges                            ProviderEndpointEdges `json:"edges"`
+	Edges                            ProviderEndpointEdges `json:"datas"`
 	provider_register_data_endpoints *int
 }
 
 // ProviderEndpointEdges holds the relations/edges for other nodes in the graph.
 type ProviderEndpointEdges struct {
-	// RequiredData holds the value of the requiredData edge.
-	RequiredData []*EndpointData `json:"requiredData,omitempty"`
-	// ProvidedData holds the value of the providedData edge.
-	ProvidedData []*EndpointData `json:"providedData,omitempty"`
+	// RequiredData holds the value of the required_data edge.
+	RequiredData []*EndpointData `json:"required_data,omitempty"`
+	// ProvidedData holds the value of the provided_data edge.
+	ProvidedData []*EndpointData `json:"provided_data,omitempty"`
 	// Provider holds the value of the provider edge.
 	Provider *ProviderRegisterData `json:"provider,omitempty"`
 	// loadedTypes holds the information for reporting if a
@@ -47,7 +47,7 @@ func (e ProviderEndpointEdges) RequiredDataOrErr() ([]*EndpointData, error) {
 	if e.loadedTypes[0] {
 		return e.RequiredData, nil
 	}
-	return nil, &NotLoadedError{edge: "requiredData"}
+	return nil, &NotLoadedError{edge: "required_data"}
 }
 
 // ProvidedDataOrErr returns the ProvidedData value or an error if the edge
@@ -56,7 +56,7 @@ func (e ProviderEndpointEdges) ProvidedDataOrErr() ([]*EndpointData, error) {
 	if e.loadedTypes[1] {
 		return e.ProvidedData, nil
 	}
-	return nil, &NotLoadedError{edge: "providedData"}
+	return nil, &NotLoadedError{edge: "provided_data"}
 }
 
 // ProviderOrErr returns the Provider value or an error if the edge
@@ -134,12 +134,12 @@ func (pe *ProviderEndpoint) assignValues(columns []string, values []any) error {
 	return nil
 }
 
-// QueryRequiredData queries the "requiredData" edge of the ProviderEndpoint entity.
+// QueryRequiredData queries the "required_data" edge of the ProviderEndpoint entity.
 func (pe *ProviderEndpoint) QueryRequiredData() *EndpointDataQuery {
 	return (&ProviderEndpointClient{config: pe.config}).QueryRequiredData(pe)
 }
 
-// QueryProvidedData queries the "providedData" edge of the ProviderEndpoint entity.
+// QueryProvidedData queries the "provided_data" edge of the ProviderEndpoint entity.
 func (pe *ProviderEndpoint) QueryProvidedData() *EndpointDataQuery {
 	return (&ProviderEndpointClient{config: pe.config}).QueryProvidedData(pe)
 }

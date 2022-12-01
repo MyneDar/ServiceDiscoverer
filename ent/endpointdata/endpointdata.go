@@ -13,25 +13,25 @@ const (
 	FieldDiscription = "discription"
 	// FieldType holds the string denoting the type field in the database.
 	FieldType = "type"
-	// EdgeEndpointRequired holds the string denoting the endpointrequired edge name in mutations.
-	EdgeEndpointRequired = "endpointRequired"
-	// EdgeEndpointProvided holds the string denoting the endpointprovided edge name in mutations.
-	EdgeEndpointProvided = "endpointProvided"
+	// EdgeEndpointRequired holds the string denoting the endpoint_required edge name in mutations.
+	EdgeEndpointRequired = "endpoint_required"
+	// EdgeEndpointProvided holds the string denoting the endpoint_provided edge name in mutations.
+	EdgeEndpointProvided = "endpoint_provided"
 	// Table holds the table name of the endpointdata in the database.
 	Table = "endpoint_data"
-	// EndpointRequiredTable is the table that holds the endpointRequired relation/edge.
+	// EndpointRequiredTable is the table that holds the endpoint_required relation/edge.
 	EndpointRequiredTable = "endpoint_data"
 	// EndpointRequiredInverseTable is the table name for the ProviderEndpoint entity.
 	// It exists in this package in order to avoid circular dependency with the "providerendpoint" package.
 	EndpointRequiredInverseTable = "provider_endpoints"
-	// EndpointRequiredColumn is the table column denoting the endpointRequired relation/edge.
+	// EndpointRequiredColumn is the table column denoting the endpoint_required relation/edge.
 	EndpointRequiredColumn = "provider_endpoint_required_data"
-	// EndpointProvidedTable is the table that holds the endpointProvided relation/edge.
+	// EndpointProvidedTable is the table that holds the endpoint_provided relation/edge.
 	EndpointProvidedTable = "endpoint_data"
 	// EndpointProvidedInverseTable is the table name for the ProviderEndpoint entity.
 	// It exists in this package in order to avoid circular dependency with the "providerendpoint" package.
 	EndpointProvidedInverseTable = "provider_endpoints"
-	// EndpointProvidedColumn is the table column denoting the endpointProvided relation/edge.
+	// EndpointProvidedColumn is the table column denoting the endpoint_provided relation/edge.
 	EndpointProvidedColumn = "provider_endpoint_provided_data"
 )
 

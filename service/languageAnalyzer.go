@@ -1,7 +1,7 @@
 package service
 
 import (
-	"net/http"
+	json2 "encoding/json"
 	"servicediscoverer/interfaces"
 	"servicediscoverer/language/parsers"
 	"servicediscoverer/models"
@@ -26,7 +26,7 @@ func NewLanguageAnalyzer() *LanguageAnalyzer {
 	return &LanguageAnalyzer{analyzerParsers: analyzerParserMap, information: info}
 }
 
-func (l *LanguageAnalyzer) TokenProcess(tokens map[models.ServiceToken][]models.TokenStruct, json map[string]interface{}) (err error, response *http.Response) {
+func (l *LanguageAnalyzer) TokenProcess(tokens map[models.ServiceToken][]models.TokenStruct, json map[string]interface{}) (err error, response []byte) {
 	//get data to call
 	for key, value := range tokens {
 		err = l.analyzerParsers[key].Process(value, l.information)
@@ -37,8 +37,9 @@ func (l *LanguageAnalyzer) TokenProcess(tokens map[models.ServiceToken][]models.
 	}
 
 	//endpoint call if needed
-
+	//TODO automatic response data merge end return it (now only INFO returned)
+	//TODO data outsource like "Info_Data" etc
 	//Filtering if needed
-
-	return nil, nil
+	respData, err := json2.Marshal(l.information["Info_Data"])
+	return err, respData
 }

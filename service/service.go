@@ -2,7 +2,6 @@ package service
 
 import (
 	"encoding/json"
-	"io"
 	"log"
 	"net/http"
 	"servicediscoverer/dev"
@@ -59,13 +58,7 @@ func (s *Service) GetDataHandler(w http.ResponseWriter, r *http.Request) {
 		}
 
 		//Send back data
-		body, err := io.ReadAll(response.Body)
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusBadRequest)
-			return
-		}
-
-		_, err = w.Write(body)
+		_, err = w.Write(response)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return

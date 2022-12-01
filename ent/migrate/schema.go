@@ -24,16 +24,16 @@ var (
 		PrimaryKey: []*schema.Column{EndpointDataColumns[0]},
 		ForeignKeys: []*schema.ForeignKey{
 			{
-				Symbol:     "endpoint_data_provider_endpoints_requiredData",
+				Symbol:     "endpoint_data_provider_endpoints_required_data",
 				Columns:    []*schema.Column{EndpointDataColumns[4]},
 				RefColumns: []*schema.Column{ProviderEndpointsColumns[0]},
-				OnDelete:   schema.SetNull,
+				OnDelete:   schema.Cascade,
 			},
 			{
-				Symbol:     "endpoint_data_provider_endpoints_providedData",
+				Symbol:     "endpoint_data_provider_endpoints_provided_data",
 				Columns:    []*schema.Column{EndpointDataColumns[5]},
 				RefColumns: []*schema.Column{ProviderEndpointsColumns[0]},
-				OnDelete:   schema.SetNull,
+				OnDelete:   schema.Cascade,
 			},
 		},
 	}
@@ -55,7 +55,7 @@ var (
 				Symbol:     "provider_endpoints_provider_register_data_endpoints",
 				Columns:    []*schema.Column{ProviderEndpointsColumns[4]},
 				RefColumns: []*schema.Column{ProviderRegisterDataColumns[0]},
-				OnDelete:   schema.SetNull,
+				OnDelete:   schema.Cascade,
 			},
 		},
 	}

@@ -47,13 +47,13 @@ func (peu *ProviderEndpointUpdate) SetType(s string) *ProviderEndpointUpdate {
 	return peu
 }
 
-// AddRequiredDatumIDs adds the "requiredData" edge to the EndpointData entity by IDs.
+// AddRequiredDatumIDs adds the "required_data" edge to the EndpointData entity by IDs.
 func (peu *ProviderEndpointUpdate) AddRequiredDatumIDs(ids ...int) *ProviderEndpointUpdate {
 	peu.mutation.AddRequiredDatumIDs(ids...)
 	return peu
 }
 
-// AddRequiredData adds the "requiredData" edges to the EndpointData entity.
+// AddRequiredData adds the "required_data" edges to the EndpointData entity.
 func (peu *ProviderEndpointUpdate) AddRequiredData(e ...*EndpointData) *ProviderEndpointUpdate {
 	ids := make([]int, len(e))
 	for i := range e {
@@ -62,13 +62,13 @@ func (peu *ProviderEndpointUpdate) AddRequiredData(e ...*EndpointData) *Provider
 	return peu.AddRequiredDatumIDs(ids...)
 }
 
-// AddProvidedDatumIDs adds the "providedData" edge to the EndpointData entity by IDs.
+// AddProvidedDatumIDs adds the "provided_data" edge to the EndpointData entity by IDs.
 func (peu *ProviderEndpointUpdate) AddProvidedDatumIDs(ids ...int) *ProviderEndpointUpdate {
 	peu.mutation.AddProvidedDatumIDs(ids...)
 	return peu
 }
 
-// AddProvidedData adds the "providedData" edges to the EndpointData entity.
+// AddProvidedData adds the "provided_data" edges to the EndpointData entity.
 func (peu *ProviderEndpointUpdate) AddProvidedData(e ...*EndpointData) *ProviderEndpointUpdate {
 	ids := make([]int, len(e))
 	for i := range e {
@@ -101,19 +101,19 @@ func (peu *ProviderEndpointUpdate) Mutation() *ProviderEndpointMutation {
 	return peu.mutation
 }
 
-// ClearRequiredData clears all "requiredData" edges to the EndpointData entity.
+// ClearRequiredData clears all "required_data" edges to the EndpointData entity.
 func (peu *ProviderEndpointUpdate) ClearRequiredData() *ProviderEndpointUpdate {
 	peu.mutation.ClearRequiredData()
 	return peu
 }
 
-// RemoveRequiredDatumIDs removes the "requiredData" edge to EndpointData entities by IDs.
+// RemoveRequiredDatumIDs removes the "required_data" edge to EndpointData entities by IDs.
 func (peu *ProviderEndpointUpdate) RemoveRequiredDatumIDs(ids ...int) *ProviderEndpointUpdate {
 	peu.mutation.RemoveRequiredDatumIDs(ids...)
 	return peu
 }
 
-// RemoveRequiredData removes "requiredData" edges to EndpointData entities.
+// RemoveRequiredData removes "required_data" edges to EndpointData entities.
 func (peu *ProviderEndpointUpdate) RemoveRequiredData(e ...*EndpointData) *ProviderEndpointUpdate {
 	ids := make([]int, len(e))
 	for i := range e {
@@ -122,19 +122,19 @@ func (peu *ProviderEndpointUpdate) RemoveRequiredData(e ...*EndpointData) *Provi
 	return peu.RemoveRequiredDatumIDs(ids...)
 }
 
-// ClearProvidedData clears all "providedData" edges to the EndpointData entity.
+// ClearProvidedData clears all "provided_data" edges to the EndpointData entity.
 func (peu *ProviderEndpointUpdate) ClearProvidedData() *ProviderEndpointUpdate {
 	peu.mutation.ClearProvidedData()
 	return peu
 }
 
-// RemoveProvidedDatumIDs removes the "providedData" edge to EndpointData entities by IDs.
+// RemoveProvidedDatumIDs removes the "provided_data" edge to EndpointData entities by IDs.
 func (peu *ProviderEndpointUpdate) RemoveProvidedDatumIDs(ids ...int) *ProviderEndpointUpdate {
 	peu.mutation.RemoveProvidedDatumIDs(ids...)
 	return peu
 }
 
-// RemoveProvidedData removes "providedData" edges to EndpointData entities.
+// RemoveProvidedData removes "provided_data" edges to EndpointData entities.
 func (peu *ProviderEndpointUpdate) RemoveProvidedData(e ...*EndpointData) *ProviderEndpointUpdate {
 	ids := make([]int, len(e))
 	for i := range e {
@@ -410,13 +410,13 @@ func (peuo *ProviderEndpointUpdateOne) SetType(s string) *ProviderEndpointUpdate
 	return peuo
 }
 
-// AddRequiredDatumIDs adds the "requiredData" edge to the EndpointData entity by IDs.
+// AddRequiredDatumIDs adds the "required_data" edge to the EndpointData entity by IDs.
 func (peuo *ProviderEndpointUpdateOne) AddRequiredDatumIDs(ids ...int) *ProviderEndpointUpdateOne {
 	peuo.mutation.AddRequiredDatumIDs(ids...)
 	return peuo
 }
 
-// AddRequiredData adds the "requiredData" edges to the EndpointData entity.
+// AddRequiredData adds the "required_data" edges to the EndpointData entity.
 func (peuo *ProviderEndpointUpdateOne) AddRequiredData(e ...*EndpointData) *ProviderEndpointUpdateOne {
 	ids := make([]int, len(e))
 	for i := range e {
@@ -425,13 +425,13 @@ func (peuo *ProviderEndpointUpdateOne) AddRequiredData(e ...*EndpointData) *Prov
 	return peuo.AddRequiredDatumIDs(ids...)
 }
 
-// AddProvidedDatumIDs adds the "providedData" edge to the EndpointData entity by IDs.
+// AddProvidedDatumIDs adds the "provided_data" edge to the EndpointData entity by IDs.
 func (peuo *ProviderEndpointUpdateOne) AddProvidedDatumIDs(ids ...int) *ProviderEndpointUpdateOne {
 	peuo.mutation.AddProvidedDatumIDs(ids...)
 	return peuo
 }
 
-// AddProvidedData adds the "providedData" edges to the EndpointData entity.
+// AddProvidedData adds the "provided_data" edges to the EndpointData entity.
 func (peuo *ProviderEndpointUpdateOne) AddProvidedData(e ...*EndpointData) *ProviderEndpointUpdateOne {
 	ids := make([]int, len(e))
 	for i := range e {
@@ -464,19 +464,19 @@ func (peuo *ProviderEndpointUpdateOne) Mutation() *ProviderEndpointMutation {
 	return peuo.mutation
 }
 
-// ClearRequiredData clears all "requiredData" edges to the EndpointData entity.
+// ClearRequiredData clears all "required_data" edges to the EndpointData entity.
 func (peuo *ProviderEndpointUpdateOne) ClearRequiredData() *ProviderEndpointUpdateOne {
 	peuo.mutation.ClearRequiredData()
 	return peuo
 }
 
-// RemoveRequiredDatumIDs removes the "requiredData" edge to EndpointData entities by IDs.
+// RemoveRequiredDatumIDs removes the "required_data" edge to EndpointData entities by IDs.
 func (peuo *ProviderEndpointUpdateOne) RemoveRequiredDatumIDs(ids ...int) *ProviderEndpointUpdateOne {
 	peuo.mutation.RemoveRequiredDatumIDs(ids...)
 	return peuo
 }
 
-// RemoveRequiredData removes "requiredData" edges to EndpointData entities.
+// RemoveRequiredData removes "required_data" edges to EndpointData entities.
 func (peuo *ProviderEndpointUpdateOne) RemoveRequiredData(e ...*EndpointData) *ProviderEndpointUpdateOne {
 	ids := make([]int, len(e))
 	for i := range e {
@@ -485,19 +485,19 @@ func (peuo *ProviderEndpointUpdateOne) RemoveRequiredData(e ...*EndpointData) *P
 	return peuo.RemoveRequiredDatumIDs(ids...)
 }
 
-// ClearProvidedData clears all "providedData" edges to the EndpointData entity.
+// ClearProvidedData clears all "provided_data" edges to the EndpointData entity.
 func (peuo *ProviderEndpointUpdateOne) ClearProvidedData() *ProviderEndpointUpdateOne {
 	peuo.mutation.ClearProvidedData()
 	return peuo
 }
 
-// RemoveProvidedDatumIDs removes the "providedData" edge to EndpointData entities by IDs.
+// RemoveProvidedDatumIDs removes the "provided_data" edge to EndpointData entities by IDs.
 func (peuo *ProviderEndpointUpdateOne) RemoveProvidedDatumIDs(ids ...int) *ProviderEndpointUpdateOne {
 	peuo.mutation.RemoveProvidedDatumIDs(ids...)
 	return peuo
 }
 
-// RemoveProvidedData removes "providedData" edges to EndpointData entities.
+// RemoveProvidedData removes "provided_data" edges to EndpointData entities.
 func (peuo *ProviderEndpointUpdateOne) RemoveProvidedData(e ...*EndpointData) *ProviderEndpointUpdateOne {
 	ids := make([]int, len(e))
 	for i := range e {

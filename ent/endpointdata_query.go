@@ -63,7 +63,7 @@ func (edq *EndpointDataQuery) Order(o ...OrderFunc) *EndpointDataQuery {
 	return edq
 }
 
-// QueryEndpointRequired chains the current query on the "endpointRequired" edge.
+// QueryEndpointRequired chains the current query on the "endpoint_required" edge.
 func (edq *EndpointDataQuery) QueryEndpointRequired() *ProviderEndpointQuery {
 	query := &ProviderEndpointQuery{config: edq.config}
 	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
@@ -85,7 +85,7 @@ func (edq *EndpointDataQuery) QueryEndpointRequired() *ProviderEndpointQuery {
 	return query
 }
 
-// QueryEndpointProvided chains the current query on the "endpointProvided" edge.
+// QueryEndpointProvided chains the current query on the "endpoint_provided" edge.
 func (edq *EndpointDataQuery) QueryEndpointProvided() *ProviderEndpointQuery {
 	query := &ProviderEndpointQuery{config: edq.config}
 	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
@@ -298,7 +298,7 @@ func (edq *EndpointDataQuery) Clone() *EndpointDataQuery {
 }
 
 // WithEndpointRequired tells the query-builder to eager-load the nodes that are connected to
-// the "endpointRequired" edge. The optional arguments are used to configure the query builder of the edge.
+// the "endpoint_required" edge. The optional arguments are used to configure the query builder of the edge.
 func (edq *EndpointDataQuery) WithEndpointRequired(opts ...func(*ProviderEndpointQuery)) *EndpointDataQuery {
 	query := &ProviderEndpointQuery{config: edq.config}
 	for _, opt := range opts {
@@ -309,7 +309,7 @@ func (edq *EndpointDataQuery) WithEndpointRequired(opts ...func(*ProviderEndpoin
 }
 
 // WithEndpointProvided tells the query-builder to eager-load the nodes that are connected to
-// the "endpointProvided" edge. The optional arguments are used to configure the query builder of the edge.
+// the "endpoint_provided" edge. The optional arguments are used to configure the query builder of the edge.
 func (edq *EndpointDataQuery) WithEndpointProvided(opts ...func(*ProviderEndpointQuery)) *EndpointDataQuery {
 	query := &ProviderEndpointQuery{config: edq.config}
 	for _, opt := range opts {

@@ -2,6 +2,7 @@ package schema
 
 import (
 	"entgo.io/ent"
+	"entgo.io/ent/dialect/entsql"
 	"entgo.io/ent/schema/edge"
 	"entgo.io/ent/schema/field"
 )
@@ -23,8 +24,12 @@ func (ProviderEndpoint) Fields() []ent.Field {
 // Edges of the ProviderEndpoint.
 func (ProviderEndpoint) Edges() []ent.Edge {
 	return []ent.Edge{
-		edge.To("requiredData", EndpointData.Type),
-		edge.To("providedData", EndpointData.Type),
+		edge.To("required_data", EndpointData.Type).Annotations(entsql.Annotation{
+			OnDelete: entsql.Cascade,
+		}),
+		edge.To("provided_data", EndpointData.Type).Annotations(entsql.Annotation{
+			OnDelete: entsql.Cascade,
+		}),
 		edge.From("provider", ProviderRegisterData.Type).Ref("endpoints").Unique(),
 	}
 }

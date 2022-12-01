@@ -39,13 +39,13 @@ func (pec *ProviderEndpointCreate) SetType(s string) *ProviderEndpointCreate {
 	return pec
 }
 
-// AddRequiredDatumIDs adds the "requiredData" edge to the EndpointData entity by IDs.
+// AddRequiredDatumIDs adds the "required_data" edge to the EndpointData entity by IDs.
 func (pec *ProviderEndpointCreate) AddRequiredDatumIDs(ids ...int) *ProviderEndpointCreate {
 	pec.mutation.AddRequiredDatumIDs(ids...)
 	return pec
 }
 
-// AddRequiredData adds the "requiredData" edges to the EndpointData entity.
+// AddRequiredData adds the "required_data" edges to the EndpointData entity.
 func (pec *ProviderEndpointCreate) AddRequiredData(e ...*EndpointData) *ProviderEndpointCreate {
 	ids := make([]int, len(e))
 	for i := range e {
@@ -54,13 +54,13 @@ func (pec *ProviderEndpointCreate) AddRequiredData(e ...*EndpointData) *Provider
 	return pec.AddRequiredDatumIDs(ids...)
 }
 
-// AddProvidedDatumIDs adds the "providedData" edge to the EndpointData entity by IDs.
+// AddProvidedDatumIDs adds the "provided_data" edge to the EndpointData entity by IDs.
 func (pec *ProviderEndpointCreate) AddProvidedDatumIDs(ids ...int) *ProviderEndpointCreate {
 	pec.mutation.AddProvidedDatumIDs(ids...)
 	return pec
 }
 
-// AddProvidedData adds the "providedData" edges to the EndpointData entity.
+// AddProvidedData adds the "provided_data" edges to the EndpointData entity.
 func (pec *ProviderEndpointCreate) AddProvidedData(e ...*EndpointData) *ProviderEndpointCreate {
 	ids := make([]int, len(e))
 	for i := range e {
