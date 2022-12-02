@@ -12,7 +12,7 @@ var (
 	EndpointDataColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
 		{Name: "data_name", Type: field.TypeString},
-		{Name: "discription", Type: field.TypeString},
+		{Name: "description", Type: field.TypeString},
 		{Name: "type", Type: field.TypeString},
 		{Name: "provider_endpoint_required_data", Type: field.TypeInt, Nullable: true},
 		{Name: "provider_endpoint_provided_data", Type: field.TypeInt, Nullable: true},

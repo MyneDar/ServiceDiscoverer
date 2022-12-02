@@ -3,6 +3,7 @@ package schema
 import (
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/entsql"
+	"entgo.io/ent/schema"
 	"entgo.io/ent/schema/edge"
 	"entgo.io/ent/schema/field"
 )
@@ -21,12 +22,13 @@ testCall string    `json:"testCall"`*/
 // Fields of the ProviderRegisterData.
 func (ProviderRegisterData) Fields() []ent.Field {
 	return []ent.Field{
+		field.Int("id").StructTag(`json:"-"`),
 		field.String("name"),
-		field.String("port"),
-		field.String("address"),
+		field.String("port").StructTag(`json:"-"`),
+		field.String("address").StructTag(`json:"-"`),
 		field.String("description"),
-		field.Int("liveInterval"),
-		field.Int("liveTimeout"),
+		field.Int("liveInterval").StructTag(`json:"-"`),
+		field.Int("liveTimeout").StructTag(`json:"-"`),
 	}
 }
 
@@ -36,5 +38,11 @@ func (ProviderRegisterData) Edges() []ent.Edge {
 		edge.To("endpoints", ProviderEndpoint.Type).Annotations(entsql.Annotation{
 			OnDelete: entsql.Cascade,
 		}),
+	}
+}
+
+func (ProviderRegisterData) Annotations() []schema.Annotation {
+	return []schema.Annotation{
+		edge.Annotation{StructTag: `json:"connections"`},
 	}
 }

@@ -24,7 +24,7 @@ type ProviderEndpoint struct {
 	Type string `json:"type,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the ProviderEndpointQuery when eager-loading is set.
-	Edges                            ProviderEndpointEdges `json:"datas"`
+	Edges                            ProviderEndpointEdges `json:"data"`
 	provider_register_data_endpoints *int
 }
 

@@ -36,7 +36,7 @@ type EndpointDataMutation struct {
 	typ                      string
 	id                       *int
 	dataName                 *string
-	discription              *string
+	description              *string
 	_type                    *string
 	clearedFields            map[string]struct{}
 	endpoint_required        *int
@@ -118,6 +118,12 @@ func (m EndpointDataMutation) Tx() (*Tx, error) {
 	return tx, nil
 }
 
+// SetID sets the value of the id field. Note that this
+// operation is only accepted on creation of EndpointData entities.
+func (m *EndpointDataMutation) SetID(id int) {
+	m.id = &id
+}
+
 // ID returns the ID value in the mutation. Note that the ID is only available
 // if it was provided to the builder or after it was returned from the database.
 func (m *EndpointDataMutation) ID() (id int, exists bool) {
@@ -182,40 +188,40 @@ func (m *EndpointDataMutation) ResetDataName() {
 	m.dataName = nil
 }
 
-// SetDiscription sets the "discription" field.
-func (m *EndpointDataMutation) SetDiscription(s string) {
-	m.discription = &s
+// SetDescription sets the "description" field.
+func (m *EndpointDataMutation) SetDescription(s string) {
+	m.description = &s
 }
 
-// Discription returns the value of the "discription" field in the mutation.
-func (m *EndpointDataMutation) Discription() (r string, exists bool) {
-	v := m.discription
+// Description returns the value of the "description" field in the mutation.
+func (m *EndpointDataMutation) Description() (r string, exists bool) {
+	v := m.description
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldDiscription returns the old "discription" field's value of the EndpointData entity.
+// OldDescription returns the old "description" field's value of the EndpointData entity.
 // If the EndpointData object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *EndpointDataMutation) OldDiscription(ctx context.Context) (v string, err error) {
+func (m *EndpointDataMutation) OldDescription(ctx context.Context) (v string, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldDiscription is only allowed on UpdateOne operations")
+		return v, errors.New("OldDescription is only allowed on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldDiscription requires an ID field in the mutation")
+		return v, errors.New("OldDescription requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldDiscription: %w", err)
+		return v, fmt.Errorf("querying old value for OldDescription: %w", err)
 	}
-	return oldValue.Discription, nil
+	return oldValue.Description, nil
 }
 
-// ResetDiscription resets all changes to the "discription" field.
-func (m *EndpointDataMutation) ResetDiscription() {
-	m.discription = nil
+// ResetDescription resets all changes to the "description" field.
+func (m *EndpointDataMutation) ResetDescription() {
+	m.description = nil
 }
 
 // SetType sets the "type" field.
@@ -355,8 +361,8 @@ func (m *EndpointDataMutation) Fields() []string {
 	if m.dataName != nil {
 		fields = append(fields, endpointdata.FieldDataName)
 	}
-	if m.discription != nil {
-		fields = append(fields, endpointdata.FieldDiscription)
+	if m.description != nil {
+		fields = append(fields, endpointdata.FieldDescription)
 	}
 	if m._type != nil {
 		fields = append(fields, endpointdata.FieldType)
@@ -371,8 +377,8 @@ func (m *EndpointDataMutation) Field(name string) (ent.Value, bool) {
 	switch name {
 	case endpointdata.FieldDataName:
 		return m.DataName()
-	case endpointdata.FieldDiscription:
-		return m.Discription()
+	case endpointdata.FieldDescription:
+		return m.Description()
 	case endpointdata.FieldType:
 		return m.GetType()
 	}
@@ -386,8 +392,8 @@ func (m *EndpointDataMutation) OldField(ctx context.Context, name string) (ent.V
 	switch name {
 	case endpointdata.FieldDataName:
 		return m.OldDataName(ctx)
-	case endpointdata.FieldDiscription:
-		return m.OldDiscription(ctx)
+	case endpointdata.FieldDescription:
+		return m.OldDescription(ctx)
 	case endpointdata.FieldType:
 		return m.OldType(ctx)
 	}
@@ -406,12 +412,12 @@ func (m *EndpointDataMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetDataName(v)
 		return nil
-	case endpointdata.FieldDiscription:
+	case endpointdata.FieldDescription:
 		v, ok := value.(string)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetDiscription(v)
+		m.SetDescription(v)
 		return nil
 	case endpointdata.FieldType:
 		v, ok := value.(string)
@@ -472,8 +478,8 @@ func (m *EndpointDataMutation) ResetField(name string) error {
 	case endpointdata.FieldDataName:
 		m.ResetDataName()
 		return nil
-	case endpointdata.FieldDiscription:
-		m.ResetDiscription()
+	case endpointdata.FieldDescription:
+		m.ResetDescription()
 		return nil
 	case endpointdata.FieldType:
 		m.ResetType()
@@ -665,6 +671,12 @@ func (m ProviderEndpointMutation) Tx() (*Tx, error) {
 	tx := &Tx{config: m.config}
 	tx.init()
 	return tx, nil
+}
+
+// SetID sets the value of the id field. Note that this
+// operation is only accepted on creation of ProviderEndpoint entities.
+func (m *ProviderEndpointMutation) SetID(id int) {
+	m.id = &id
 }
 
 // ID returns the ID value in the mutation. Note that the ID is only available
@@ -1319,6 +1331,12 @@ func (m ProviderRegisterDataMutation) Tx() (*Tx, error) {
 	tx := &Tx{config: m.config}
 	tx.init()
 	return tx, nil
+}
+
+// SetID sets the value of the id field. Note that this
+// operation is only accepted on creation of ProviderRegisterData entities.
+func (m *ProviderRegisterDataMutation) SetID(id int) {
+	m.id = &id
 }
 
 // ID returns the ID value in the mutation. Note that the ID is only available

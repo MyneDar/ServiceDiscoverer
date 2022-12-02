@@ -39,6 +39,12 @@ func (pec *ProviderEndpointCreate) SetType(s string) *ProviderEndpointCreate {
 	return pec
 }
 
+// SetID sets the "id" field.
+func (pec *ProviderEndpointCreate) SetID(i int) *ProviderEndpointCreate {
+	pec.mutation.SetID(i)
+	return pec
+}
+
 // AddRequiredDatumIDs adds the "required_data" edge to the EndpointData entity by IDs.
 func (pec *ProviderEndpointCreate) AddRequiredDatumIDs(ids ...int) *ProviderEndpointCreate {
 	pec.mutation.AddRequiredDatumIDs(ids...)
@@ -184,8 +190,10 @@ func (pec *ProviderEndpointCreate) sqlSave(ctx context.Context) (*ProviderEndpoi
 		}
 		return nil, err
 	}
-	id := _spec.ID.Value.(int64)
-	_node.ID = int(id)
+	if _spec.ID.Value != _node.ID {
+		id := _spec.ID.Value.(int64)
+		_node.ID = int(id)
+	}
 	return _node, nil
 }
 
@@ -200,6 +208,10 @@ func (pec *ProviderEndpointCreate) createSpec() (*ProviderEndpoint, *sqlgraph.Cr
 			},
 		}
 	)
+	if id, ok := pec.mutation.ID(); ok {
+		_node.ID = id
+		_spec.ID.Value = id
+	}
 	if value, ok := pec.mutation.Name(); ok {
 		_spec.SetField(providerendpoint.FieldName, field.TypeString, value)
 		_node.Name = value
@@ -313,7 +325,7 @@ func (pecb *ProviderEndpointCreateBulk) Save(ctx context.Context) ([]*ProviderEn
 					return nil, err
 				}
 				mutation.id = &nodes[i].ID
-				if specs[i].ID.Value != nil {
+				if specs[i].ID.Value != nil && nodes[i].ID == 0 {
 					id := specs[i].ID.Value.(int64)
 					nodes[i].ID = int(id)
 				}

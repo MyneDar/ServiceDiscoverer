@@ -34,9 +34,9 @@ func (edu *EndpointDataUpdate) SetDataName(s string) *EndpointDataUpdate {
 	return edu
 }
 
-// SetDiscription sets the "discription" field.
-func (edu *EndpointDataUpdate) SetDiscription(s string) *EndpointDataUpdate {
-	edu.mutation.SetDiscription(s)
+// SetDescription sets the "description" field.
+func (edu *EndpointDataUpdate) SetDescription(s string) *EndpointDataUpdate {
+	edu.mutation.SetDescription(s)
 	return edu
 }
 
@@ -176,8 +176,8 @@ func (edu *EndpointDataUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	if value, ok := edu.mutation.DataName(); ok {
 		_spec.SetField(endpointdata.FieldDataName, field.TypeString, value)
 	}
-	if value, ok := edu.mutation.Discription(); ok {
-		_spec.SetField(endpointdata.FieldDiscription, field.TypeString, value)
+	if value, ok := edu.mutation.Description(); ok {
+		_spec.SetField(endpointdata.FieldDescription, field.TypeString, value)
 	}
 	if value, ok := edu.mutation.GetType(); ok {
 		_spec.SetField(endpointdata.FieldType, field.TypeString, value)
@@ -277,9 +277,9 @@ func (eduo *EndpointDataUpdateOne) SetDataName(s string) *EndpointDataUpdateOne 
 	return eduo
 }
 
-// SetDiscription sets the "discription" field.
-func (eduo *EndpointDataUpdateOne) SetDiscription(s string) *EndpointDataUpdateOne {
-	eduo.mutation.SetDiscription(s)
+// SetDescription sets the "description" field.
+func (eduo *EndpointDataUpdateOne) SetDescription(s string) *EndpointDataUpdateOne {
+	eduo.mutation.SetDescription(s)
 	return eduo
 }
 
@@ -449,8 +449,8 @@ func (eduo *EndpointDataUpdateOne) sqlSave(ctx context.Context) (_node *Endpoint
 	if value, ok := eduo.mutation.DataName(); ok {
 		_spec.SetField(endpointdata.FieldDataName, field.TypeString, value)
 	}
-	if value, ok := eduo.mutation.Discription(); ok {
-		_spec.SetField(endpointdata.FieldDiscription, field.TypeString, value)
+	if value, ok := eduo.mutation.Description(); ok {
+		_spec.SetField(endpointdata.FieldDescription, field.TypeString, value)
 	}
 	if value, ok := eduo.mutation.GetType(); ok {
 		_spec.SetField(endpointdata.FieldType, field.TypeString, value)

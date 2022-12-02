@@ -3,6 +3,7 @@ package schema
 import (
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/entsql"
+	"entgo.io/ent/schema"
 	"entgo.io/ent/schema/edge"
 	"entgo.io/ent/schema/field"
 )
@@ -15,6 +16,7 @@ type ProviderEndpoint struct {
 // Fields of the ProviderEndpoint.
 func (ProviderEndpoint) Fields() []ent.Field {
 	return []ent.Field{
+		field.Int("id").StructTag(`json:"-"`),
 		field.String("name"),
 		field.String("path"),
 		field.String("type"),
@@ -31,5 +33,10 @@ func (ProviderEndpoint) Edges() []ent.Edge {
 			OnDelete: entsql.Cascade,
 		}),
 		edge.From("provider", ProviderRegisterData.Type).Ref("endpoints").Unique(),
+	}
+}
+func (ProviderEndpoint) Annotations() []schema.Annotation {
+	return []schema.Annotation{
+		edge.Annotation{StructTag: `json:"data"`},
 	}
 }

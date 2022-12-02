@@ -14,22 +14,22 @@ import (
 type ProviderRegisterData struct {
 	config `json:"-"`
 	// ID of the ent.
-	ID int `json:"id,omitempty"`
+	ID int `json:"-"`
 	// Name holds the value of the "name" field.
 	Name string `json:"name,omitempty"`
 	// Port holds the value of the "port" field.
-	Port string `json:"port,omitempty"`
+	Port string `json:"-"`
 	// Address holds the value of the "address" field.
-	Address string `json:"address,omitempty"`
+	Address string `json:"-"`
 	// Description holds the value of the "description" field.
 	Description string `json:"description,omitempty"`
 	// LiveInterval holds the value of the "liveInterval" field.
-	LiveInterval int `json:"liveInterval,omitempty"`
+	LiveInterval int `json:"-"`
 	// LiveTimeout holds the value of the "liveTimeout" field.
-	LiveTimeout int `json:"liveTimeout,omitempty"`
+	LiveTimeout int `json:"-"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the ProviderRegisterDataQuery when eager-loading is set.
-	Edges ProviderRegisterDataEdges `json:"edges"`
+	Edges ProviderRegisterDataEdges `json:"connections"`
 }
 
 // ProviderRegisterDataEdges holds the relations/edges for other nodes in the graph.

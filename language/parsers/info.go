@@ -16,40 +16,38 @@ func NewInfoParser() *InfoParser {
 }
 
 func (l *InfoParser) Process(tok []models.TokenStruct, information map[string]interface{}) error {
-	service, err := dev.LocalClient.ProviderRegisterData.
-		Query().
-		Where(providerregisterdata.Name(tok[0].Data)).
-		Only(dev.Ctx)
-	serviceInfo := models.ServiceInfoDTO{
-		Name:        service.Name,
-		Description: service.Description,
-	}
-	if err != nil {
-		return err
-	}
-
-	var endpoints []*ent.ProviderEndpoint
+	var err error
+	var provider *ent.ProviderRegisterData
 	switch tok[1].Data {
-	case "*":
-		endpoints, err = service.QueryEndpoints().
-			WithProvidedData().
-			WithRequiredData().
-			All(dev.Ctx)
+	case models.ASTERISK.String():
+		provider, err = dev.LocalClient.ProviderRegisterData.
+			Query().
+			Where(providerregisterdata.Name(tok[0].Data)).
+			WithEndpoints(
+				func(query *ent.ProviderEndpointQuery) {
+					query.WithProvidedData()
+					query.WithRequiredData()
+					query.All(dev.Ctx)
+				},
+			).
+			Only(dev.Ctx)
 	default:
-		endpoints, err = service.QueryEndpoints().
-			Where(providerendpoint.Name(tok[1].Data)).
-			WithProvidedData().
-			WithRequiredData().
-			All(dev.Ctx)
+		provider, err = dev.LocalClient.ProviderRegisterData.
+			Query().
+			Where(providerregisterdata.Name(tok[0].Data)).
+			WithEndpoints(
+				func(query *ent.ProviderEndpointQuery) {
+					query.Where(providerendpoint.Name(tok[1].Data))
+					query.WithProvidedData()
+					query.WithRequiredData()
+					query.All(dev.Ctx)
+				},
+			).
+			Only(dev.Ctx)
 	}
-	serviceInfo.Endpoints = endpoints
 	if err != nil {
 		return err
 	}
-	/*data, errJs := json.Marshal(endpoints)
-	if errJs != nil {
-		return err
-	}*/
-	information["Info_Data"] = serviceInfo
+	information["Info_Data"] = provider
 	return err
 }

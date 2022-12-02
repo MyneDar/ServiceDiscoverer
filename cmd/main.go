@@ -99,7 +99,7 @@ func FillUpTestData(writer http.ResponseWriter, request *http.Request) {
 		Create().
 		SetDataName("Name").
 		SetType("string").
-		SetDiscription("Same test Name").
+		SetDescription("Same test Name").
 		SetEndpointProvided(end1).
 		Save(dev.Ctx)
 	if err != nil {

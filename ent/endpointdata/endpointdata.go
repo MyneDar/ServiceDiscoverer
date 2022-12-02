@@ -9,8 +9,8 @@ const (
 	FieldID = "id"
 	// FieldDataName holds the string denoting the dataname field in the database.
 	FieldDataName = "data_name"
-	// FieldDiscription holds the string denoting the discription field in the database.
-	FieldDiscription = "discription"
+	// FieldDescription holds the string denoting the description field in the database.
+	FieldDescription = "description"
 	// FieldType holds the string denoting the type field in the database.
 	FieldType = "type"
 	// EdgeEndpointRequired holds the string denoting the endpoint_required edge name in mutations.
@@ -39,7 +39,7 @@ const (
 var Columns = []string{
 	FieldID,
 	FieldDataName,
-	FieldDiscription,
+	FieldDescription,
 	FieldType,
 }
 

@@ -26,15 +26,21 @@ func (edc *EndpointDataCreate) SetDataName(s string) *EndpointDataCreate {
 	return edc
 }
 
-// SetDiscription sets the "discription" field.
-func (edc *EndpointDataCreate) SetDiscription(s string) *EndpointDataCreate {
-	edc.mutation.SetDiscription(s)
+// SetDescription sets the "description" field.
+func (edc *EndpointDataCreate) SetDescription(s string) *EndpointDataCreate {
+	edc.mutation.SetDescription(s)
 	return edc
 }
 
 // SetType sets the "type" field.
 func (edc *EndpointDataCreate) SetType(s string) *EndpointDataCreate {
 	edc.mutation.SetType(s)
+	return edc
+}
+
+// SetID sets the "id" field.
+func (edc *EndpointDataCreate) SetID(i int) *EndpointDataCreate {
+	edc.mutation.SetID(i)
 	return edc
 }
 
@@ -155,8 +161,8 @@ func (edc *EndpointDataCreate) check() error {
 	if _, ok := edc.mutation.DataName(); !ok {
 		return &ValidationError{Name: "dataName", err: errors.New(`ent: missing required field "EndpointData.dataName"`)}
 	}
-	if _, ok := edc.mutation.Discription(); !ok {
-		return &ValidationError{Name: "discription", err: errors.New(`ent: missing required field "EndpointData.discription"`)}
+	if _, ok := edc.mutation.Description(); !ok {
+		return &ValidationError{Name: "description", err: errors.New(`ent: missing required field "EndpointData.description"`)}
 	}
 	if _, ok := edc.mutation.GetType(); !ok {
 		return &ValidationError{Name: "type", err: errors.New(`ent: missing required field "EndpointData.type"`)}
@@ -172,8 +178,10 @@ func (edc *EndpointDataCreate) sqlSave(ctx context.Context) (*EndpointData, erro
 		}
 		return nil, err
 	}
-	id := _spec.ID.Value.(int64)
-	_node.ID = int(id)
+	if _spec.ID.Value != _node.ID {
+		id := _spec.ID.Value.(int64)
+		_node.ID = int(id)
+	}
 	return _node, nil
 }
 
@@ -188,13 +196,17 @@ func (edc *EndpointDataCreate) createSpec() (*EndpointData, *sqlgraph.CreateSpec
 			},
 		}
 	)
+	if id, ok := edc.mutation.ID(); ok {
+		_node.ID = id
+		_spec.ID.Value = id
+	}
 	if value, ok := edc.mutation.DataName(); ok {
 		_spec.SetField(endpointdata.FieldDataName, field.TypeString, value)
 		_node.DataName = value
 	}
-	if value, ok := edc.mutation.Discription(); ok {
-		_spec.SetField(endpointdata.FieldDiscription, field.TypeString, value)
-		_node.Discription = value
+	if value, ok := edc.mutation.Description(); ok {
+		_spec.SetField(endpointdata.FieldDescription, field.TypeString, value)
+		_node.Description = value
 	}
 	if value, ok := edc.mutation.GetType(); ok {
 		_spec.SetField(endpointdata.FieldType, field.TypeString, value)
@@ -283,7 +295,7 @@ func (edcb *EndpointDataCreateBulk) Save(ctx context.Context) ([]*EndpointData, 
 					return nil, err
 				}
 				mutation.id = &nodes[i].ID
-				if specs[i].ID.Value != nil {
+				if specs[i].ID.Value != nil && nodes[i].ID == 0 {
 					id := specs[i].ID.Value.(int64)
 					nodes[i].ID = int(id)
 				}

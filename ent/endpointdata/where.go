@@ -87,10 +87,10 @@ func DataName(v string) predicate.EndpointData {
 	})
 }
 
-// Discription applies equality check predicate on the "discription" field. It's identical to DiscriptionEQ.
-func Discription(v string) predicate.EndpointData {
+// Description applies equality check predicate on the "description" field. It's identical to DescriptionEQ.
+func Description(v string) predicate.EndpointData {
 	return predicate.EndpointData(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldDiscription), v))
+		s.Where(sql.EQ(s.C(FieldDescription), v))
 	})
 }
 
@@ -200,102 +200,102 @@ func DataNameContainsFold(v string) predicate.EndpointData {
 	})
 }
 
-// DiscriptionEQ applies the EQ predicate on the "discription" field.
-func DiscriptionEQ(v string) predicate.EndpointData {
+// DescriptionEQ applies the EQ predicate on the "description" field.
+func DescriptionEQ(v string) predicate.EndpointData {
 	return predicate.EndpointData(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldDiscription), v))
+		s.Where(sql.EQ(s.C(FieldDescription), v))
 	})
 }
 
-// DiscriptionNEQ applies the NEQ predicate on the "discription" field.
-func DiscriptionNEQ(v string) predicate.EndpointData {
+// DescriptionNEQ applies the NEQ predicate on the "description" field.
+func DescriptionNEQ(v string) predicate.EndpointData {
 	return predicate.EndpointData(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldDiscription), v))
+		s.Where(sql.NEQ(s.C(FieldDescription), v))
 	})
 }
 
-// DiscriptionIn applies the In predicate on the "discription" field.
-func DiscriptionIn(vs ...string) predicate.EndpointData {
+// DescriptionIn applies the In predicate on the "description" field.
+func DescriptionIn(vs ...string) predicate.EndpointData {
 	v := make([]any, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
 	return predicate.EndpointData(func(s *sql.Selector) {
-		s.Where(sql.In(s.C(FieldDiscription), v...))
+		s.Where(sql.In(s.C(FieldDescription), v...))
 	})
 }
 
-// DiscriptionNotIn applies the NotIn predicate on the "discription" field.
-func DiscriptionNotIn(vs ...string) predicate.EndpointData {
+// DescriptionNotIn applies the NotIn predicate on the "description" field.
+func DescriptionNotIn(vs ...string) predicate.EndpointData {
 	v := make([]any, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
 	return predicate.EndpointData(func(s *sql.Selector) {
-		s.Where(sql.NotIn(s.C(FieldDiscription), v...))
+		s.Where(sql.NotIn(s.C(FieldDescription), v...))
 	})
 }
 
-// DiscriptionGT applies the GT predicate on the "discription" field.
-func DiscriptionGT(v string) predicate.EndpointData {
+// DescriptionGT applies the GT predicate on the "description" field.
+func DescriptionGT(v string) predicate.EndpointData {
 	return predicate.EndpointData(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldDiscription), v))
+		s.Where(sql.GT(s.C(FieldDescription), v))
 	})
 }
 
-// DiscriptionGTE applies the GTE predicate on the "discription" field.
-func DiscriptionGTE(v string) predicate.EndpointData {
+// DescriptionGTE applies the GTE predicate on the "description" field.
+func DescriptionGTE(v string) predicate.EndpointData {
 	return predicate.EndpointData(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldDiscription), v))
+		s.Where(sql.GTE(s.C(FieldDescription), v))
 	})
 }
 
-// DiscriptionLT applies the LT predicate on the "discription" field.
-func DiscriptionLT(v string) predicate.EndpointData {
+// DescriptionLT applies the LT predicate on the "description" field.
+func DescriptionLT(v string) predicate.EndpointData {
 	return predicate.EndpointData(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldDiscription), v))
+		s.Where(sql.LT(s.C(FieldDescription), v))
 	})
 }
 
-// DiscriptionLTE applies the LTE predicate on the "discription" field.
-func DiscriptionLTE(v string) predicate.EndpointData {
+// DescriptionLTE applies the LTE predicate on the "description" field.
+func DescriptionLTE(v string) predicate.EndpointData {
 	return predicate.EndpointData(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldDiscription), v))
+		s.Where(sql.LTE(s.C(FieldDescription), v))
 	})
 }
 
-// DiscriptionContains applies the Contains predicate on the "discription" field.
-func DiscriptionContains(v string) predicate.EndpointData {
+// DescriptionContains applies the Contains predicate on the "description" field.
+func DescriptionContains(v string) predicate.EndpointData {
 	return predicate.EndpointData(func(s *sql.Selector) {
-		s.Where(sql.Contains(s.C(FieldDiscription), v))
+		s.Where(sql.Contains(s.C(FieldDescription), v))
 	})
 }
 
-// DiscriptionHasPrefix applies the HasPrefix predicate on the "discription" field.
-func DiscriptionHasPrefix(v string) predicate.EndpointData {
+// DescriptionHasPrefix applies the HasPrefix predicate on the "description" field.
+func DescriptionHasPrefix(v string) predicate.EndpointData {
 	return predicate.EndpointData(func(s *sql.Selector) {
-		s.Where(sql.HasPrefix(s.C(FieldDiscription), v))
+		s.Where(sql.HasPrefix(s.C(FieldDescription), v))
 	})
 }
 
-// DiscriptionHasSuffix applies the HasSuffix predicate on the "discription" field.
-func DiscriptionHasSuffix(v string) predicate.EndpointData {
+// DescriptionHasSuffix applies the HasSuffix predicate on the "description" field.
+func DescriptionHasSuffix(v string) predicate.EndpointData {
 	return predicate.EndpointData(func(s *sql.Selector) {
-		s.Where(sql.HasSuffix(s.C(FieldDiscription), v))
+		s.Where(sql.HasSuffix(s.C(FieldDescription), v))
 	})
 }
 
-// DiscriptionEqualFold applies the EqualFold predicate on the "discription" field.
-func DiscriptionEqualFold(v string) predicate.EndpointData {
+// DescriptionEqualFold applies the EqualFold predicate on the "description" field.
+func DescriptionEqualFold(v string) predicate.EndpointData {
 	return predicate.EndpointData(func(s *sql.Selector) {
-		s.Where(sql.EqualFold(s.C(FieldDiscription), v))
+		s.Where(sql.EqualFold(s.C(FieldDescription), v))
 	})
 }
 
-// DiscriptionContainsFold applies the ContainsFold predicate on the "discription" field.
-func DiscriptionContainsFold(v string) predicate.EndpointData {
+// DescriptionContainsFold applies the ContainsFold predicate on the "description" field.
+func DescriptionContainsFold(v string) predicate.EndpointData {
 	return predicate.EndpointData(func(s *sql.Selector) {
-		s.Where(sql.ContainsFold(s.C(FieldDiscription), v))
+		s.Where(sql.ContainsFold(s.C(FieldDescription), v))
 	})
 }
 

@@ -15,7 +15,7 @@ type Service struct {
 func (s *Service) Init() {
 	err := dev.EntClientInit()
 	if err != nil {
-		log.Fatal()
+		log.Fatal(err)
 	}
 	s.tokenizer = NewTokenizer()
 	s.languageAnalyzer = NewLanguageAnalyzer()

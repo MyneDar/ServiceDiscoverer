@@ -18,8 +18,8 @@ type EndpointData struct {
 	ID int `json:"-"`
 	// DataName holds the value of the "dataName" field.
 	DataName string `json:"dataName,omitempty"`
-	// Discription holds the value of the "discription" field.
-	Discription string `json:"discription,omitempty"`
+	// Description holds the value of the "description" field.
+	Description string `json:"description,omitempty"`
 	// Type holds the value of the "type" field.
 	Type string `json:"type,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
@@ -73,7 +73,7 @@ func (*EndpointData) scanValues(columns []string) ([]any, error) {
 		switch columns[i] {
 		case endpointdata.FieldID:
 			values[i] = new(sql.NullInt64)
-		case endpointdata.FieldDataName, endpointdata.FieldDiscription, endpointdata.FieldType:
+		case endpointdata.FieldDataName, endpointdata.FieldDescription, endpointdata.FieldType:
 			values[i] = new(sql.NullString)
 		case endpointdata.ForeignKeys[0]: // provider_endpoint_required_data
 			values[i] = new(sql.NullInt64)
@@ -106,11 +106,11 @@ func (ed *EndpointData) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				ed.DataName = value.String
 			}
-		case endpointdata.FieldDiscription:
+		case endpointdata.FieldDescription:
 			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field discription", values[i])
+				return fmt.Errorf("unexpected type %T for field description", values[i])
 			} else if value.Valid {
-				ed.Discription = value.String
+				ed.Description = value.String
 			}
 		case endpointdata.FieldType:
 			if value, ok := values[i].(*sql.NullString); !ok {
@@ -173,8 +173,8 @@ func (ed *EndpointData) String() string {
 	builder.WriteString("dataName=")
 	builder.WriteString(ed.DataName)
 	builder.WriteString(", ")
-	builder.WriteString("discription=")
-	builder.WriteString(ed.Discription)
+	builder.WriteString("description=")
+	builder.WriteString(ed.Description)
 	builder.WriteString(", ")
 	builder.WriteString("type=")
 	builder.WriteString(ed.Type)
