@@ -11,391 +11,257 @@ import (
 
 // ID filters vertices based on their ID field.
 func ID(id int) predicate.EndpointData {
-	return predicate.EndpointData(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldID), id))
-	})
+	return predicate.EndpointData(sql.FieldEQ(FieldID, id))
 }
 
 // IDEQ applies the EQ predicate on the ID field.
 func IDEQ(id int) predicate.EndpointData {
-	return predicate.EndpointData(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldID), id))
-	})
+	return predicate.EndpointData(sql.FieldEQ(FieldID, id))
 }
 
 // IDNEQ applies the NEQ predicate on the ID field.
 func IDNEQ(id int) predicate.EndpointData {
-	return predicate.EndpointData(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldID), id))
-	})
+	return predicate.EndpointData(sql.FieldNEQ(FieldID, id))
 }
 
 // IDIn applies the In predicate on the ID field.
 func IDIn(ids ...int) predicate.EndpointData {
-	return predicate.EndpointData(func(s *sql.Selector) {
-		v := make([]any, len(ids))
-		for i := range v {
-			v[i] = ids[i]
-		}
-		s.Where(sql.In(s.C(FieldID), v...))
-	})
+	return predicate.EndpointData(sql.FieldIn(FieldID, ids...))
 }
 
 // IDNotIn applies the NotIn predicate on the ID field.
 func IDNotIn(ids ...int) predicate.EndpointData {
-	return predicate.EndpointData(func(s *sql.Selector) {
-		v := make([]any, len(ids))
-		for i := range v {
-			v[i] = ids[i]
-		}
-		s.Where(sql.NotIn(s.C(FieldID), v...))
-	})
+	return predicate.EndpointData(sql.FieldNotIn(FieldID, ids...))
 }
 
 // IDGT applies the GT predicate on the ID field.
 func IDGT(id int) predicate.EndpointData {
-	return predicate.EndpointData(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldID), id))
-	})
+	return predicate.EndpointData(sql.FieldGT(FieldID, id))
 }
 
 // IDGTE applies the GTE predicate on the ID field.
 func IDGTE(id int) predicate.EndpointData {
-	return predicate.EndpointData(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldID), id))
-	})
+	return predicate.EndpointData(sql.FieldGTE(FieldID, id))
 }
 
 // IDLT applies the LT predicate on the ID field.
 func IDLT(id int) predicate.EndpointData {
-	return predicate.EndpointData(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldID), id))
-	})
+	return predicate.EndpointData(sql.FieldLT(FieldID, id))
 }
 
 // IDLTE applies the LTE predicate on the ID field.
 func IDLTE(id int) predicate.EndpointData {
-	return predicate.EndpointData(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldID), id))
-	})
+	return predicate.EndpointData(sql.FieldLTE(FieldID, id))
 }
 
 // DataName applies equality check predicate on the "dataName" field. It's identical to DataNameEQ.
 func DataName(v string) predicate.EndpointData {
-	return predicate.EndpointData(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldDataName), v))
-	})
+	return predicate.EndpointData(sql.FieldEQ(FieldDataName, v))
 }
 
 // Description applies equality check predicate on the "description" field. It's identical to DescriptionEQ.
 func Description(v string) predicate.EndpointData {
-	return predicate.EndpointData(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldDescription), v))
-	})
+	return predicate.EndpointData(sql.FieldEQ(FieldDescription, v))
 }
 
 // Type applies equality check predicate on the "type" field. It's identical to TypeEQ.
 func Type(v string) predicate.EndpointData {
-	return predicate.EndpointData(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldType), v))
-	})
+	return predicate.EndpointData(sql.FieldEQ(FieldType, v))
 }
 
 // DataNameEQ applies the EQ predicate on the "dataName" field.
 func DataNameEQ(v string) predicate.EndpointData {
-	return predicate.EndpointData(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldDataName), v))
-	})
+	return predicate.EndpointData(sql.FieldEQ(FieldDataName, v))
 }
 
 // DataNameNEQ applies the NEQ predicate on the "dataName" field.
 func DataNameNEQ(v string) predicate.EndpointData {
-	return predicate.EndpointData(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldDataName), v))
-	})
+	return predicate.EndpointData(sql.FieldNEQ(FieldDataName, v))
 }
 
 // DataNameIn applies the In predicate on the "dataName" field.
 func DataNameIn(vs ...string) predicate.EndpointData {
-	v := make([]any, len(vs))
-	for i := range v {
-		v[i] = vs[i]
-	}
-	return predicate.EndpointData(func(s *sql.Selector) {
-		s.Where(sql.In(s.C(FieldDataName), v...))
-	})
+	return predicate.EndpointData(sql.FieldIn(FieldDataName, vs...))
 }
 
 // DataNameNotIn applies the NotIn predicate on the "dataName" field.
 func DataNameNotIn(vs ...string) predicate.EndpointData {
-	v := make([]any, len(vs))
-	for i := range v {
-		v[i] = vs[i]
-	}
-	return predicate.EndpointData(func(s *sql.Selector) {
-		s.Where(sql.NotIn(s.C(FieldDataName), v...))
-	})
+	return predicate.EndpointData(sql.FieldNotIn(FieldDataName, vs...))
 }
 
 // DataNameGT applies the GT predicate on the "dataName" field.
 func DataNameGT(v string) predicate.EndpointData {
-	return predicate.EndpointData(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldDataName), v))
-	})
+	return predicate.EndpointData(sql.FieldGT(FieldDataName, v))
 }
 
 // DataNameGTE applies the GTE predicate on the "dataName" field.
 func DataNameGTE(v string) predicate.EndpointData {
-	return predicate.EndpointData(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldDataName), v))
-	})
+	return predicate.EndpointData(sql.FieldGTE(FieldDataName, v))
 }
 
 // DataNameLT applies the LT predicate on the "dataName" field.
 func DataNameLT(v string) predicate.EndpointData {
-	return predicate.EndpointData(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldDataName), v))
-	})
+	return predicate.EndpointData(sql.FieldLT(FieldDataName, v))
 }
 
 // DataNameLTE applies the LTE predicate on the "dataName" field.
 func DataNameLTE(v string) predicate.EndpointData {
-	return predicate.EndpointData(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldDataName), v))
-	})
+	return predicate.EndpointData(sql.FieldLTE(FieldDataName, v))
 }
 
 // DataNameContains applies the Contains predicate on the "dataName" field.
 func DataNameContains(v string) predicate.EndpointData {
-	return predicate.EndpointData(func(s *sql.Selector) {
-		s.Where(sql.Contains(s.C(FieldDataName), v))
-	})
+	return predicate.EndpointData(sql.FieldContains(FieldDataName, v))
 }
 
 // DataNameHasPrefix applies the HasPrefix predicate on the "dataName" field.
 func DataNameHasPrefix(v string) predicate.EndpointData {
-	return predicate.EndpointData(func(s *sql.Selector) {
-		s.Where(sql.HasPrefix(s.C(FieldDataName), v))
-	})
+	return predicate.EndpointData(sql.FieldHasPrefix(FieldDataName, v))
 }
 
 // DataNameHasSuffix applies the HasSuffix predicate on the "dataName" field.
 func DataNameHasSuffix(v string) predicate.EndpointData {
-	return predicate.EndpointData(func(s *sql.Selector) {
-		s.Where(sql.HasSuffix(s.C(FieldDataName), v))
-	})
+	return predicate.EndpointData(sql.FieldHasSuffix(FieldDataName, v))
 }
 
 // DataNameEqualFold applies the EqualFold predicate on the "dataName" field.
 func DataNameEqualFold(v string) predicate.EndpointData {
-	return predicate.EndpointData(func(s *sql.Selector) {
-		s.Where(sql.EqualFold(s.C(FieldDataName), v))
-	})
+	return predicate.EndpointData(sql.FieldEqualFold(FieldDataName, v))
 }
 
 // DataNameContainsFold applies the ContainsFold predicate on the "dataName" field.
 func DataNameContainsFold(v string) predicate.EndpointData {
-	return predicate.EndpointData(func(s *sql.Selector) {
-		s.Where(sql.ContainsFold(s.C(FieldDataName), v))
-	})
+	return predicate.EndpointData(sql.FieldContainsFold(FieldDataName, v))
 }
 
 // DescriptionEQ applies the EQ predicate on the "description" field.
 func DescriptionEQ(v string) predicate.EndpointData {
-	return predicate.EndpointData(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldDescription), v))
-	})
+	return predicate.EndpointData(sql.FieldEQ(FieldDescription, v))
 }
 
 // DescriptionNEQ applies the NEQ predicate on the "description" field.
 func DescriptionNEQ(v string) predicate.EndpointData {
-	return predicate.EndpointData(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldDescription), v))
-	})
+	return predicate.EndpointData(sql.FieldNEQ(FieldDescription, v))
 }
 
 // DescriptionIn applies the In predicate on the "description" field.
 func DescriptionIn(vs ...string) predicate.EndpointData {
-	v := make([]any, len(vs))
-	for i := range v {
-		v[i] = vs[i]
-	}
-	return predicate.EndpointData(func(s *sql.Selector) {
-		s.Where(sql.In(s.C(FieldDescription), v...))
-	})
+	return predicate.EndpointData(sql.FieldIn(FieldDescription, vs...))
 }
 
 // DescriptionNotIn applies the NotIn predicate on the "description" field.
 func DescriptionNotIn(vs ...string) predicate.EndpointData {
-	v := make([]any, len(vs))
-	for i := range v {
-		v[i] = vs[i]
-	}
-	return predicate.EndpointData(func(s *sql.Selector) {
-		s.Where(sql.NotIn(s.C(FieldDescription), v...))
-	})
+	return predicate.EndpointData(sql.FieldNotIn(FieldDescription, vs...))
 }
 
 // DescriptionGT applies the GT predicate on the "description" field.
 func DescriptionGT(v string) predicate.EndpointData {
-	return predicate.EndpointData(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldDescription), v))
-	})
+	return predicate.EndpointData(sql.FieldGT(FieldDescription, v))
 }
 
 // DescriptionGTE applies the GTE predicate on the "description" field.
 func DescriptionGTE(v string) predicate.EndpointData {
-	return predicate.EndpointData(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldDescription), v))
-	})
+	return predicate.EndpointData(sql.FieldGTE(FieldDescription, v))
 }
 
 // DescriptionLT applies the LT predicate on the "description" field.
 func DescriptionLT(v string) predicate.EndpointData {
-	return predicate.EndpointData(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldDescription), v))
-	})
+	return predicate.EndpointData(sql.FieldLT(FieldDescription, v))
 }
 
 // DescriptionLTE applies the LTE predicate on the "description" field.
 func DescriptionLTE(v string) predicate.EndpointData {
-	return predicate.EndpointData(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldDescription), v))
-	})
+	return predicate.EndpointData(sql.FieldLTE(FieldDescription, v))
 }
 
 // DescriptionContains applies the Contains predicate on the "description" field.
 func DescriptionContains(v string) predicate.EndpointData {
-	return predicate.EndpointData(func(s *sql.Selector) {
-		s.Where(sql.Contains(s.C(FieldDescription), v))
-	})
+	return predicate.EndpointData(sql.FieldContains(FieldDescription, v))
 }
 
 // DescriptionHasPrefix applies the HasPrefix predicate on the "description" field.
 func DescriptionHasPrefix(v string) predicate.EndpointData {
-	return predicate.EndpointData(func(s *sql.Selector) {
-		s.Where(sql.HasPrefix(s.C(FieldDescription), v))
-	})
+	return predicate.EndpointData(sql.FieldHasPrefix(FieldDescription, v))
 }
 
 // DescriptionHasSuffix applies the HasSuffix predicate on the "description" field.
 func DescriptionHasSuffix(v string) predicate.EndpointData {
-	return predicate.EndpointData(func(s *sql.Selector) {
-		s.Where(sql.HasSuffix(s.C(FieldDescription), v))
-	})
+	return predicate.EndpointData(sql.FieldHasSuffix(FieldDescription, v))
 }
 
 // DescriptionEqualFold applies the EqualFold predicate on the "description" field.
 func DescriptionEqualFold(v string) predicate.EndpointData {
-	return predicate.EndpointData(func(s *sql.Selector) {
-		s.Where(sql.EqualFold(s.C(FieldDescription), v))
-	})
+	return predicate.EndpointData(sql.FieldEqualFold(FieldDescription, v))
 }
 
 // DescriptionContainsFold applies the ContainsFold predicate on the "description" field.
 func DescriptionContainsFold(v string) predicate.EndpointData {
-	return predicate.EndpointData(func(s *sql.Selector) {
-		s.Where(sql.ContainsFold(s.C(FieldDescription), v))
-	})
+	return predicate.EndpointData(sql.FieldContainsFold(FieldDescription, v))
 }
 
 // TypeEQ applies the EQ predicate on the "type" field.
 func TypeEQ(v string) predicate.EndpointData {
-	return predicate.EndpointData(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldType), v))
-	})
+	return predicate.EndpointData(sql.FieldEQ(FieldType, v))
 }
 
 // TypeNEQ applies the NEQ predicate on the "type" field.
 func TypeNEQ(v string) predicate.EndpointData {
-	return predicate.EndpointData(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldType), v))
-	})
+	return predicate.EndpointData(sql.FieldNEQ(FieldType, v))
 }
 
 // TypeIn applies the In predicate on the "type" field.
 func TypeIn(vs ...string) predicate.EndpointData {
-	v := make([]any, len(vs))
-	for i := range v {
-		v[i] = vs[i]
-	}
-	return predicate.EndpointData(func(s *sql.Selector) {
-		s.Where(sql.In(s.C(FieldType), v...))
-	})
+	return predicate.EndpointData(sql.FieldIn(FieldType, vs...))
 }
 
 // TypeNotIn applies the NotIn predicate on the "type" field.
 func TypeNotIn(vs ...string) predicate.EndpointData {
-	v := make([]any, len(vs))
-	for i := range v {
-		v[i] = vs[i]
-	}
-	return predicate.EndpointData(func(s *sql.Selector) {
-		s.Where(sql.NotIn(s.C(FieldType), v...))
-	})
+	return predicate.EndpointData(sql.FieldNotIn(FieldType, vs...))
 }
 
 // TypeGT applies the GT predicate on the "type" field.
 func TypeGT(v string) predicate.EndpointData {
-	return predicate.EndpointData(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldType), v))
-	})
+	return predicate.EndpointData(sql.FieldGT(FieldType, v))
 }
 
 // TypeGTE applies the GTE predicate on the "type" field.
 func TypeGTE(v string) predicate.EndpointData {
-	return predicate.EndpointData(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldType), v))
-	})
+	return predicate.EndpointData(sql.FieldGTE(FieldType, v))
 }
 
 // TypeLT applies the LT predicate on the "type" field.
 func TypeLT(v string) predicate.EndpointData {
-	return predicate.EndpointData(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldType), v))
-	})
+	return predicate.EndpointData(sql.FieldLT(FieldType, v))
 }
 
 // TypeLTE applies the LTE predicate on the "type" field.
 func TypeLTE(v string) predicate.EndpointData {
-	return predicate.EndpointData(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldType), v))
-	})
+	return predicate.EndpointData(sql.FieldLTE(FieldType, v))
 }
 
 // TypeContains applies the Contains predicate on the "type" field.
 func TypeContains(v string) predicate.EndpointData {
-	return predicate.EndpointData(func(s *sql.Selector) {
-		s.Where(sql.Contains(s.C(FieldType), v))
-	})
+	return predicate.EndpointData(sql.FieldContains(FieldType, v))
 }
 
 // TypeHasPrefix applies the HasPrefix predicate on the "type" field.
 func TypeHasPrefix(v string) predicate.EndpointData {
-	return predicate.EndpointData(func(s *sql.Selector) {
-		s.Where(sql.HasPrefix(s.C(FieldType), v))
-	})
+	return predicate.EndpointData(sql.FieldHasPrefix(FieldType, v))
 }
 
 // TypeHasSuffix applies the HasSuffix predicate on the "type" field.
 func TypeHasSuffix(v string) predicate.EndpointData {
-	return predicate.EndpointData(func(s *sql.Selector) {
-		s.Where(sql.HasSuffix(s.C(FieldType), v))
-	})
+	return predicate.EndpointData(sql.FieldHasSuffix(FieldType, v))
 }
 
 // TypeEqualFold applies the EqualFold predicate on the "type" field.
 func TypeEqualFold(v string) predicate.EndpointData {
-	return predicate.EndpointData(func(s *sql.Selector) {
-		s.Where(sql.EqualFold(s.C(FieldType), v))
-	})
+	return predicate.EndpointData(sql.FieldEqualFold(FieldType, v))
 }
 
 // TypeContainsFold applies the ContainsFold predicate on the "type" field.
 func TypeContainsFold(v string) predicate.EndpointData {
-	return predicate.EndpointData(func(s *sql.Selector) {
-		s.Where(sql.ContainsFold(s.C(FieldType), v))
-	})
+	return predicate.EndpointData(sql.FieldContainsFold(FieldType, v))
 }
 
 // HasEndpointRequired applies the HasEdge predicate on the "endpoint_required" edge.
@@ -403,7 +269,6 @@ func HasEndpointRequired() predicate.EndpointData {
 	return predicate.EndpointData(func(s *sql.Selector) {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(Table, FieldID),
-			sqlgraph.To(EndpointRequiredTable, FieldID),
 			sqlgraph.Edge(sqlgraph.M2O, true, EndpointRequiredTable, EndpointRequiredColumn),
 		)
 		sqlgraph.HasNeighbors(s, step)
@@ -431,7 +296,6 @@ func HasEndpointProvided() predicate.EndpointData {
 	return predicate.EndpointData(func(s *sql.Selector) {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(Table, FieldID),
-			sqlgraph.To(EndpointProvidedTable, FieldID),
 			sqlgraph.Edge(sqlgraph.M2O, true, EndpointProvidedTable, EndpointProvidedColumn),
 		)
 		sqlgraph.HasNeighbors(s, step)

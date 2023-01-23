@@ -34,7 +34,7 @@ type Client struct {
 
 // NewClient creates a new client configured with the given options.
 func NewClient(opts ...Option) *Client {
-	cfg := config{log: log.Println, hooks: &hooks{}}
+	cfg := config{log: log.Println, hooks: &hooks{}, inters: &inters{}}
 	cfg.options(opts...)
 	client := &Client{config: cfg}
 	client.init()
@@ -137,6 +137,28 @@ func (c *Client) Use(hooks ...Hook) {
 	c.ProviderRegisterData.Use(hooks...)
 }
 
+// Intercept adds the query interceptors to all the entity clients.
+// In order to add interceptors to a specific client, call: `client.Node.Intercept(...)`.
+func (c *Client) Intercept(interceptors ...Interceptor) {
+	c.EndpointData.Intercept(interceptors...)
+	c.ProviderEndpoint.Intercept(interceptors...)
+	c.ProviderRegisterData.Intercept(interceptors...)
+}
+
+// Mutate implements the ent.Mutator interface.
+func (c *Client) Mutate(ctx context.Context, m Mutation) (Value, error) {
+	switch m := m.(type) {
+	case *EndpointDataMutation:
+		return c.EndpointData.mutate(ctx, m)
+	case *ProviderEndpointMutation:
+		return c.ProviderEndpoint.mutate(ctx, m)
+	case *ProviderRegisterDataMutation:
+		return c.ProviderRegisterData.mutate(ctx, m)
+	default:
+		return nil, fmt.Errorf("ent: unknown mutation type %T", m)
+	}
+}
+
 // EndpointDataClient is a client for the EndpointData schema.
 type EndpointDataClient struct {
 	config
@@ -151,6 +173,12 @@ func NewEndpointDataClient(c config) *EndpointDataClient {
 // A call to `Use(f, g, h)` equals to `endpointdata.Hooks(f(g(h())))`.
 func (c *EndpointDataClient) Use(hooks ...Hook) {
 	c.hooks.EndpointData = append(c.hooks.EndpointData, hooks...)
+}
+
+// Use adds a list of query interceptors to the interceptors stack.
+// A call to `Intercept(f, g, h)` equals to `endpointdata.Intercept(f(g(h())))`.
+func (c *EndpointDataClient) Intercept(interceptors ...Interceptor) {
+	c.inters.EndpointData = append(c.inters.EndpointData, interceptors...)
 }
 
 // Create returns a builder for creating a EndpointData entity.
@@ -205,6 +233,7 @@ func (c *EndpointDataClient) DeleteOneID(id int) *EndpointDataDeleteOne {
 func (c *EndpointDataClient) Query() *EndpointDataQuery {
 	return &EndpointDataQuery{
 		config: c.config,
+		inters: c.Interceptors(),
 	}
 }
 
@@ -224,7 +253,7 @@ func (c *EndpointDataClient) GetX(ctx context.Context, id int) *EndpointData {
 
 // QueryEndpointRequired queries the endpoint_required edge of a EndpointData.
 func (c *EndpointDataClient) QueryEndpointRequired(ed *EndpointData) *ProviderEndpointQuery {
-	query := &ProviderEndpointQuery{config: c.config}
+	query := (&ProviderEndpointClient{config: c.config}).Query()
 	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
 		id := ed.ID
 		step := sqlgraph.NewStep(
@@ -240,7 +269,7 @@ func (c *EndpointDataClient) QueryEndpointRequired(ed *EndpointData) *ProviderEn
 
 // QueryEndpointProvided queries the endpoint_provided edge of a EndpointData.
 func (c *EndpointDataClient) QueryEndpointProvided(ed *EndpointData) *ProviderEndpointQuery {
-	query := &ProviderEndpointQuery{config: c.config}
+	query := (&ProviderEndpointClient{config: c.config}).Query()
 	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
 		id := ed.ID
 		step := sqlgraph.NewStep(
@@ -259,6 +288,26 @@ func (c *EndpointDataClient) Hooks() []Hook {
 	return c.hooks.EndpointData
 }
 
+// Interceptors returns the client interceptors.
+func (c *EndpointDataClient) Interceptors() []Interceptor {
+	return c.inters.EndpointData
+}
+
+func (c *EndpointDataClient) mutate(ctx context.Context, m *EndpointDataMutation) (Value, error) {
+	switch m.Op() {
+	case OpCreate:
+		return (&EndpointDataCreate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdate:
+		return (&EndpointDataUpdate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdateOne:
+		return (&EndpointDataUpdateOne{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpDelete, OpDeleteOne:
+		return (&EndpointDataDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
+	default:
+		return nil, fmt.Errorf("ent: unknown EndpointData mutation op: %q", m.Op())
+	}
+}
+
 // ProviderEndpointClient is a client for the ProviderEndpoint schema.
 type ProviderEndpointClient struct {
 	config
@@ -273,6 +322,12 @@ func NewProviderEndpointClient(c config) *ProviderEndpointClient {
 // A call to `Use(f, g, h)` equals to `providerendpoint.Hooks(f(g(h())))`.
 func (c *ProviderEndpointClient) Use(hooks ...Hook) {
 	c.hooks.ProviderEndpoint = append(c.hooks.ProviderEndpoint, hooks...)
+}
+
+// Use adds a list of query interceptors to the interceptors stack.
+// A call to `Intercept(f, g, h)` equals to `providerendpoint.Intercept(f(g(h())))`.
+func (c *ProviderEndpointClient) Intercept(interceptors ...Interceptor) {
+	c.inters.ProviderEndpoint = append(c.inters.ProviderEndpoint, interceptors...)
 }
 
 // Create returns a builder for creating a ProviderEndpoint entity.
@@ -327,6 +382,7 @@ func (c *ProviderEndpointClient) DeleteOneID(id int) *ProviderEndpointDeleteOne 
 func (c *ProviderEndpointClient) Query() *ProviderEndpointQuery {
 	return &ProviderEndpointQuery{
 		config: c.config,
+		inters: c.Interceptors(),
 	}
 }
 
@@ -346,7 +402,7 @@ func (c *ProviderEndpointClient) GetX(ctx context.Context, id int) *ProviderEndp
 
 // QueryRequiredData queries the required_data edge of a ProviderEndpoint.
 func (c *ProviderEndpointClient) QueryRequiredData(pe *ProviderEndpoint) *EndpointDataQuery {
-	query := &EndpointDataQuery{config: c.config}
+	query := (&EndpointDataClient{config: c.config}).Query()
 	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
 		id := pe.ID
 		step := sqlgraph.NewStep(
@@ -362,7 +418,7 @@ func (c *ProviderEndpointClient) QueryRequiredData(pe *ProviderEndpoint) *Endpoi
 
 // QueryProvidedData queries the provided_data edge of a ProviderEndpoint.
 func (c *ProviderEndpointClient) QueryProvidedData(pe *ProviderEndpoint) *EndpointDataQuery {
-	query := &EndpointDataQuery{config: c.config}
+	query := (&EndpointDataClient{config: c.config}).Query()
 	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
 		id := pe.ID
 		step := sqlgraph.NewStep(
@@ -378,7 +434,7 @@ func (c *ProviderEndpointClient) QueryProvidedData(pe *ProviderEndpoint) *Endpoi
 
 // QueryProvider queries the provider edge of a ProviderEndpoint.
 func (c *ProviderEndpointClient) QueryProvider(pe *ProviderEndpoint) *ProviderRegisterDataQuery {
-	query := &ProviderRegisterDataQuery{config: c.config}
+	query := (&ProviderRegisterDataClient{config: c.config}).Query()
 	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
 		id := pe.ID
 		step := sqlgraph.NewStep(
@@ -397,6 +453,26 @@ func (c *ProviderEndpointClient) Hooks() []Hook {
 	return c.hooks.ProviderEndpoint
 }
 
+// Interceptors returns the client interceptors.
+func (c *ProviderEndpointClient) Interceptors() []Interceptor {
+	return c.inters.ProviderEndpoint
+}
+
+func (c *ProviderEndpointClient) mutate(ctx context.Context, m *ProviderEndpointMutation) (Value, error) {
+	switch m.Op() {
+	case OpCreate:
+		return (&ProviderEndpointCreate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdate:
+		return (&ProviderEndpointUpdate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdateOne:
+		return (&ProviderEndpointUpdateOne{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpDelete, OpDeleteOne:
+		return (&ProviderEndpointDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
+	default:
+		return nil, fmt.Errorf("ent: unknown ProviderEndpoint mutation op: %q", m.Op())
+	}
+}
+
 // ProviderRegisterDataClient is a client for the ProviderRegisterData schema.
 type ProviderRegisterDataClient struct {
 	config
@@ -411,6 +487,12 @@ func NewProviderRegisterDataClient(c config) *ProviderRegisterDataClient {
 // A call to `Use(f, g, h)` equals to `providerregisterdata.Hooks(f(g(h())))`.
 func (c *ProviderRegisterDataClient) Use(hooks ...Hook) {
 	c.hooks.ProviderRegisterData = append(c.hooks.ProviderRegisterData, hooks...)
+}
+
+// Use adds a list of query interceptors to the interceptors stack.
+// A call to `Intercept(f, g, h)` equals to `providerregisterdata.Intercept(f(g(h())))`.
+func (c *ProviderRegisterDataClient) Intercept(interceptors ...Interceptor) {
+	c.inters.ProviderRegisterData = append(c.inters.ProviderRegisterData, interceptors...)
 }
 
 // Create returns a builder for creating a ProviderRegisterData entity.
@@ -465,6 +547,7 @@ func (c *ProviderRegisterDataClient) DeleteOneID(id int) *ProviderRegisterDataDe
 func (c *ProviderRegisterDataClient) Query() *ProviderRegisterDataQuery {
 	return &ProviderRegisterDataQuery{
 		config: c.config,
+		inters: c.Interceptors(),
 	}
 }
 
@@ -484,7 +567,7 @@ func (c *ProviderRegisterDataClient) GetX(ctx context.Context, id int) *Provider
 
 // QueryEndpoints queries the endpoints edge of a ProviderRegisterData.
 func (c *ProviderRegisterDataClient) QueryEndpoints(prd *ProviderRegisterData) *ProviderEndpointQuery {
-	query := &ProviderEndpointQuery{config: c.config}
+	query := (&ProviderEndpointClient{config: c.config}).Query()
 	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
 		id := prd.ID
 		step := sqlgraph.NewStep(
@@ -501,4 +584,24 @@ func (c *ProviderRegisterDataClient) QueryEndpoints(prd *ProviderRegisterData) *
 // Hooks returns the client hooks.
 func (c *ProviderRegisterDataClient) Hooks() []Hook {
 	return c.hooks.ProviderRegisterData
+}
+
+// Interceptors returns the client interceptors.
+func (c *ProviderRegisterDataClient) Interceptors() []Interceptor {
+	return c.inters.ProviderRegisterData
+}
+
+func (c *ProviderRegisterDataClient) mutate(ctx context.Context, m *ProviderRegisterDataMutation) (Value, error) {
+	switch m.Op() {
+	case OpCreate:
+		return (&ProviderRegisterDataCreate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdate:
+		return (&ProviderRegisterDataUpdate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdateOne:
+		return (&ProviderRegisterDataUpdateOne{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpDelete, OpDeleteOne:
+		return (&ProviderRegisterDataDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
+	default:
+		return nil, fmt.Errorf("ent: unknown ProviderRegisterData mutation op: %q", m.Op())
+	}
 }

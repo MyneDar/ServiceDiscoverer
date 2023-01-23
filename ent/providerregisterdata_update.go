@@ -121,34 +121,7 @@ func (prdu *ProviderRegisterDataUpdate) RemoveEndpoints(p ...*ProviderEndpoint) 
 
 // Save executes the query and returns the number of nodes affected by the update operation.
 func (prdu *ProviderRegisterDataUpdate) Save(ctx context.Context) (int, error) {
-	var (
-		err      error
-		affected int
-	)
-	if len(prdu.hooks) == 0 {
-		affected, err = prdu.sqlSave(ctx)
-	} else {
-		var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
-			mutation, ok := m.(*ProviderRegisterDataMutation)
-			if !ok {
-				return nil, fmt.Errorf("unexpected mutation type %T", m)
-			}
-			prdu.mutation = mutation
-			affected, err = prdu.sqlSave(ctx)
-			mutation.done = true
-			return affected, err
-		})
-		for i := len(prdu.hooks) - 1; i >= 0; i-- {
-			if prdu.hooks[i] == nil {
-				return 0, fmt.Errorf("ent: uninitialized hook (forgotten import ent/runtime?)")
-			}
-			mut = prdu.hooks[i](mut)
-		}
-		if _, err := mut.Mutate(ctx, prdu.mutation); err != nil {
-			return 0, err
-		}
-	}
-	return affected, err
+	return withHooks[int, ProviderRegisterDataMutation](ctx, prdu.sqlSave, prdu.mutation, prdu.hooks)
 }
 
 // SaveX is like Save, but panics if an error occurs.
@@ -277,6 +250,7 @@ func (prdu *ProviderRegisterDataUpdate) sqlSave(ctx context.Context) (n int, err
 		}
 		return 0, err
 	}
+	prdu.mutation.done = true
 	return n, nil
 }
 
@@ -388,40 +362,7 @@ func (prduo *ProviderRegisterDataUpdateOne) Select(field string, fields ...strin
 
 // Save executes the query and returns the updated ProviderRegisterData entity.
 func (prduo *ProviderRegisterDataUpdateOne) Save(ctx context.Context) (*ProviderRegisterData, error) {
-	var (
-		err  error
-		node *ProviderRegisterData
-	)
-	if len(prduo.hooks) == 0 {
-		node, err = prduo.sqlSave(ctx)
-	} else {
-		var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
-			mutation, ok := m.(*ProviderRegisterDataMutation)
-			if !ok {
-				return nil, fmt.Errorf("unexpected mutation type %T", m)
-			}
-			prduo.mutation = mutation
-			node, err = prduo.sqlSave(ctx)
-			mutation.done = true
-			return node, err
-		})
-		for i := len(prduo.hooks) - 1; i >= 0; i-- {
-			if prduo.hooks[i] == nil {
-				return nil, fmt.Errorf("ent: uninitialized hook (forgotten import ent/runtime?)")
-			}
-			mut = prduo.hooks[i](mut)
-		}
-		v, err := mut.Mutate(ctx, prduo.mutation)
-		if err != nil {
-			return nil, err
-		}
-		nv, ok := v.(*ProviderRegisterData)
-		if !ok {
-			return nil, fmt.Errorf("unexpected node type %T returned from ProviderRegisterDataMutation", v)
-		}
-		node = nv
-	}
-	return node, err
+	return withHooks[*ProviderRegisterData, ProviderRegisterDataMutation](ctx, prduo.sqlSave, prduo.mutation, prduo.hooks)
 }
 
 // SaveX is like Save, but panics if an error occurs.
@@ -570,5 +511,6 @@ func (prduo *ProviderRegisterDataUpdateOne) sqlSave(ctx context.Context) (_node 
 		}
 		return nil, err
 	}
+	prduo.mutation.done = true
 	return _node, nil
 }

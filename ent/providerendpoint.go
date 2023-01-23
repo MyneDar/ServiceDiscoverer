@@ -3,6 +3,7 @@
 package ent
 
 import (
+	"encoding/json"
 	"fmt"
 	"servicediscoverer/ent/providerendpoint"
 	"servicediscoverer/ent/providerregisterdata"
@@ -22,9 +23,11 @@ type ProviderEndpoint struct {
 	Path string `json:"path,omitempty"`
 	// Type holds the value of the "type" field.
 	Type string `json:"type,omitempty"`
+	// Description holds the value of the "description" field.
+	Description string `json:"description,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the ProviderEndpointQuery when eager-loading is set.
-	Edges                            ProviderEndpointEdges `json:"data"`
+	Edges                            ProviderEndpointEdges `json:"-"`
 	provider_register_data_endpoints *int
 }
 
@@ -79,7 +82,7 @@ func (*ProviderEndpoint) scanValues(columns []string) ([]any, error) {
 		switch columns[i] {
 		case providerendpoint.FieldID:
 			values[i] = new(sql.NullInt64)
-		case providerendpoint.FieldName, providerendpoint.FieldPath, providerendpoint.FieldType:
+		case providerendpoint.FieldName, providerendpoint.FieldPath, providerendpoint.FieldType, providerendpoint.FieldDescription:
 			values[i] = new(sql.NullString)
 		case providerendpoint.ForeignKeys[0]: // provider_register_data_endpoints
 			values[i] = new(sql.NullInt64)
@@ -121,6 +124,12 @@ func (pe *ProviderEndpoint) assignValues(columns []string, values []any) error {
 				return fmt.Errorf("unexpected type %T for field type", values[i])
 			} else if value.Valid {
 				pe.Type = value.String
+			}
+		case providerendpoint.FieldDescription:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field description", values[i])
+			} else if value.Valid {
+				pe.Description = value.String
 			}
 		case providerendpoint.ForeignKeys[0]:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
@@ -180,8 +189,23 @@ func (pe *ProviderEndpoint) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("type=")
 	builder.WriteString(pe.Type)
+	builder.WriteString(", ")
+	builder.WriteString("description=")
+	builder.WriteString(pe.Description)
 	builder.WriteByte(')')
 	return builder.String()
+}
+
+// MarshalJSON implements the json.Marshaler interface.
+func (pe *ProviderEndpoint) MarshalJSON() ([]byte, error) {
+	type Alias ProviderEndpoint
+	return json.Marshal(&struct {
+		*Alias
+		ProviderEndpointEdges
+	}{
+		Alias:                 (*Alias)(pe),
+		ProviderEndpointEdges: pe.Edges,
+	})
 }
 
 // ProviderEndpoints is a parsable slice of ProviderEndpoint.

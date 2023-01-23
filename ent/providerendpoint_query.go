@@ -25,6 +25,7 @@ type ProviderEndpointQuery struct {
 	unique           *bool
 	order            []OrderFunc
 	fields           []string
+	inters           []Interceptor
 	predicates       []predicate.ProviderEndpoint
 	withRequiredData *EndpointDataQuery
 	withProvidedData *EndpointDataQuery
@@ -41,13 +42,13 @@ func (peq *ProviderEndpointQuery) Where(ps ...predicate.ProviderEndpoint) *Provi
 	return peq
 }
 
-// Limit adds a limit step to the query.
+// Limit the number of records to be returned by this query.
 func (peq *ProviderEndpointQuery) Limit(limit int) *ProviderEndpointQuery {
 	peq.limit = &limit
 	return peq
 }
 
-// Offset adds an offset step to the query.
+// Offset to start from.
 func (peq *ProviderEndpointQuery) Offset(offset int) *ProviderEndpointQuery {
 	peq.offset = &offset
 	return peq
@@ -60,7 +61,7 @@ func (peq *ProviderEndpointQuery) Unique(unique bool) *ProviderEndpointQuery {
 	return peq
 }
 
-// Order adds an order step to the query.
+// Order specifies how the records should be ordered.
 func (peq *ProviderEndpointQuery) Order(o ...OrderFunc) *ProviderEndpointQuery {
 	peq.order = append(peq.order, o...)
 	return peq
@@ -68,7 +69,7 @@ func (peq *ProviderEndpointQuery) Order(o ...OrderFunc) *ProviderEndpointQuery {
 
 // QueryRequiredData chains the current query on the "required_data" edge.
 func (peq *ProviderEndpointQuery) QueryRequiredData() *EndpointDataQuery {
-	query := &EndpointDataQuery{config: peq.config}
+	query := (&EndpointDataClient{config: peq.config}).Query()
 	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
 		if err := peq.prepareQuery(ctx); err != nil {
 			return nil, err
@@ -90,7 +91,7 @@ func (peq *ProviderEndpointQuery) QueryRequiredData() *EndpointDataQuery {
 
 // QueryProvidedData chains the current query on the "provided_data" edge.
 func (peq *ProviderEndpointQuery) QueryProvidedData() *EndpointDataQuery {
-	query := &EndpointDataQuery{config: peq.config}
+	query := (&EndpointDataClient{config: peq.config}).Query()
 	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
 		if err := peq.prepareQuery(ctx); err != nil {
 			return nil, err
@@ -112,7 +113,7 @@ func (peq *ProviderEndpointQuery) QueryProvidedData() *EndpointDataQuery {
 
 // QueryProvider chains the current query on the "provider" edge.
 func (peq *ProviderEndpointQuery) QueryProvider() *ProviderRegisterDataQuery {
-	query := &ProviderRegisterDataQuery{config: peq.config}
+	query := (&ProviderRegisterDataClient{config: peq.config}).Query()
 	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
 		if err := peq.prepareQuery(ctx); err != nil {
 			return nil, err
@@ -135,7 +136,7 @@ func (peq *ProviderEndpointQuery) QueryProvider() *ProviderRegisterDataQuery {
 // First returns the first ProviderEndpoint entity from the query.
 // Returns a *NotFoundError when no ProviderEndpoint was found.
 func (peq *ProviderEndpointQuery) First(ctx context.Context) (*ProviderEndpoint, error) {
-	nodes, err := peq.Limit(1).All(ctx)
+	nodes, err := peq.Limit(1).All(newQueryContext(ctx, TypeProviderEndpoint, "First"))
 	if err != nil {
 		return nil, err
 	}
@@ -158,7 +159,7 @@ func (peq *ProviderEndpointQuery) FirstX(ctx context.Context) *ProviderEndpoint 
 // Returns a *NotFoundError when no ProviderEndpoint ID was found.
 func (peq *ProviderEndpointQuery) FirstID(ctx context.Context) (id int, err error) {
 	var ids []int
-	if ids, err = peq.Limit(1).IDs(ctx); err != nil {
+	if ids, err = peq.Limit(1).IDs(newQueryContext(ctx, TypeProviderEndpoint, "FirstID")); err != nil {
 		return
 	}
 	if len(ids) == 0 {
@@ -181,7 +182,7 @@ func (peq *ProviderEndpointQuery) FirstIDX(ctx context.Context) int {
 // Returns a *NotSingularError when more than one ProviderEndpoint entity is found.
 // Returns a *NotFoundError when no ProviderEndpoint entities are found.
 func (peq *ProviderEndpointQuery) Only(ctx context.Context) (*ProviderEndpoint, error) {
-	nodes, err := peq.Limit(2).All(ctx)
+	nodes, err := peq.Limit(2).All(newQueryContext(ctx, TypeProviderEndpoint, "Only"))
 	if err != nil {
 		return nil, err
 	}
@@ -209,7 +210,7 @@ func (peq *ProviderEndpointQuery) OnlyX(ctx context.Context) *ProviderEndpoint {
 // Returns a *NotFoundError when no entities are found.
 func (peq *ProviderEndpointQuery) OnlyID(ctx context.Context) (id int, err error) {
 	var ids []int
-	if ids, err = peq.Limit(2).IDs(ctx); err != nil {
+	if ids, err = peq.Limit(2).IDs(newQueryContext(ctx, TypeProviderEndpoint, "OnlyID")); err != nil {
 		return
 	}
 	switch len(ids) {
@@ -234,10 +235,12 @@ func (peq *ProviderEndpointQuery) OnlyIDX(ctx context.Context) int {
 
 // All executes the query and returns a list of ProviderEndpoints.
 func (peq *ProviderEndpointQuery) All(ctx context.Context) ([]*ProviderEndpoint, error) {
+	ctx = newQueryContext(ctx, TypeProviderEndpoint, "All")
 	if err := peq.prepareQuery(ctx); err != nil {
 		return nil, err
 	}
-	return peq.sqlAll(ctx)
+	qr := querierAll[[]*ProviderEndpoint, *ProviderEndpointQuery]()
+	return withInterceptors[[]*ProviderEndpoint](ctx, peq, qr, peq.inters)
 }
 
 // AllX is like All, but panics if an error occurs.
@@ -252,6 +255,7 @@ func (peq *ProviderEndpointQuery) AllX(ctx context.Context) []*ProviderEndpoint 
 // IDs executes the query and returns a list of ProviderEndpoint IDs.
 func (peq *ProviderEndpointQuery) IDs(ctx context.Context) ([]int, error) {
 	var ids []int
+	ctx = newQueryContext(ctx, TypeProviderEndpoint, "IDs")
 	if err := peq.Select(providerendpoint.FieldID).Scan(ctx, &ids); err != nil {
 		return nil, err
 	}
@@ -269,10 +273,11 @@ func (peq *ProviderEndpointQuery) IDsX(ctx context.Context) []int {
 
 // Count returns the count of the given query.
 func (peq *ProviderEndpointQuery) Count(ctx context.Context) (int, error) {
+	ctx = newQueryContext(ctx, TypeProviderEndpoint, "Count")
 	if err := peq.prepareQuery(ctx); err != nil {
 		return 0, err
 	}
-	return peq.sqlCount(ctx)
+	return withInterceptors[int](ctx, peq, querierCount[*ProviderEndpointQuery](), peq.inters)
 }
 
 // CountX is like Count, but panics if an error occurs.
@@ -286,10 +291,15 @@ func (peq *ProviderEndpointQuery) CountX(ctx context.Context) int {
 
 // Exist returns true if the query has elements in the graph.
 func (peq *ProviderEndpointQuery) Exist(ctx context.Context) (bool, error) {
-	if err := peq.prepareQuery(ctx); err != nil {
-		return false, err
+	ctx = newQueryContext(ctx, TypeProviderEndpoint, "Exist")
+	switch _, err := peq.FirstID(ctx); {
+	case IsNotFound(err):
+		return false, nil
+	case err != nil:
+		return false, fmt.Errorf("ent: check existence: %w", err)
+	default:
+		return true, nil
 	}
-	return peq.sqlExist(ctx)
 }
 
 // ExistX is like Exist, but panics if an error occurs.
@@ -312,6 +322,7 @@ func (peq *ProviderEndpointQuery) Clone() *ProviderEndpointQuery {
 		limit:            peq.limit,
 		offset:           peq.offset,
 		order:            append([]OrderFunc{}, peq.order...),
+		inters:           append([]Interceptor{}, peq.inters...),
 		predicates:       append([]predicate.ProviderEndpoint{}, peq.predicates...),
 		withRequiredData: peq.withRequiredData.Clone(),
 		withProvidedData: peq.withProvidedData.Clone(),
@@ -326,7 +337,7 @@ func (peq *ProviderEndpointQuery) Clone() *ProviderEndpointQuery {
 // WithRequiredData tells the query-builder to eager-load the nodes that are connected to
 // the "required_data" edge. The optional arguments are used to configure the query builder of the edge.
 func (peq *ProviderEndpointQuery) WithRequiredData(opts ...func(*EndpointDataQuery)) *ProviderEndpointQuery {
-	query := &EndpointDataQuery{config: peq.config}
+	query := (&EndpointDataClient{config: peq.config}).Query()
 	for _, opt := range opts {
 		opt(query)
 	}
@@ -337,7 +348,7 @@ func (peq *ProviderEndpointQuery) WithRequiredData(opts ...func(*EndpointDataQue
 // WithProvidedData tells the query-builder to eager-load the nodes that are connected to
 // the "provided_data" edge. The optional arguments are used to configure the query builder of the edge.
 func (peq *ProviderEndpointQuery) WithProvidedData(opts ...func(*EndpointDataQuery)) *ProviderEndpointQuery {
-	query := &EndpointDataQuery{config: peq.config}
+	query := (&EndpointDataClient{config: peq.config}).Query()
 	for _, opt := range opts {
 		opt(query)
 	}
@@ -348,7 +359,7 @@ func (peq *ProviderEndpointQuery) WithProvidedData(opts ...func(*EndpointDataQue
 // WithProvider tells the query-builder to eager-load the nodes that are connected to
 // the "provider" edge. The optional arguments are used to configure the query builder of the edge.
 func (peq *ProviderEndpointQuery) WithProvider(opts ...func(*ProviderRegisterDataQuery)) *ProviderEndpointQuery {
-	query := &ProviderRegisterDataQuery{config: peq.config}
+	query := (&ProviderRegisterDataClient{config: peq.config}).Query()
 	for _, opt := range opts {
 		opt(query)
 	}
@@ -371,16 +382,11 @@ func (peq *ProviderEndpointQuery) WithProvider(opts ...func(*ProviderRegisterDat
 //		Aggregate(ent.Count()).
 //		Scan(ctx, &v)
 func (peq *ProviderEndpointQuery) GroupBy(field string, fields ...string) *ProviderEndpointGroupBy {
-	grbuild := &ProviderEndpointGroupBy{config: peq.config}
-	grbuild.fields = append([]string{field}, fields...)
-	grbuild.path = func(ctx context.Context) (prev *sql.Selector, err error) {
-		if err := peq.prepareQuery(ctx); err != nil {
-			return nil, err
-		}
-		return peq.sqlQuery(ctx), nil
-	}
+	peq.fields = append([]string{field}, fields...)
+	grbuild := &ProviderEndpointGroupBy{build: peq}
+	grbuild.flds = &peq.fields
 	grbuild.label = providerendpoint.Label
-	grbuild.flds, grbuild.scan = &grbuild.fields, grbuild.Scan
+	grbuild.scan = grbuild.Scan
 	return grbuild
 }
 
@@ -398,10 +404,10 @@ func (peq *ProviderEndpointQuery) GroupBy(field string, fields ...string) *Provi
 //		Scan(ctx, &v)
 func (peq *ProviderEndpointQuery) Select(fields ...string) *ProviderEndpointSelect {
 	peq.fields = append(peq.fields, fields...)
-	selbuild := &ProviderEndpointSelect{ProviderEndpointQuery: peq}
-	selbuild.label = providerendpoint.Label
-	selbuild.flds, selbuild.scan = &peq.fields, selbuild.Scan
-	return selbuild
+	sbuild := &ProviderEndpointSelect{ProviderEndpointQuery: peq}
+	sbuild.label = providerendpoint.Label
+	sbuild.flds, sbuild.scan = &peq.fields, sbuild.Scan
+	return sbuild
 }
 
 // Aggregate returns a ProviderEndpointSelect configured with the given aggregations.
@@ -410,6 +416,16 @@ func (peq *ProviderEndpointQuery) Aggregate(fns ...AggregateFunc) *ProviderEndpo
 }
 
 func (peq *ProviderEndpointQuery) prepareQuery(ctx context.Context) error {
+	for _, inter := range peq.inters {
+		if inter == nil {
+			return fmt.Errorf("ent: uninitialized interceptor (forgotten import ent/runtime?)")
+		}
+		if trv, ok := inter.(Traverser); ok {
+			if err := trv.Traverse(ctx, peq); err != nil {
+				return err
+			}
+		}
+	}
 	for _, f := range peq.fields {
 		if !providerendpoint.ValidColumn(f) {
 			return &ValidationError{Name: f, err: fmt.Errorf("ent: invalid field %q for query", f)}
@@ -584,17 +600,6 @@ func (peq *ProviderEndpointQuery) sqlCount(ctx context.Context) (int, error) {
 	return sqlgraph.CountNodes(ctx, peq.driver, _spec)
 }
 
-func (peq *ProviderEndpointQuery) sqlExist(ctx context.Context) (bool, error) {
-	switch _, err := peq.FirstID(ctx); {
-	case IsNotFound(err):
-		return false, nil
-	case err != nil:
-		return false, fmt.Errorf("ent: check existence: %w", err)
-	default:
-		return true, nil
-	}
-}
-
 func (peq *ProviderEndpointQuery) querySpec() *sqlgraph.QuerySpec {
 	_spec := &sqlgraph.QuerySpec{
 		Node: &sqlgraph.NodeSpec{
@@ -677,13 +682,8 @@ func (peq *ProviderEndpointQuery) sqlQuery(ctx context.Context) *sql.Selector {
 
 // ProviderEndpointGroupBy is the group-by builder for ProviderEndpoint entities.
 type ProviderEndpointGroupBy struct {
-	config
 	selector
-	fields []string
-	fns    []AggregateFunc
-	// intermediate query (i.e. traversal path).
-	sql  *sql.Selector
-	path func(context.Context) (*sql.Selector, error)
+	build *ProviderEndpointQuery
 }
 
 // Aggregate adds the given aggregation functions to the group-by query.
@@ -692,58 +692,46 @@ func (pegb *ProviderEndpointGroupBy) Aggregate(fns ...AggregateFunc) *ProviderEn
 	return pegb
 }
 
-// Scan applies the group-by query and scans the result into the given value.
+// Scan applies the selector query and scans the result into the given value.
 func (pegb *ProviderEndpointGroupBy) Scan(ctx context.Context, v any) error {
-	query, err := pegb.path(ctx)
-	if err != nil {
+	ctx = newQueryContext(ctx, TypeProviderEndpoint, "GroupBy")
+	if err := pegb.build.prepareQuery(ctx); err != nil {
 		return err
 	}
-	pegb.sql = query
-	return pegb.sqlScan(ctx, v)
+	return scanWithInterceptors[*ProviderEndpointQuery, *ProviderEndpointGroupBy](ctx, pegb.build, pegb, pegb.build.inters, v)
 }
 
-func (pegb *ProviderEndpointGroupBy) sqlScan(ctx context.Context, v any) error {
-	for _, f := range pegb.fields {
-		if !providerendpoint.ValidColumn(f) {
-			return &ValidationError{Name: f, err: fmt.Errorf("invalid field %q for group-by", f)}
-		}
+func (pegb *ProviderEndpointGroupBy) sqlScan(ctx context.Context, root *ProviderEndpointQuery, v any) error {
+	selector := root.sqlQuery(ctx).Select()
+	aggregation := make([]string, 0, len(pegb.fns))
+	for _, fn := range pegb.fns {
+		aggregation = append(aggregation, fn(selector))
 	}
-	selector := pegb.sqlQuery()
+	if len(selector.SelectedColumns()) == 0 {
+		columns := make([]string, 0, len(*pegb.flds)+len(pegb.fns))
+		for _, f := range *pegb.flds {
+			columns = append(columns, selector.C(f))
+		}
+		columns = append(columns, aggregation...)
+		selector.Select(columns...)
+	}
+	selector.GroupBy(selector.Columns(*pegb.flds...)...)
 	if err := selector.Err(); err != nil {
 		return err
 	}
 	rows := &sql.Rows{}
 	query, args := selector.Query()
-	if err := pegb.driver.Query(ctx, query, args, rows); err != nil {
+	if err := pegb.build.driver.Query(ctx, query, args, rows); err != nil {
 		return err
 	}
 	defer rows.Close()
 	return sql.ScanSlice(rows, v)
 }
 
-func (pegb *ProviderEndpointGroupBy) sqlQuery() *sql.Selector {
-	selector := pegb.sql.Select()
-	aggregation := make([]string, 0, len(pegb.fns))
-	for _, fn := range pegb.fns {
-		aggregation = append(aggregation, fn(selector))
-	}
-	if len(selector.SelectedColumns()) == 0 {
-		columns := make([]string, 0, len(pegb.fields)+len(pegb.fns))
-		for _, f := range pegb.fields {
-			columns = append(columns, selector.C(f))
-		}
-		columns = append(columns, aggregation...)
-		selector.Select(columns...)
-	}
-	return selector.GroupBy(selector.Columns(pegb.fields...)...)
-}
-
 // ProviderEndpointSelect is the builder for selecting fields of ProviderEndpoint entities.
 type ProviderEndpointSelect struct {
 	*ProviderEndpointQuery
 	selector
-	// intermediate query (i.e. traversal path).
-	sql *sql.Selector
 }
 
 // Aggregate adds the given aggregation functions to the selector query.
@@ -754,26 +742,27 @@ func (pes *ProviderEndpointSelect) Aggregate(fns ...AggregateFunc) *ProviderEndp
 
 // Scan applies the selector query and scans the result into the given value.
 func (pes *ProviderEndpointSelect) Scan(ctx context.Context, v any) error {
+	ctx = newQueryContext(ctx, TypeProviderEndpoint, "Select")
 	if err := pes.prepareQuery(ctx); err != nil {
 		return err
 	}
-	pes.sql = pes.ProviderEndpointQuery.sqlQuery(ctx)
-	return pes.sqlScan(ctx, v)
+	return scanWithInterceptors[*ProviderEndpointQuery, *ProviderEndpointSelect](ctx, pes.ProviderEndpointQuery, pes, pes.inters, v)
 }
 
-func (pes *ProviderEndpointSelect) sqlScan(ctx context.Context, v any) error {
+func (pes *ProviderEndpointSelect) sqlScan(ctx context.Context, root *ProviderEndpointQuery, v any) error {
+	selector := root.sqlQuery(ctx)
 	aggregation := make([]string, 0, len(pes.fns))
 	for _, fn := range pes.fns {
-		aggregation = append(aggregation, fn(pes.sql))
+		aggregation = append(aggregation, fn(selector))
 	}
 	switch n := len(*pes.selector.flds); {
 	case n == 0 && len(aggregation) > 0:
-		pes.sql.Select(aggregation...)
+		selector.Select(aggregation...)
 	case n != 0 && len(aggregation) > 0:
-		pes.sql.AppendSelect(aggregation...)
+		selector.AppendSelect(aggregation...)
 	}
 	rows := &sql.Rows{}
-	query, args := pes.sql.Query()
+	query, args := selector.Query()
 	if err := pes.driver.Query(ctx, query, args, rows); err != nil {
 		return err
 	}

@@ -20,6 +20,7 @@ func (ProviderEndpoint) Fields() []ent.Field {
 		field.String("name"),
 		field.String("path"),
 		field.String("type"),
+		field.String("description"),
 	}
 }
 

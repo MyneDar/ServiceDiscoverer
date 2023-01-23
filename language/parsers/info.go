@@ -17,34 +17,61 @@ func NewInfoParser() *InfoParser {
 
 func (l *InfoParser) Process(tok []models.TokenStruct, information map[string]interface{}) error {
 	var err error
-	var provider *ent.ProviderRegisterData
-	switch tok[1].Data {
-	case models.ASTERISK.String():
+	var provider interface{}
+	var temp *ent.ProviderRegisterData
+	if len(tok) == 1 {
 		provider, err = dev.LocalClient.ProviderRegisterData.
 			Query().
-			Where(providerregisterdata.Name(tok[0].Data)).
 			WithEndpoints(
 				func(query *ent.ProviderEndpointQuery) {
 					query.WithProvidedData()
 					query.WithRequiredData()
-					query.All(dev.Ctx)
+					_, err2 := query.All(dev.Ctx)
+					if err2 != nil {
+						err = err2
+					}
 				},
-			).
-			Only(dev.Ctx)
-	default:
-		provider, err = dev.LocalClient.ProviderRegisterData.
-			Query().
-			Where(providerregisterdata.Name(tok[0].Data)).
-			WithEndpoints(
-				func(query *ent.ProviderEndpointQuery) {
-					query.Where(providerendpoint.Name(tok[1].Data))
-					query.WithProvidedData()
-					query.WithRequiredData()
-					query.All(dev.Ctx)
-				},
-			).
-			Only(dev.Ctx)
+			).All(dev.Ctx)
+	} else {
+		switch tok[1].Data {
+		case models.ASTERISK.String():
+			provider, err = dev.LocalClient.ProviderRegisterData.
+				Query().
+				Where(providerregisterdata.Name(tok[0].Data)).
+				WithEndpoints(
+					func(query *ent.ProviderEndpointQuery) {
+						query.WithProvidedData()
+						query.WithRequiredData()
+						_, err2 := query.All(dev.Ctx)
+						if err2 != nil {
+							err = err2
+						}
+					},
+				).
+				Only(dev.Ctx)
+		default:
+			temp, err = dev.LocalClient.ProviderRegisterData.
+				Query().
+				Where(providerregisterdata.Name(tok[0].Data)).
+				WithEndpoints(
+					func(query *ent.ProviderEndpointQuery) {
+						query.Where(providerendpoint.Name(tok[1].Data))
+						query.WithProvidedData()
+						query.WithRequiredData()
+						_, err2 := query.All(dev.Ctx)
+						if err2 != nil {
+							err = err2
+						}
+					},
+				).
+				Only(dev.Ctx)
+			if err != nil {
+				return err
+			}
+			provider = temp.Edges.Endpoints[0]
+		}
 	}
+
 	if err != nil {
 		return err
 	}

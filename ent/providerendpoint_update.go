@@ -47,6 +47,12 @@ func (peu *ProviderEndpointUpdate) SetType(s string) *ProviderEndpointUpdate {
 	return peu
 }
 
+// SetDescription sets the "description" field.
+func (peu *ProviderEndpointUpdate) SetDescription(s string) *ProviderEndpointUpdate {
+	peu.mutation.SetDescription(s)
+	return peu
+}
+
 // AddRequiredDatumIDs adds the "required_data" edge to the EndpointData entity by IDs.
 func (peu *ProviderEndpointUpdate) AddRequiredDatumIDs(ids ...int) *ProviderEndpointUpdate {
 	peu.mutation.AddRequiredDatumIDs(ids...)
@@ -151,34 +157,7 @@ func (peu *ProviderEndpointUpdate) ClearProvider() *ProviderEndpointUpdate {
 
 // Save executes the query and returns the number of nodes affected by the update operation.
 func (peu *ProviderEndpointUpdate) Save(ctx context.Context) (int, error) {
-	var (
-		err      error
-		affected int
-	)
-	if len(peu.hooks) == 0 {
-		affected, err = peu.sqlSave(ctx)
-	} else {
-		var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
-			mutation, ok := m.(*ProviderEndpointMutation)
-			if !ok {
-				return nil, fmt.Errorf("unexpected mutation type %T", m)
-			}
-			peu.mutation = mutation
-			affected, err = peu.sqlSave(ctx)
-			mutation.done = true
-			return affected, err
-		})
-		for i := len(peu.hooks) - 1; i >= 0; i-- {
-			if peu.hooks[i] == nil {
-				return 0, fmt.Errorf("ent: uninitialized hook (forgotten import ent/runtime?)")
-			}
-			mut = peu.hooks[i](mut)
-		}
-		if _, err := mut.Mutate(ctx, peu.mutation); err != nil {
-			return 0, err
-		}
-	}
-	return affected, err
+	return withHooks[int, ProviderEndpointMutation](ctx, peu.sqlSave, peu.mutation, peu.hooks)
 }
 
 // SaveX is like Save, but panics if an error occurs.
@@ -229,6 +208,9 @@ func (peu *ProviderEndpointUpdate) sqlSave(ctx context.Context) (n int, err erro
 	}
 	if value, ok := peu.mutation.GetType(); ok {
 		_spec.SetField(providerendpoint.FieldType, field.TypeString, value)
+	}
+	if value, ok := peu.mutation.Description(); ok {
+		_spec.SetField(providerendpoint.FieldDescription, field.TypeString, value)
 	}
 	if peu.mutation.RequiredDataCleared() {
 		edge := &sqlgraph.EdgeSpec{
@@ -381,6 +363,7 @@ func (peu *ProviderEndpointUpdate) sqlSave(ctx context.Context) (n int, err erro
 		}
 		return 0, err
 	}
+	peu.mutation.done = true
 	return n, nil
 }
 
@@ -407,6 +390,12 @@ func (peuo *ProviderEndpointUpdateOne) SetPath(s string) *ProviderEndpointUpdate
 // SetType sets the "type" field.
 func (peuo *ProviderEndpointUpdateOne) SetType(s string) *ProviderEndpointUpdateOne {
 	peuo.mutation.SetType(s)
+	return peuo
+}
+
+// SetDescription sets the "description" field.
+func (peuo *ProviderEndpointUpdateOne) SetDescription(s string) *ProviderEndpointUpdateOne {
+	peuo.mutation.SetDescription(s)
 	return peuo
 }
 
@@ -521,40 +510,7 @@ func (peuo *ProviderEndpointUpdateOne) Select(field string, fields ...string) *P
 
 // Save executes the query and returns the updated ProviderEndpoint entity.
 func (peuo *ProviderEndpointUpdateOne) Save(ctx context.Context) (*ProviderEndpoint, error) {
-	var (
-		err  error
-		node *ProviderEndpoint
-	)
-	if len(peuo.hooks) == 0 {
-		node, err = peuo.sqlSave(ctx)
-	} else {
-		var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
-			mutation, ok := m.(*ProviderEndpointMutation)
-			if !ok {
-				return nil, fmt.Errorf("unexpected mutation type %T", m)
-			}
-			peuo.mutation = mutation
-			node, err = peuo.sqlSave(ctx)
-			mutation.done = true
-			return node, err
-		})
-		for i := len(peuo.hooks) - 1; i >= 0; i-- {
-			if peuo.hooks[i] == nil {
-				return nil, fmt.Errorf("ent: uninitialized hook (forgotten import ent/runtime?)")
-			}
-			mut = peuo.hooks[i](mut)
-		}
-		v, err := mut.Mutate(ctx, peuo.mutation)
-		if err != nil {
-			return nil, err
-		}
-		nv, ok := v.(*ProviderEndpoint)
-		if !ok {
-			return nil, fmt.Errorf("unexpected node type %T returned from ProviderEndpointMutation", v)
-		}
-		node = nv
-	}
-	return node, err
+	return withHooks[*ProviderEndpoint, ProviderEndpointMutation](ctx, peuo.sqlSave, peuo.mutation, peuo.hooks)
 }
 
 // SaveX is like Save, but panics if an error occurs.
@@ -622,6 +578,9 @@ func (peuo *ProviderEndpointUpdateOne) sqlSave(ctx context.Context) (_node *Prov
 	}
 	if value, ok := peuo.mutation.GetType(); ok {
 		_spec.SetField(providerendpoint.FieldType, field.TypeString, value)
+	}
+	if value, ok := peuo.mutation.Description(); ok {
+		_spec.SetField(providerendpoint.FieldDescription, field.TypeString, value)
 	}
 	if peuo.mutation.RequiredDataCleared() {
 		edge := &sqlgraph.EdgeSpec{
@@ -777,5 +736,6 @@ func (peuo *ProviderEndpointUpdateOne) sqlSave(ctx context.Context) (_node *Prov
 		}
 		return nil, err
 	}
+	peuo.mutation.done = true
 	return _node, nil
 }

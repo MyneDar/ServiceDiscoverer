@@ -103,34 +103,7 @@ func (edu *EndpointDataUpdate) ClearEndpointProvided() *EndpointDataUpdate {
 
 // Save executes the query and returns the number of nodes affected by the update operation.
 func (edu *EndpointDataUpdate) Save(ctx context.Context) (int, error) {
-	var (
-		err      error
-		affected int
-	)
-	if len(edu.hooks) == 0 {
-		affected, err = edu.sqlSave(ctx)
-	} else {
-		var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
-			mutation, ok := m.(*EndpointDataMutation)
-			if !ok {
-				return nil, fmt.Errorf("unexpected mutation type %T", m)
-			}
-			edu.mutation = mutation
-			affected, err = edu.sqlSave(ctx)
-			mutation.done = true
-			return affected, err
-		})
-		for i := len(edu.hooks) - 1; i >= 0; i-- {
-			if edu.hooks[i] == nil {
-				return 0, fmt.Errorf("ent: uninitialized hook (forgotten import ent/runtime?)")
-			}
-			mut = edu.hooks[i](mut)
-		}
-		if _, err := mut.Mutate(ctx, edu.mutation); err != nil {
-			return 0, err
-		}
-	}
-	return affected, err
+	return withHooks[int, EndpointDataMutation](ctx, edu.sqlSave, edu.mutation, edu.hooks)
 }
 
 // SaveX is like Save, but panics if an error occurs.
@@ -260,6 +233,7 @@ func (edu *EndpointDataUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		return 0, err
 	}
+	edu.mutation.done = true
 	return n, nil
 }
 
@@ -353,40 +327,7 @@ func (eduo *EndpointDataUpdateOne) Select(field string, fields ...string) *Endpo
 
 // Save executes the query and returns the updated EndpointData entity.
 func (eduo *EndpointDataUpdateOne) Save(ctx context.Context) (*EndpointData, error) {
-	var (
-		err  error
-		node *EndpointData
-	)
-	if len(eduo.hooks) == 0 {
-		node, err = eduo.sqlSave(ctx)
-	} else {
-		var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
-			mutation, ok := m.(*EndpointDataMutation)
-			if !ok {
-				return nil, fmt.Errorf("unexpected mutation type %T", m)
-			}
-			eduo.mutation = mutation
-			node, err = eduo.sqlSave(ctx)
-			mutation.done = true
-			return node, err
-		})
-		for i := len(eduo.hooks) - 1; i >= 0; i-- {
-			if eduo.hooks[i] == nil {
-				return nil, fmt.Errorf("ent: uninitialized hook (forgotten import ent/runtime?)")
-			}
-			mut = eduo.hooks[i](mut)
-		}
-		v, err := mut.Mutate(ctx, eduo.mutation)
-		if err != nil {
-			return nil, err
-		}
-		nv, ok := v.(*EndpointData)
-		if !ok {
-			return nil, fmt.Errorf("unexpected node type %T returned from EndpointDataMutation", v)
-		}
-		node = nv
-	}
-	return node, err
+	return withHooks[*EndpointData, EndpointDataMutation](ctx, eduo.sqlSave, eduo.mutation, eduo.hooks)
 }
 
 // SaveX is like Save, but panics if an error occurs.
@@ -536,5 +477,6 @@ func (eduo *EndpointDataUpdateOne) sqlSave(ctx context.Context) (_node *Endpoint
 		}
 		return nil, err
 	}
+	eduo.mutation.done = true
 	return _node, nil
 }

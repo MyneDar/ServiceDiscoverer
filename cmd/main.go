@@ -72,7 +72,7 @@ func DelTestData(writer http.ResponseWriter, request *http.Request) {
 		return
 	}
 }
-
+JSON->Unmarshal -> OBject
 func FillUpTestData(writer http.ResponseWriter, request *http.Request) {
 	serv, err := dev.LocalClient.ProviderRegisterData.
 		Create().
@@ -92,6 +92,7 @@ func FillUpTestData(writer http.ResponseWriter, request *http.Request) {
 		SetName("Endpoint1").
 		SetPath("end1").
 		SetType("GET").
+		SetDescription("ASDASD").
 		SetProvider(serv).
 		Save(dev.Ctx)
 

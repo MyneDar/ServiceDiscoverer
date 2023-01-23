@@ -13,6 +13,7 @@ import (
 	"sync"
 
 	"entgo.io/ent"
+	"entgo.io/ent/dialect/sql"
 )
 
 const (
@@ -343,9 +344,24 @@ func (m *EndpointDataMutation) Where(ps ...predicate.EndpointData) {
 	m.predicates = append(m.predicates, ps...)
 }
 
+// WhereP appends storage-level predicates to the EndpointDataMutation builder. Using this method,
+// users can use type-assertion to append predicates that do not depend on any generated package.
+func (m *EndpointDataMutation) WhereP(ps ...func(*sql.Selector)) {
+	p := make([]predicate.EndpointData, len(ps))
+	for i := range ps {
+		p[i] = ps[i]
+	}
+	m.Where(p...)
+}
+
 // Op returns the operation name.
 func (m *EndpointDataMutation) Op() Op {
 	return m.op
+}
+
+// SetOp allows setting the mutation operation.
+func (m *EndpointDataMutation) SetOp(op Op) {
+	m.op = op
 }
 
 // Type returns the node type of this mutation (EndpointData).
@@ -589,6 +605,7 @@ type ProviderEndpointMutation struct {
 	name                 *string
 	_path                *string
 	_type                *string
+	description          *string
 	clearedFields        map[string]struct{}
 	required_data        map[int]struct{}
 	removedrequired_data map[int]struct{}
@@ -815,6 +832,42 @@ func (m *ProviderEndpointMutation) ResetType() {
 	m._type = nil
 }
 
+// SetDescription sets the "description" field.
+func (m *ProviderEndpointMutation) SetDescription(s string) {
+	m.description = &s
+}
+
+// Description returns the value of the "description" field in the mutation.
+func (m *ProviderEndpointMutation) Description() (r string, exists bool) {
+	v := m.description
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldDescription returns the old "description" field's value of the ProviderEndpoint entity.
+// If the ProviderEndpoint object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ProviderEndpointMutation) OldDescription(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldDescription is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldDescription requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldDescription: %w", err)
+	}
+	return oldValue.Description, nil
+}
+
+// ResetDescription resets all changes to the "description" field.
+func (m *ProviderEndpointMutation) ResetDescription() {
+	m.description = nil
+}
+
 // AddRequiredDatumIDs adds the "required_data" edge to the EndpointData entity by ids.
 func (m *ProviderEndpointMutation) AddRequiredDatumIDs(ids ...int) {
 	if m.required_data == nil {
@@ -967,9 +1020,24 @@ func (m *ProviderEndpointMutation) Where(ps ...predicate.ProviderEndpoint) {
 	m.predicates = append(m.predicates, ps...)
 }
 
+// WhereP appends storage-level predicates to the ProviderEndpointMutation builder. Using this method,
+// users can use type-assertion to append predicates that do not depend on any generated package.
+func (m *ProviderEndpointMutation) WhereP(ps ...func(*sql.Selector)) {
+	p := make([]predicate.ProviderEndpoint, len(ps))
+	for i := range ps {
+		p[i] = ps[i]
+	}
+	m.Where(p...)
+}
+
 // Op returns the operation name.
 func (m *ProviderEndpointMutation) Op() Op {
 	return m.op
+}
+
+// SetOp allows setting the mutation operation.
+func (m *ProviderEndpointMutation) SetOp(op Op) {
+	m.op = op
 }
 
 // Type returns the node type of this mutation (ProviderEndpoint).
@@ -981,7 +1049,7 @@ func (m *ProviderEndpointMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *ProviderEndpointMutation) Fields() []string {
-	fields := make([]string, 0, 3)
+	fields := make([]string, 0, 4)
 	if m.name != nil {
 		fields = append(fields, providerendpoint.FieldName)
 	}
@@ -990,6 +1058,9 @@ func (m *ProviderEndpointMutation) Fields() []string {
 	}
 	if m._type != nil {
 		fields = append(fields, providerendpoint.FieldType)
+	}
+	if m.description != nil {
+		fields = append(fields, providerendpoint.FieldDescription)
 	}
 	return fields
 }
@@ -1005,6 +1076,8 @@ func (m *ProviderEndpointMutation) Field(name string) (ent.Value, bool) {
 		return m.Path()
 	case providerendpoint.FieldType:
 		return m.GetType()
+	case providerendpoint.FieldDescription:
+		return m.Description()
 	}
 	return nil, false
 }
@@ -1020,6 +1093,8 @@ func (m *ProviderEndpointMutation) OldField(ctx context.Context, name string) (e
 		return m.OldPath(ctx)
 	case providerendpoint.FieldType:
 		return m.OldType(ctx)
+	case providerendpoint.FieldDescription:
+		return m.OldDescription(ctx)
 	}
 	return nil, fmt.Errorf("unknown ProviderEndpoint field %s", name)
 }
@@ -1049,6 +1124,13 @@ func (m *ProviderEndpointMutation) SetField(name string, value ent.Value) error 
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetType(v)
+		return nil
+	case providerendpoint.FieldDescription:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetDescription(v)
 		return nil
 	}
 	return fmt.Errorf("unknown ProviderEndpoint field %s", name)
@@ -1107,6 +1189,9 @@ func (m *ProviderEndpointMutation) ResetField(name string) error {
 		return nil
 	case providerendpoint.FieldType:
 		m.ResetType()
+		return nil
+	case providerendpoint.FieldDescription:
+		m.ResetDescription()
 		return nil
 	}
 	return fmt.Errorf("unknown ProviderEndpoint field %s", name)
@@ -1682,9 +1767,24 @@ func (m *ProviderRegisterDataMutation) Where(ps ...predicate.ProviderRegisterDat
 	m.predicates = append(m.predicates, ps...)
 }
 
+// WhereP appends storage-level predicates to the ProviderRegisterDataMutation builder. Using this method,
+// users can use type-assertion to append predicates that do not depend on any generated package.
+func (m *ProviderRegisterDataMutation) WhereP(ps ...func(*sql.Selector)) {
+	p := make([]predicate.ProviderRegisterData, len(ps))
+	for i := range ps {
+		p[i] = ps[i]
+	}
+	m.Where(p...)
+}
+
 // Op returns the operation name.
 func (m *ProviderRegisterDataMutation) Op() Op {
 	return m.op
+}
+
+// SetOp allows setting the mutation operation.
+func (m *ProviderRegisterDataMutation) SetOp(op Op) {
+	m.op = op
 }
 
 // Type returns the node type of this mutation (ProviderRegisterData).

@@ -43,6 +43,7 @@ var (
 		{Name: "name", Type: field.TypeString},
 		{Name: "path", Type: field.TypeString},
 		{Name: "type", Type: field.TypeString},
+		{Name: "description", Type: field.TypeString},
 		{Name: "provider_register_data_endpoints", Type: field.TypeInt, Nullable: true},
 	}
 	// ProviderEndpointsTable holds the schema information for the "provider_endpoints" table.
@@ -53,7 +54,7 @@ var (
 		ForeignKeys: []*schema.ForeignKey{
 			{
 				Symbol:     "provider_endpoints_provider_register_data_endpoints",
-				Columns:    []*schema.Column{ProviderEndpointsColumns[4]},
+				Columns:    []*schema.Column{ProviderEndpointsColumns[5]},
 				RefColumns: []*schema.Column{ProviderRegisterDataColumns[0]},
 				OnDelete:   schema.Cascade,
 			},

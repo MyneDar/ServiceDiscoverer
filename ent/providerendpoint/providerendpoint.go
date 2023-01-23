@@ -13,6 +13,8 @@ const (
 	FieldPath = "path"
 	// FieldType holds the string denoting the type field in the database.
 	FieldType = "type"
+	// FieldDescription holds the string denoting the description field in the database.
+	FieldDescription = "description"
 	// EdgeRequiredData holds the string denoting the required_data edge name in mutations.
 	EdgeRequiredData = "required_data"
 	// EdgeProvidedData holds the string denoting the provided_data edge name in mutations.
@@ -50,6 +52,7 @@ var Columns = []string{
 	FieldName,
 	FieldPath,
 	FieldType,
+	FieldDescription,
 }
 
 // ForeignKeys holds the SQL foreign-keys that are owned by the "provider_endpoints"

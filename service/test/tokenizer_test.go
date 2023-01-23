@@ -1,6 +1,7 @@
 package test
 
 import (
+	"github.com/stretchr/testify/assert"
 	"servicediscoverer/service"
 	"testing"
 )
@@ -45,3 +46,13 @@ func TestNewTokenizerIrrationalButCorrect(t *testing.T) {
 // Error cases
 //
 //
+
+func TestNewTokenizerWithBadSchema(t *testing.T) {
+	//test initialization
+	var TokenizerTestFromAndDelete = "FROM Human.Add DELETE"
+	var tokenizer = service.NewTokenizer()
+	//Running of the test
+	err, got := tokenizer.CommandProcess(TokenizerTestFromAndDelete)
+	assert.NotNil(t, err, "Error should be nil")
+	assert.Nil(t, got, "Got should be nil")
+}

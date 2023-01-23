@@ -33,7 +33,7 @@ func (l *InfoLex) Process(command *[]string) (err error, tokens []models.TokenSt
 	tokens = append(tokens, models.TokenStruct{Name: models.INFO, Data: splitted[0]})
 
 	target := strings.Split(splitted[1], models.PERIOD.String())
-	if len(target) == 2 {
+	if len(target) == 2 && target[0] != "" && target[1] != "" {
 		tokens = append(tokens, models.TokenStruct{Name: models.IDENT, Data: target[0]})
 
 		if target[1] == models.ASTERISK.String() {

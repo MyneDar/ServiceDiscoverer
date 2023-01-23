@@ -24,6 +24,7 @@ type ProviderRegisterDataQuery struct {
 	unique        *bool
 	order         []OrderFunc
 	fields        []string
+	inters        []Interceptor
 	predicates    []predicate.ProviderRegisterData
 	withEndpoints *ProviderEndpointQuery
 	// intermediate query (i.e. traversal path).
@@ -37,13 +38,13 @@ func (prdq *ProviderRegisterDataQuery) Where(ps ...predicate.ProviderRegisterDat
 	return prdq
 }
 
-// Limit adds a limit step to the query.
+// Limit the number of records to be returned by this query.
 func (prdq *ProviderRegisterDataQuery) Limit(limit int) *ProviderRegisterDataQuery {
 	prdq.limit = &limit
 	return prdq
 }
 
-// Offset adds an offset step to the query.
+// Offset to start from.
 func (prdq *ProviderRegisterDataQuery) Offset(offset int) *ProviderRegisterDataQuery {
 	prdq.offset = &offset
 	return prdq
@@ -56,7 +57,7 @@ func (prdq *ProviderRegisterDataQuery) Unique(unique bool) *ProviderRegisterData
 	return prdq
 }
 
-// Order adds an order step to the query.
+// Order specifies how the records should be ordered.
 func (prdq *ProviderRegisterDataQuery) Order(o ...OrderFunc) *ProviderRegisterDataQuery {
 	prdq.order = append(prdq.order, o...)
 	return prdq
@@ -64,7 +65,7 @@ func (prdq *ProviderRegisterDataQuery) Order(o ...OrderFunc) *ProviderRegisterDa
 
 // QueryEndpoints chains the current query on the "endpoints" edge.
 func (prdq *ProviderRegisterDataQuery) QueryEndpoints() *ProviderEndpointQuery {
-	query := &ProviderEndpointQuery{config: prdq.config}
+	query := (&ProviderEndpointClient{config: prdq.config}).Query()
 	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
 		if err := prdq.prepareQuery(ctx); err != nil {
 			return nil, err
@@ -87,7 +88,7 @@ func (prdq *ProviderRegisterDataQuery) QueryEndpoints() *ProviderEndpointQuery {
 // First returns the first ProviderRegisterData entity from the query.
 // Returns a *NotFoundError when no ProviderRegisterData was found.
 func (prdq *ProviderRegisterDataQuery) First(ctx context.Context) (*ProviderRegisterData, error) {
-	nodes, err := prdq.Limit(1).All(ctx)
+	nodes, err := prdq.Limit(1).All(newQueryContext(ctx, TypeProviderRegisterData, "First"))
 	if err != nil {
 		return nil, err
 	}
@@ -110,7 +111,7 @@ func (prdq *ProviderRegisterDataQuery) FirstX(ctx context.Context) *ProviderRegi
 // Returns a *NotFoundError when no ProviderRegisterData ID was found.
 func (prdq *ProviderRegisterDataQuery) FirstID(ctx context.Context) (id int, err error) {
 	var ids []int
-	if ids, err = prdq.Limit(1).IDs(ctx); err != nil {
+	if ids, err = prdq.Limit(1).IDs(newQueryContext(ctx, TypeProviderRegisterData, "FirstID")); err != nil {
 		return
 	}
 	if len(ids) == 0 {
@@ -133,7 +134,7 @@ func (prdq *ProviderRegisterDataQuery) FirstIDX(ctx context.Context) int {
 // Returns a *NotSingularError when more than one ProviderRegisterData entity is found.
 // Returns a *NotFoundError when no ProviderRegisterData entities are found.
 func (prdq *ProviderRegisterDataQuery) Only(ctx context.Context) (*ProviderRegisterData, error) {
-	nodes, err := prdq.Limit(2).All(ctx)
+	nodes, err := prdq.Limit(2).All(newQueryContext(ctx, TypeProviderRegisterData, "Only"))
 	if err != nil {
 		return nil, err
 	}
@@ -161,7 +162,7 @@ func (prdq *ProviderRegisterDataQuery) OnlyX(ctx context.Context) *ProviderRegis
 // Returns a *NotFoundError when no entities are found.
 func (prdq *ProviderRegisterDataQuery) OnlyID(ctx context.Context) (id int, err error) {
 	var ids []int
-	if ids, err = prdq.Limit(2).IDs(ctx); err != nil {
+	if ids, err = prdq.Limit(2).IDs(newQueryContext(ctx, TypeProviderRegisterData, "OnlyID")); err != nil {
 		return
 	}
 	switch len(ids) {
@@ -186,10 +187,12 @@ func (prdq *ProviderRegisterDataQuery) OnlyIDX(ctx context.Context) int {
 
 // All executes the query and returns a list of ProviderRegisterDataSlice.
 func (prdq *ProviderRegisterDataQuery) All(ctx context.Context) ([]*ProviderRegisterData, error) {
+	ctx = newQueryContext(ctx, TypeProviderRegisterData, "All")
 	if err := prdq.prepareQuery(ctx); err != nil {
 		return nil, err
 	}
-	return prdq.sqlAll(ctx)
+	qr := querierAll[[]*ProviderRegisterData, *ProviderRegisterDataQuery]()
+	return withInterceptors[[]*ProviderRegisterData](ctx, prdq, qr, prdq.inters)
 }
 
 // AllX is like All, but panics if an error occurs.
@@ -204,6 +207,7 @@ func (prdq *ProviderRegisterDataQuery) AllX(ctx context.Context) []*ProviderRegi
 // IDs executes the query and returns a list of ProviderRegisterData IDs.
 func (prdq *ProviderRegisterDataQuery) IDs(ctx context.Context) ([]int, error) {
 	var ids []int
+	ctx = newQueryContext(ctx, TypeProviderRegisterData, "IDs")
 	if err := prdq.Select(providerregisterdata.FieldID).Scan(ctx, &ids); err != nil {
 		return nil, err
 	}
@@ -221,10 +225,11 @@ func (prdq *ProviderRegisterDataQuery) IDsX(ctx context.Context) []int {
 
 // Count returns the count of the given query.
 func (prdq *ProviderRegisterDataQuery) Count(ctx context.Context) (int, error) {
+	ctx = newQueryContext(ctx, TypeProviderRegisterData, "Count")
 	if err := prdq.prepareQuery(ctx); err != nil {
 		return 0, err
 	}
-	return prdq.sqlCount(ctx)
+	return withInterceptors[int](ctx, prdq, querierCount[*ProviderRegisterDataQuery](), prdq.inters)
 }
 
 // CountX is like Count, but panics if an error occurs.
@@ -238,10 +243,15 @@ func (prdq *ProviderRegisterDataQuery) CountX(ctx context.Context) int {
 
 // Exist returns true if the query has elements in the graph.
 func (prdq *ProviderRegisterDataQuery) Exist(ctx context.Context) (bool, error) {
-	if err := prdq.prepareQuery(ctx); err != nil {
-		return false, err
+	ctx = newQueryContext(ctx, TypeProviderRegisterData, "Exist")
+	switch _, err := prdq.FirstID(ctx); {
+	case IsNotFound(err):
+		return false, nil
+	case err != nil:
+		return false, fmt.Errorf("ent: check existence: %w", err)
+	default:
+		return true, nil
 	}
-	return prdq.sqlExist(ctx)
 }
 
 // ExistX is like Exist, but panics if an error occurs.
@@ -264,6 +274,7 @@ func (prdq *ProviderRegisterDataQuery) Clone() *ProviderRegisterDataQuery {
 		limit:         prdq.limit,
 		offset:        prdq.offset,
 		order:         append([]OrderFunc{}, prdq.order...),
+		inters:        append([]Interceptor{}, prdq.inters...),
 		predicates:    append([]predicate.ProviderRegisterData{}, prdq.predicates...),
 		withEndpoints: prdq.withEndpoints.Clone(),
 		// clone intermediate query.
@@ -276,7 +287,7 @@ func (prdq *ProviderRegisterDataQuery) Clone() *ProviderRegisterDataQuery {
 // WithEndpoints tells the query-builder to eager-load the nodes that are connected to
 // the "endpoints" edge. The optional arguments are used to configure the query builder of the edge.
 func (prdq *ProviderRegisterDataQuery) WithEndpoints(opts ...func(*ProviderEndpointQuery)) *ProviderRegisterDataQuery {
-	query := &ProviderEndpointQuery{config: prdq.config}
+	query := (&ProviderEndpointClient{config: prdq.config}).Query()
 	for _, opt := range opts {
 		opt(query)
 	}
@@ -299,16 +310,11 @@ func (prdq *ProviderRegisterDataQuery) WithEndpoints(opts ...func(*ProviderEndpo
 //		Aggregate(ent.Count()).
 //		Scan(ctx, &v)
 func (prdq *ProviderRegisterDataQuery) GroupBy(field string, fields ...string) *ProviderRegisterDataGroupBy {
-	grbuild := &ProviderRegisterDataGroupBy{config: prdq.config}
-	grbuild.fields = append([]string{field}, fields...)
-	grbuild.path = func(ctx context.Context) (prev *sql.Selector, err error) {
-		if err := prdq.prepareQuery(ctx); err != nil {
-			return nil, err
-		}
-		return prdq.sqlQuery(ctx), nil
-	}
+	prdq.fields = append([]string{field}, fields...)
+	grbuild := &ProviderRegisterDataGroupBy{build: prdq}
+	grbuild.flds = &prdq.fields
 	grbuild.label = providerregisterdata.Label
-	grbuild.flds, grbuild.scan = &grbuild.fields, grbuild.Scan
+	grbuild.scan = grbuild.Scan
 	return grbuild
 }
 
@@ -326,10 +332,10 @@ func (prdq *ProviderRegisterDataQuery) GroupBy(field string, fields ...string) *
 //		Scan(ctx, &v)
 func (prdq *ProviderRegisterDataQuery) Select(fields ...string) *ProviderRegisterDataSelect {
 	prdq.fields = append(prdq.fields, fields...)
-	selbuild := &ProviderRegisterDataSelect{ProviderRegisterDataQuery: prdq}
-	selbuild.label = providerregisterdata.Label
-	selbuild.flds, selbuild.scan = &prdq.fields, selbuild.Scan
-	return selbuild
+	sbuild := &ProviderRegisterDataSelect{ProviderRegisterDataQuery: prdq}
+	sbuild.label = providerregisterdata.Label
+	sbuild.flds, sbuild.scan = &prdq.fields, sbuild.Scan
+	return sbuild
 }
 
 // Aggregate returns a ProviderRegisterDataSelect configured with the given aggregations.
@@ -338,6 +344,16 @@ func (prdq *ProviderRegisterDataQuery) Aggregate(fns ...AggregateFunc) *Provider
 }
 
 func (prdq *ProviderRegisterDataQuery) prepareQuery(ctx context.Context) error {
+	for _, inter := range prdq.inters {
+		if inter == nil {
+			return fmt.Errorf("ent: uninitialized interceptor (forgotten import ent/runtime?)")
+		}
+		if trv, ok := inter.(Traverser); ok {
+			if err := trv.Traverse(ctx, prdq); err != nil {
+				return err
+			}
+		}
+	}
 	for _, f := range prdq.fields {
 		if !providerregisterdata.ValidColumn(f) {
 			return &ValidationError{Name: f, err: fmt.Errorf("ent: invalid field %q for query", f)}
@@ -430,17 +446,6 @@ func (prdq *ProviderRegisterDataQuery) sqlCount(ctx context.Context) (int, error
 	return sqlgraph.CountNodes(ctx, prdq.driver, _spec)
 }
 
-func (prdq *ProviderRegisterDataQuery) sqlExist(ctx context.Context) (bool, error) {
-	switch _, err := prdq.FirstID(ctx); {
-	case IsNotFound(err):
-		return false, nil
-	case err != nil:
-		return false, fmt.Errorf("ent: check existence: %w", err)
-	default:
-		return true, nil
-	}
-}
-
 func (prdq *ProviderRegisterDataQuery) querySpec() *sqlgraph.QuerySpec {
 	_spec := &sqlgraph.QuerySpec{
 		Node: &sqlgraph.NodeSpec{
@@ -523,13 +528,8 @@ func (prdq *ProviderRegisterDataQuery) sqlQuery(ctx context.Context) *sql.Select
 
 // ProviderRegisterDataGroupBy is the group-by builder for ProviderRegisterData entities.
 type ProviderRegisterDataGroupBy struct {
-	config
 	selector
-	fields []string
-	fns    []AggregateFunc
-	// intermediate query (i.e. traversal path).
-	sql  *sql.Selector
-	path func(context.Context) (*sql.Selector, error)
+	build *ProviderRegisterDataQuery
 }
 
 // Aggregate adds the given aggregation functions to the group-by query.
@@ -538,58 +538,46 @@ func (prdgb *ProviderRegisterDataGroupBy) Aggregate(fns ...AggregateFunc) *Provi
 	return prdgb
 }
 
-// Scan applies the group-by query and scans the result into the given value.
+// Scan applies the selector query and scans the result into the given value.
 func (prdgb *ProviderRegisterDataGroupBy) Scan(ctx context.Context, v any) error {
-	query, err := prdgb.path(ctx)
-	if err != nil {
+	ctx = newQueryContext(ctx, TypeProviderRegisterData, "GroupBy")
+	if err := prdgb.build.prepareQuery(ctx); err != nil {
 		return err
 	}
-	prdgb.sql = query
-	return prdgb.sqlScan(ctx, v)
+	return scanWithInterceptors[*ProviderRegisterDataQuery, *ProviderRegisterDataGroupBy](ctx, prdgb.build, prdgb, prdgb.build.inters, v)
 }
 
-func (prdgb *ProviderRegisterDataGroupBy) sqlScan(ctx context.Context, v any) error {
-	for _, f := range prdgb.fields {
-		if !providerregisterdata.ValidColumn(f) {
-			return &ValidationError{Name: f, err: fmt.Errorf("invalid field %q for group-by", f)}
-		}
+func (prdgb *ProviderRegisterDataGroupBy) sqlScan(ctx context.Context, root *ProviderRegisterDataQuery, v any) error {
+	selector := root.sqlQuery(ctx).Select()
+	aggregation := make([]string, 0, len(prdgb.fns))
+	for _, fn := range prdgb.fns {
+		aggregation = append(aggregation, fn(selector))
 	}
-	selector := prdgb.sqlQuery()
+	if len(selector.SelectedColumns()) == 0 {
+		columns := make([]string, 0, len(*prdgb.flds)+len(prdgb.fns))
+		for _, f := range *prdgb.flds {
+			columns = append(columns, selector.C(f))
+		}
+		columns = append(columns, aggregation...)
+		selector.Select(columns...)
+	}
+	selector.GroupBy(selector.Columns(*prdgb.flds...)...)
 	if err := selector.Err(); err != nil {
 		return err
 	}
 	rows := &sql.Rows{}
 	query, args := selector.Query()
-	if err := prdgb.driver.Query(ctx, query, args, rows); err != nil {
+	if err := prdgb.build.driver.Query(ctx, query, args, rows); err != nil {
 		return err
 	}
 	defer rows.Close()
 	return sql.ScanSlice(rows, v)
 }
 
-func (prdgb *ProviderRegisterDataGroupBy) sqlQuery() *sql.Selector {
-	selector := prdgb.sql.Select()
-	aggregation := make([]string, 0, len(prdgb.fns))
-	for _, fn := range prdgb.fns {
-		aggregation = append(aggregation, fn(selector))
-	}
-	if len(selector.SelectedColumns()) == 0 {
-		columns := make([]string, 0, len(prdgb.fields)+len(prdgb.fns))
-		for _, f := range prdgb.fields {
-			columns = append(columns, selector.C(f))
-		}
-		columns = append(columns, aggregation...)
-		selector.Select(columns...)
-	}
-	return selector.GroupBy(selector.Columns(prdgb.fields...)...)
-}
-
 // ProviderRegisterDataSelect is the builder for selecting fields of ProviderRegisterData entities.
 type ProviderRegisterDataSelect struct {
 	*ProviderRegisterDataQuery
 	selector
-	// intermediate query (i.e. traversal path).
-	sql *sql.Selector
 }
 
 // Aggregate adds the given aggregation functions to the selector query.
@@ -600,26 +588,27 @@ func (prds *ProviderRegisterDataSelect) Aggregate(fns ...AggregateFunc) *Provide
 
 // Scan applies the selector query and scans the result into the given value.
 func (prds *ProviderRegisterDataSelect) Scan(ctx context.Context, v any) error {
+	ctx = newQueryContext(ctx, TypeProviderRegisterData, "Select")
 	if err := prds.prepareQuery(ctx); err != nil {
 		return err
 	}
-	prds.sql = prds.ProviderRegisterDataQuery.sqlQuery(ctx)
-	return prds.sqlScan(ctx, v)
+	return scanWithInterceptors[*ProviderRegisterDataQuery, *ProviderRegisterDataSelect](ctx, prds.ProviderRegisterDataQuery, prds, prds.inters, v)
 }
 
-func (prds *ProviderRegisterDataSelect) sqlScan(ctx context.Context, v any) error {
+func (prds *ProviderRegisterDataSelect) sqlScan(ctx context.Context, root *ProviderRegisterDataQuery, v any) error {
+	selector := root.sqlQuery(ctx)
 	aggregation := make([]string, 0, len(prds.fns))
 	for _, fn := range prds.fns {
-		aggregation = append(aggregation, fn(prds.sql))
+		aggregation = append(aggregation, fn(selector))
 	}
 	switch n := len(*prds.selector.flds); {
 	case n == 0 && len(aggregation) > 0:
-		prds.sql.Select(aggregation...)
+		selector.Select(aggregation...)
 	case n != 0 && len(aggregation) > 0:
-		prds.sql.AppendSelect(aggregation...)
+		selector.AppendSelect(aggregation...)
 	}
 	rows := &sql.Rows{}
-	query, args := prds.sql.Query()
+	query, args := selector.Query()
 	if err := prds.driver.Query(ctx, query, args, rows); err != nil {
 		return err
 	}

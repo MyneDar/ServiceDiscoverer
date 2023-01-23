@@ -23,6 +23,7 @@ type EndpointDataQuery struct {
 	unique               *bool
 	order                []OrderFunc
 	fields               []string
+	inters               []Interceptor
 	predicates           []predicate.EndpointData
 	withEndpointRequired *ProviderEndpointQuery
 	withEndpointProvided *ProviderEndpointQuery
@@ -38,13 +39,13 @@ func (edq *EndpointDataQuery) Where(ps ...predicate.EndpointData) *EndpointDataQ
 	return edq
 }
 
-// Limit adds a limit step to the query.
+// Limit the number of records to be returned by this query.
 func (edq *EndpointDataQuery) Limit(limit int) *EndpointDataQuery {
 	edq.limit = &limit
 	return edq
 }
 
-// Offset adds an offset step to the query.
+// Offset to start from.
 func (edq *EndpointDataQuery) Offset(offset int) *EndpointDataQuery {
 	edq.offset = &offset
 	return edq
@@ -57,7 +58,7 @@ func (edq *EndpointDataQuery) Unique(unique bool) *EndpointDataQuery {
 	return edq
 }
 
-// Order adds an order step to the query.
+// Order specifies how the records should be ordered.
 func (edq *EndpointDataQuery) Order(o ...OrderFunc) *EndpointDataQuery {
 	edq.order = append(edq.order, o...)
 	return edq
@@ -65,7 +66,7 @@ func (edq *EndpointDataQuery) Order(o ...OrderFunc) *EndpointDataQuery {
 
 // QueryEndpointRequired chains the current query on the "endpoint_required" edge.
 func (edq *EndpointDataQuery) QueryEndpointRequired() *ProviderEndpointQuery {
-	query := &ProviderEndpointQuery{config: edq.config}
+	query := (&ProviderEndpointClient{config: edq.config}).Query()
 	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
 		if err := edq.prepareQuery(ctx); err != nil {
 			return nil, err
@@ -87,7 +88,7 @@ func (edq *EndpointDataQuery) QueryEndpointRequired() *ProviderEndpointQuery {
 
 // QueryEndpointProvided chains the current query on the "endpoint_provided" edge.
 func (edq *EndpointDataQuery) QueryEndpointProvided() *ProviderEndpointQuery {
-	query := &ProviderEndpointQuery{config: edq.config}
+	query := (&ProviderEndpointClient{config: edq.config}).Query()
 	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
 		if err := edq.prepareQuery(ctx); err != nil {
 			return nil, err
@@ -110,7 +111,7 @@ func (edq *EndpointDataQuery) QueryEndpointProvided() *ProviderEndpointQuery {
 // First returns the first EndpointData entity from the query.
 // Returns a *NotFoundError when no EndpointData was found.
 func (edq *EndpointDataQuery) First(ctx context.Context) (*EndpointData, error) {
-	nodes, err := edq.Limit(1).All(ctx)
+	nodes, err := edq.Limit(1).All(newQueryContext(ctx, TypeEndpointData, "First"))
 	if err != nil {
 		return nil, err
 	}
@@ -133,7 +134,7 @@ func (edq *EndpointDataQuery) FirstX(ctx context.Context) *EndpointData {
 // Returns a *NotFoundError when no EndpointData ID was found.
 func (edq *EndpointDataQuery) FirstID(ctx context.Context) (id int, err error) {
 	var ids []int
-	if ids, err = edq.Limit(1).IDs(ctx); err != nil {
+	if ids, err = edq.Limit(1).IDs(newQueryContext(ctx, TypeEndpointData, "FirstID")); err != nil {
 		return
 	}
 	if len(ids) == 0 {
@@ -156,7 +157,7 @@ func (edq *EndpointDataQuery) FirstIDX(ctx context.Context) int {
 // Returns a *NotSingularError when more than one EndpointData entity is found.
 // Returns a *NotFoundError when no EndpointData entities are found.
 func (edq *EndpointDataQuery) Only(ctx context.Context) (*EndpointData, error) {
-	nodes, err := edq.Limit(2).All(ctx)
+	nodes, err := edq.Limit(2).All(newQueryContext(ctx, TypeEndpointData, "Only"))
 	if err != nil {
 		return nil, err
 	}
@@ -184,7 +185,7 @@ func (edq *EndpointDataQuery) OnlyX(ctx context.Context) *EndpointData {
 // Returns a *NotFoundError when no entities are found.
 func (edq *EndpointDataQuery) OnlyID(ctx context.Context) (id int, err error) {
 	var ids []int
-	if ids, err = edq.Limit(2).IDs(ctx); err != nil {
+	if ids, err = edq.Limit(2).IDs(newQueryContext(ctx, TypeEndpointData, "OnlyID")); err != nil {
 		return
 	}
 	switch len(ids) {
@@ -209,10 +210,12 @@ func (edq *EndpointDataQuery) OnlyIDX(ctx context.Context) int {
 
 // All executes the query and returns a list of EndpointDataSlice.
 func (edq *EndpointDataQuery) All(ctx context.Context) ([]*EndpointData, error) {
+	ctx = newQueryContext(ctx, TypeEndpointData, "All")
 	if err := edq.prepareQuery(ctx); err != nil {
 		return nil, err
 	}
-	return edq.sqlAll(ctx)
+	qr := querierAll[[]*EndpointData, *EndpointDataQuery]()
+	return withInterceptors[[]*EndpointData](ctx, edq, qr, edq.inters)
 }
 
 // AllX is like All, but panics if an error occurs.
@@ -227,6 +230,7 @@ func (edq *EndpointDataQuery) AllX(ctx context.Context) []*EndpointData {
 // IDs executes the query and returns a list of EndpointData IDs.
 func (edq *EndpointDataQuery) IDs(ctx context.Context) ([]int, error) {
 	var ids []int
+	ctx = newQueryContext(ctx, TypeEndpointData, "IDs")
 	if err := edq.Select(endpointdata.FieldID).Scan(ctx, &ids); err != nil {
 		return nil, err
 	}
@@ -244,10 +248,11 @@ func (edq *EndpointDataQuery) IDsX(ctx context.Context) []int {
 
 // Count returns the count of the given query.
 func (edq *EndpointDataQuery) Count(ctx context.Context) (int, error) {
+	ctx = newQueryContext(ctx, TypeEndpointData, "Count")
 	if err := edq.prepareQuery(ctx); err != nil {
 		return 0, err
 	}
-	return edq.sqlCount(ctx)
+	return withInterceptors[int](ctx, edq, querierCount[*EndpointDataQuery](), edq.inters)
 }
 
 // CountX is like Count, but panics if an error occurs.
@@ -261,10 +266,15 @@ func (edq *EndpointDataQuery) CountX(ctx context.Context) int {
 
 // Exist returns true if the query has elements in the graph.
 func (edq *EndpointDataQuery) Exist(ctx context.Context) (bool, error) {
-	if err := edq.prepareQuery(ctx); err != nil {
-		return false, err
+	ctx = newQueryContext(ctx, TypeEndpointData, "Exist")
+	switch _, err := edq.FirstID(ctx); {
+	case IsNotFound(err):
+		return false, nil
+	case err != nil:
+		return false, fmt.Errorf("ent: check existence: %w", err)
+	default:
+		return true, nil
 	}
-	return edq.sqlExist(ctx)
 }
 
 // ExistX is like Exist, but panics if an error occurs.
@@ -287,6 +297,7 @@ func (edq *EndpointDataQuery) Clone() *EndpointDataQuery {
 		limit:                edq.limit,
 		offset:               edq.offset,
 		order:                append([]OrderFunc{}, edq.order...),
+		inters:               append([]Interceptor{}, edq.inters...),
 		predicates:           append([]predicate.EndpointData{}, edq.predicates...),
 		withEndpointRequired: edq.withEndpointRequired.Clone(),
 		withEndpointProvided: edq.withEndpointProvided.Clone(),
@@ -300,7 +311,7 @@ func (edq *EndpointDataQuery) Clone() *EndpointDataQuery {
 // WithEndpointRequired tells the query-builder to eager-load the nodes that are connected to
 // the "endpoint_required" edge. The optional arguments are used to configure the query builder of the edge.
 func (edq *EndpointDataQuery) WithEndpointRequired(opts ...func(*ProviderEndpointQuery)) *EndpointDataQuery {
-	query := &ProviderEndpointQuery{config: edq.config}
+	query := (&ProviderEndpointClient{config: edq.config}).Query()
 	for _, opt := range opts {
 		opt(query)
 	}
@@ -311,7 +322,7 @@ func (edq *EndpointDataQuery) WithEndpointRequired(opts ...func(*ProviderEndpoin
 // WithEndpointProvided tells the query-builder to eager-load the nodes that are connected to
 // the "endpoint_provided" edge. The optional arguments are used to configure the query builder of the edge.
 func (edq *EndpointDataQuery) WithEndpointProvided(opts ...func(*ProviderEndpointQuery)) *EndpointDataQuery {
-	query := &ProviderEndpointQuery{config: edq.config}
+	query := (&ProviderEndpointClient{config: edq.config}).Query()
 	for _, opt := range opts {
 		opt(query)
 	}
@@ -334,16 +345,11 @@ func (edq *EndpointDataQuery) WithEndpointProvided(opts ...func(*ProviderEndpoin
 //		Aggregate(ent.Count()).
 //		Scan(ctx, &v)
 func (edq *EndpointDataQuery) GroupBy(field string, fields ...string) *EndpointDataGroupBy {
-	grbuild := &EndpointDataGroupBy{config: edq.config}
-	grbuild.fields = append([]string{field}, fields...)
-	grbuild.path = func(ctx context.Context) (prev *sql.Selector, err error) {
-		if err := edq.prepareQuery(ctx); err != nil {
-			return nil, err
-		}
-		return edq.sqlQuery(ctx), nil
-	}
+	edq.fields = append([]string{field}, fields...)
+	grbuild := &EndpointDataGroupBy{build: edq}
+	grbuild.flds = &edq.fields
 	grbuild.label = endpointdata.Label
-	grbuild.flds, grbuild.scan = &grbuild.fields, grbuild.Scan
+	grbuild.scan = grbuild.Scan
 	return grbuild
 }
 
@@ -361,10 +367,10 @@ func (edq *EndpointDataQuery) GroupBy(field string, fields ...string) *EndpointD
 //		Scan(ctx, &v)
 func (edq *EndpointDataQuery) Select(fields ...string) *EndpointDataSelect {
 	edq.fields = append(edq.fields, fields...)
-	selbuild := &EndpointDataSelect{EndpointDataQuery: edq}
-	selbuild.label = endpointdata.Label
-	selbuild.flds, selbuild.scan = &edq.fields, selbuild.Scan
-	return selbuild
+	sbuild := &EndpointDataSelect{EndpointDataQuery: edq}
+	sbuild.label = endpointdata.Label
+	sbuild.flds, sbuild.scan = &edq.fields, sbuild.Scan
+	return sbuild
 }
 
 // Aggregate returns a EndpointDataSelect configured with the given aggregations.
@@ -373,6 +379,16 @@ func (edq *EndpointDataQuery) Aggregate(fns ...AggregateFunc) *EndpointDataSelec
 }
 
 func (edq *EndpointDataQuery) prepareQuery(ctx context.Context) error {
+	for _, inter := range edq.inters {
+		if inter == nil {
+			return fmt.Errorf("ent: uninitialized interceptor (forgotten import ent/runtime?)")
+		}
+		if trv, ok := inter.(Traverser); ok {
+			if err := trv.Traverse(ctx, edq); err != nil {
+				return err
+			}
+		}
+	}
 	for _, f := range edq.fields {
 		if !endpointdata.ValidColumn(f) {
 			return &ValidationError{Name: f, err: fmt.Errorf("ent: invalid field %q for query", f)}
@@ -505,17 +521,6 @@ func (edq *EndpointDataQuery) sqlCount(ctx context.Context) (int, error) {
 	return sqlgraph.CountNodes(ctx, edq.driver, _spec)
 }
 
-func (edq *EndpointDataQuery) sqlExist(ctx context.Context) (bool, error) {
-	switch _, err := edq.FirstID(ctx); {
-	case IsNotFound(err):
-		return false, nil
-	case err != nil:
-		return false, fmt.Errorf("ent: check existence: %w", err)
-	default:
-		return true, nil
-	}
-}
-
 func (edq *EndpointDataQuery) querySpec() *sqlgraph.QuerySpec {
 	_spec := &sqlgraph.QuerySpec{
 		Node: &sqlgraph.NodeSpec{
@@ -598,13 +603,8 @@ func (edq *EndpointDataQuery) sqlQuery(ctx context.Context) *sql.Selector {
 
 // EndpointDataGroupBy is the group-by builder for EndpointData entities.
 type EndpointDataGroupBy struct {
-	config
 	selector
-	fields []string
-	fns    []AggregateFunc
-	// intermediate query (i.e. traversal path).
-	sql  *sql.Selector
-	path func(context.Context) (*sql.Selector, error)
+	build *EndpointDataQuery
 }
 
 // Aggregate adds the given aggregation functions to the group-by query.
@@ -613,58 +613,46 @@ func (edgb *EndpointDataGroupBy) Aggregate(fns ...AggregateFunc) *EndpointDataGr
 	return edgb
 }
 
-// Scan applies the group-by query and scans the result into the given value.
+// Scan applies the selector query and scans the result into the given value.
 func (edgb *EndpointDataGroupBy) Scan(ctx context.Context, v any) error {
-	query, err := edgb.path(ctx)
-	if err != nil {
+	ctx = newQueryContext(ctx, TypeEndpointData, "GroupBy")
+	if err := edgb.build.prepareQuery(ctx); err != nil {
 		return err
 	}
-	edgb.sql = query
-	return edgb.sqlScan(ctx, v)
+	return scanWithInterceptors[*EndpointDataQuery, *EndpointDataGroupBy](ctx, edgb.build, edgb, edgb.build.inters, v)
 }
 
-func (edgb *EndpointDataGroupBy) sqlScan(ctx context.Context, v any) error {
-	for _, f := range edgb.fields {
-		if !endpointdata.ValidColumn(f) {
-			return &ValidationError{Name: f, err: fmt.Errorf("invalid field %q for group-by", f)}
-		}
+func (edgb *EndpointDataGroupBy) sqlScan(ctx context.Context, root *EndpointDataQuery, v any) error {
+	selector := root.sqlQuery(ctx).Select()
+	aggregation := make([]string, 0, len(edgb.fns))
+	for _, fn := range edgb.fns {
+		aggregation = append(aggregation, fn(selector))
 	}
-	selector := edgb.sqlQuery()
+	if len(selector.SelectedColumns()) == 0 {
+		columns := make([]string, 0, len(*edgb.flds)+len(edgb.fns))
+		for _, f := range *edgb.flds {
+			columns = append(columns, selector.C(f))
+		}
+		columns = append(columns, aggregation...)
+		selector.Select(columns...)
+	}
+	selector.GroupBy(selector.Columns(*edgb.flds...)...)
 	if err := selector.Err(); err != nil {
 		return err
 	}
 	rows := &sql.Rows{}
 	query, args := selector.Query()
-	if err := edgb.driver.Query(ctx, query, args, rows); err != nil {
+	if err := edgb.build.driver.Query(ctx, query, args, rows); err != nil {
 		return err
 	}
 	defer rows.Close()
 	return sql.ScanSlice(rows, v)
 }
 
-func (edgb *EndpointDataGroupBy) sqlQuery() *sql.Selector {
-	selector := edgb.sql.Select()
-	aggregation := make([]string, 0, len(edgb.fns))
-	for _, fn := range edgb.fns {
-		aggregation = append(aggregation, fn(selector))
-	}
-	if len(selector.SelectedColumns()) == 0 {
-		columns := make([]string, 0, len(edgb.fields)+len(edgb.fns))
-		for _, f := range edgb.fields {
-			columns = append(columns, selector.C(f))
-		}
-		columns = append(columns, aggregation...)
-		selector.Select(columns...)
-	}
-	return selector.GroupBy(selector.Columns(edgb.fields...)...)
-}
-
 // EndpointDataSelect is the builder for selecting fields of EndpointData entities.
 type EndpointDataSelect struct {
 	*EndpointDataQuery
 	selector
-	// intermediate query (i.e. traversal path).
-	sql *sql.Selector
 }
 
 // Aggregate adds the given aggregation functions to the selector query.
@@ -675,26 +663,27 @@ func (eds *EndpointDataSelect) Aggregate(fns ...AggregateFunc) *EndpointDataSele
 
 // Scan applies the selector query and scans the result into the given value.
 func (eds *EndpointDataSelect) Scan(ctx context.Context, v any) error {
+	ctx = newQueryContext(ctx, TypeEndpointData, "Select")
 	if err := eds.prepareQuery(ctx); err != nil {
 		return err
 	}
-	eds.sql = eds.EndpointDataQuery.sqlQuery(ctx)
-	return eds.sqlScan(ctx, v)
+	return scanWithInterceptors[*EndpointDataQuery, *EndpointDataSelect](ctx, eds.EndpointDataQuery, eds, eds.inters, v)
 }
 
-func (eds *EndpointDataSelect) sqlScan(ctx context.Context, v any) error {
+func (eds *EndpointDataSelect) sqlScan(ctx context.Context, root *EndpointDataQuery, v any) error {
+	selector := root.sqlQuery(ctx)
 	aggregation := make([]string, 0, len(eds.fns))
 	for _, fn := range eds.fns {
-		aggregation = append(aggregation, fn(eds.sql))
+		aggregation = append(aggregation, fn(selector))
 	}
 	switch n := len(*eds.selector.flds); {
 	case n == 0 && len(aggregation) > 0:
-		eds.sql.Select(aggregation...)
+		selector.Select(aggregation...)
 	case n != 0 && len(aggregation) > 0:
-		eds.sql.AppendSelect(aggregation...)
+		selector.AppendSelect(aggregation...)
 	}
 	rows := &sql.Rows{}
-	query, args := eds.sql.Query()
+	query, args := selector.Query()
 	if err := eds.driver.Query(ctx, query, args, rows); err != nil {
 		return err
 	}

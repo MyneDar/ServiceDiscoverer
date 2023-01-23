@@ -14,11 +14,10 @@ type EndpointDataFunc func(context.Context, *ent.EndpointDataMutation) (ent.Valu
 
 // Mutate calls f(ctx, m).
 func (f EndpointDataFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
-	mv, ok := m.(*ent.EndpointDataMutation)
-	if !ok {
-		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.EndpointDataMutation", m)
+	if mv, ok := m.(*ent.EndpointDataMutation); ok {
+		return f(ctx, mv)
 	}
-	return f(ctx, mv)
+	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.EndpointDataMutation", m)
 }
 
 // The ProviderEndpointFunc type is an adapter to allow the use of ordinary
@@ -27,11 +26,10 @@ type ProviderEndpointFunc func(context.Context, *ent.ProviderEndpointMutation) (
 
 // Mutate calls f(ctx, m).
 func (f ProviderEndpointFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
-	mv, ok := m.(*ent.ProviderEndpointMutation)
-	if !ok {
-		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.ProviderEndpointMutation", m)
+	if mv, ok := m.(*ent.ProviderEndpointMutation); ok {
+		return f(ctx, mv)
 	}
-	return f(ctx, mv)
+	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.ProviderEndpointMutation", m)
 }
 
 // The ProviderRegisterDataFunc type is an adapter to allow the use of ordinary
@@ -40,11 +38,10 @@ type ProviderRegisterDataFunc func(context.Context, *ent.ProviderRegisterDataMut
 
 // Mutate calls f(ctx, m).
 func (f ProviderRegisterDataFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
-	mv, ok := m.(*ent.ProviderRegisterDataMutation)
-	if !ok {
-		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.ProviderRegisterDataMutation", m)
+	if mv, ok := m.(*ent.ProviderRegisterDataMutation); ok {
+		return f(ctx, mv)
 	}
-	return f(ctx, mv)
+	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.ProviderRegisterDataMutation", m)
 }
 
 // Condition is a hook condition function.

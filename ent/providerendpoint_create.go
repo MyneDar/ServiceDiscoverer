@@ -39,6 +39,12 @@ func (pec *ProviderEndpointCreate) SetType(s string) *ProviderEndpointCreate {
 	return pec
 }
 
+// SetDescription sets the "description" field.
+func (pec *ProviderEndpointCreate) SetDescription(s string) *ProviderEndpointCreate {
+	pec.mutation.SetDescription(s)
+	return pec
+}
+
 // SetID sets the "id" field.
 func (pec *ProviderEndpointCreate) SetID(i int) *ProviderEndpointCreate {
 	pec.mutation.SetID(i)
@@ -101,49 +107,7 @@ func (pec *ProviderEndpointCreate) Mutation() *ProviderEndpointMutation {
 
 // Save creates the ProviderEndpoint in the database.
 func (pec *ProviderEndpointCreate) Save(ctx context.Context) (*ProviderEndpoint, error) {
-	var (
-		err  error
-		node *ProviderEndpoint
-	)
-	if len(pec.hooks) == 0 {
-		if err = pec.check(); err != nil {
-			return nil, err
-		}
-		node, err = pec.sqlSave(ctx)
-	} else {
-		var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
-			mutation, ok := m.(*ProviderEndpointMutation)
-			if !ok {
-				return nil, fmt.Errorf("unexpected mutation type %T", m)
-			}
-			if err = pec.check(); err != nil {
-				return nil, err
-			}
-			pec.mutation = mutation
-			if node, err = pec.sqlSave(ctx); err != nil {
-				return nil, err
-			}
-			mutation.id = &node.ID
-			mutation.done = true
-			return node, err
-		})
-		for i := len(pec.hooks) - 1; i >= 0; i-- {
-			if pec.hooks[i] == nil {
-				return nil, fmt.Errorf("ent: uninitialized hook (forgotten import ent/runtime?)")
-			}
-			mut = pec.hooks[i](mut)
-		}
-		v, err := mut.Mutate(ctx, pec.mutation)
-		if err != nil {
-			return nil, err
-		}
-		nv, ok := v.(*ProviderEndpoint)
-		if !ok {
-			return nil, fmt.Errorf("unexpected node type %T returned from ProviderEndpointMutation", v)
-		}
-		node = nv
-	}
-	return node, err
+	return withHooks[*ProviderEndpoint, ProviderEndpointMutation](ctx, pec.sqlSave, pec.mutation, pec.hooks)
 }
 
 // SaveX calls Save and panics if Save returns an error.
@@ -179,10 +143,16 @@ func (pec *ProviderEndpointCreate) check() error {
 	if _, ok := pec.mutation.GetType(); !ok {
 		return &ValidationError{Name: "type", err: errors.New(`ent: missing required field "ProviderEndpoint.type"`)}
 	}
+	if _, ok := pec.mutation.Description(); !ok {
+		return &ValidationError{Name: "description", err: errors.New(`ent: missing required field "ProviderEndpoint.description"`)}
+	}
 	return nil
 }
 
 func (pec *ProviderEndpointCreate) sqlSave(ctx context.Context) (*ProviderEndpoint, error) {
+	if err := pec.check(); err != nil {
+		return nil, err
+	}
 	_node, _spec := pec.createSpec()
 	if err := sqlgraph.CreateNode(ctx, pec.driver, _spec); err != nil {
 		if sqlgraph.IsConstraintError(err) {
@@ -194,6 +164,8 @@ func (pec *ProviderEndpointCreate) sqlSave(ctx context.Context) (*ProviderEndpoi
 		id := _spec.ID.Value.(int64)
 		_node.ID = int(id)
 	}
+	pec.mutation.id = &_node.ID
+	pec.mutation.done = true
 	return _node, nil
 }
 
@@ -223,6 +195,10 @@ func (pec *ProviderEndpointCreate) createSpec() (*ProviderEndpoint, *sqlgraph.Cr
 	if value, ok := pec.mutation.GetType(); ok {
 		_spec.SetField(providerendpoint.FieldType, field.TypeString, value)
 		_node.Type = value
+	}
+	if value, ok := pec.mutation.Description(); ok {
+		_spec.SetField(providerendpoint.FieldDescription, field.TypeString, value)
+		_node.Description = value
 	}
 	if nodes := pec.mutation.RequiredDataIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{

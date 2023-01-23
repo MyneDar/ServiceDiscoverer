@@ -84,49 +84,7 @@ func (prdc *ProviderRegisterDataCreate) Mutation() *ProviderRegisterDataMutation
 
 // Save creates the ProviderRegisterData in the database.
 func (prdc *ProviderRegisterDataCreate) Save(ctx context.Context) (*ProviderRegisterData, error) {
-	var (
-		err  error
-		node *ProviderRegisterData
-	)
-	if len(prdc.hooks) == 0 {
-		if err = prdc.check(); err != nil {
-			return nil, err
-		}
-		node, err = prdc.sqlSave(ctx)
-	} else {
-		var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
-			mutation, ok := m.(*ProviderRegisterDataMutation)
-			if !ok {
-				return nil, fmt.Errorf("unexpected mutation type %T", m)
-			}
-			if err = prdc.check(); err != nil {
-				return nil, err
-			}
-			prdc.mutation = mutation
-			if node, err = prdc.sqlSave(ctx); err != nil {
-				return nil, err
-			}
-			mutation.id = &node.ID
-			mutation.done = true
-			return node, err
-		})
-		for i := len(prdc.hooks) - 1; i >= 0; i-- {
-			if prdc.hooks[i] == nil {
-				return nil, fmt.Errorf("ent: uninitialized hook (forgotten import ent/runtime?)")
-			}
-			mut = prdc.hooks[i](mut)
-		}
-		v, err := mut.Mutate(ctx, prdc.mutation)
-		if err != nil {
-			return nil, err
-		}
-		nv, ok := v.(*ProviderRegisterData)
-		if !ok {
-			return nil, fmt.Errorf("unexpected node type %T returned from ProviderRegisterDataMutation", v)
-		}
-		node = nv
-	}
-	return node, err
+	return withHooks[*ProviderRegisterData, ProviderRegisterDataMutation](ctx, prdc.sqlSave, prdc.mutation, prdc.hooks)
 }
 
 // SaveX calls Save and panics if Save returns an error.
@@ -175,6 +133,9 @@ func (prdc *ProviderRegisterDataCreate) check() error {
 }
 
 func (prdc *ProviderRegisterDataCreate) sqlSave(ctx context.Context) (*ProviderRegisterData, error) {
+	if err := prdc.check(); err != nil {
+		return nil, err
+	}
 	_node, _spec := prdc.createSpec()
 	if err := sqlgraph.CreateNode(ctx, prdc.driver, _spec); err != nil {
 		if sqlgraph.IsConstraintError(err) {
@@ -186,6 +147,8 @@ func (prdc *ProviderRegisterDataCreate) sqlSave(ctx context.Context) (*ProviderR
 		id := _spec.ID.Value.(int64)
 		_node.ID = int(id)
 	}
+	prdc.mutation.id = &_node.ID
+	prdc.mutation.done = true
 	return _node, nil
 }
 

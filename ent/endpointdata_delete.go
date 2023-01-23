@@ -4,7 +4,6 @@ package ent
 
 import (
 	"context"
-	"fmt"
 	"servicediscoverer/ent/endpointdata"
 	"servicediscoverer/ent/predicate"
 
@@ -28,34 +27,7 @@ func (edd *EndpointDataDelete) Where(ps ...predicate.EndpointData) *EndpointData
 
 // Exec executes the deletion query and returns how many vertices were deleted.
 func (edd *EndpointDataDelete) Exec(ctx context.Context) (int, error) {
-	var (
-		err      error
-		affected int
-	)
-	if len(edd.hooks) == 0 {
-		affected, err = edd.sqlExec(ctx)
-	} else {
-		var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
-			mutation, ok := m.(*EndpointDataMutation)
-			if !ok {
-				return nil, fmt.Errorf("unexpected mutation type %T", m)
-			}
-			edd.mutation = mutation
-			affected, err = edd.sqlExec(ctx)
-			mutation.done = true
-			return affected, err
-		})
-		for i := len(edd.hooks) - 1; i >= 0; i-- {
-			if edd.hooks[i] == nil {
-				return 0, fmt.Errorf("ent: uninitialized hook (forgotten import ent/runtime?)")
-			}
-			mut = edd.hooks[i](mut)
-		}
-		if _, err := mut.Mutate(ctx, edd.mutation); err != nil {
-			return 0, err
-		}
-	}
-	return affected, err
+	return withHooks[int, EndpointDataMutation](ctx, edd.sqlExec, edd.mutation, edd.hooks)
 }
 
 // ExecX is like Exec, but panics if an error occurs.
@@ -88,6 +60,7 @@ func (edd *EndpointDataDelete) sqlExec(ctx context.Context) (int, error) {
 	if err != nil && sqlgraph.IsConstraintError(err) {
 		err = &ConstraintError{msg: err.Error(), wrap: err}
 	}
+	edd.mutation.done = true
 	return affected, err
 }
 

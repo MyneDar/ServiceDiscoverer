@@ -89,49 +89,7 @@ func (edc *EndpointDataCreate) Mutation() *EndpointDataMutation {
 
 // Save creates the EndpointData in the database.
 func (edc *EndpointDataCreate) Save(ctx context.Context) (*EndpointData, error) {
-	var (
-		err  error
-		node *EndpointData
-	)
-	if len(edc.hooks) == 0 {
-		if err = edc.check(); err != nil {
-			return nil, err
-		}
-		node, err = edc.sqlSave(ctx)
-	} else {
-		var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
-			mutation, ok := m.(*EndpointDataMutation)
-			if !ok {
-				return nil, fmt.Errorf("unexpected mutation type %T", m)
-			}
-			if err = edc.check(); err != nil {
-				return nil, err
-			}
-			edc.mutation = mutation
-			if node, err = edc.sqlSave(ctx); err != nil {
-				return nil, err
-			}
-			mutation.id = &node.ID
-			mutation.done = true
-			return node, err
-		})
-		for i := len(edc.hooks) - 1; i >= 0; i-- {
-			if edc.hooks[i] == nil {
-				return nil, fmt.Errorf("ent: uninitialized hook (forgotten import ent/runtime?)")
-			}
-			mut = edc.hooks[i](mut)
-		}
-		v, err := mut.Mutate(ctx, edc.mutation)
-		if err != nil {
-			return nil, err
-		}
-		nv, ok := v.(*EndpointData)
-		if !ok {
-			return nil, fmt.Errorf("unexpected node type %T returned from EndpointDataMutation", v)
-		}
-		node = nv
-	}
-	return node, err
+	return withHooks[*EndpointData, EndpointDataMutation](ctx, edc.sqlSave, edc.mutation, edc.hooks)
 }
 
 // SaveX calls Save and panics if Save returns an error.
@@ -171,6 +129,9 @@ func (edc *EndpointDataCreate) check() error {
 }
 
 func (edc *EndpointDataCreate) sqlSave(ctx context.Context) (*EndpointData, error) {
+	if err := edc.check(); err != nil {
+		return nil, err
+	}
 	_node, _spec := edc.createSpec()
 	if err := sqlgraph.CreateNode(ctx, edc.driver, _spec); err != nil {
 		if sqlgraph.IsConstraintError(err) {
@@ -182,6 +143,8 @@ func (edc *EndpointDataCreate) sqlSave(ctx context.Context) (*EndpointData, erro
 		id := _spec.ID.Value.(int64)
 		_node.ID = int(id)
 	}
+	edc.mutation.id = &_node.ID
+	edc.mutation.done = true
 	return _node, nil
 }
 
