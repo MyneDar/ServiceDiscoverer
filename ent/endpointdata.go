@@ -3,7 +3,6 @@
 package ent
 
 import (
-	"encoding/json"
 	"fmt"
 	"servicediscoverer/ent/endpointdata"
 	"servicediscoverer/ent/providerendpoint"
@@ -181,18 +180,6 @@ func (ed *EndpointData) String() string {
 	builder.WriteString(ed.Type)
 	builder.WriteByte(')')
 	return builder.String()
-}
-
-// MarshalJSON implements the json.Marshaler interface.
-func (ed *EndpointData) MarshalJSON() ([]byte, error) {
-	type Alias EndpointData
-	return json.Marshal(&struct {
-		*Alias
-		EndpointDataEdges
-	}{
-		Alias:             (*Alias)(ed),
-		EndpointDataEdges: ed.Edges,
-	})
 }
 
 // EndpointDataSlice is a parsable slice of EndpointData.

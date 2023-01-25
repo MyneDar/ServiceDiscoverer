@@ -3,7 +3,6 @@
 package ent
 
 import (
-	"encoding/json"
 	"fmt"
 	"servicediscoverer/ent/providerregisterdata"
 	"strings"
@@ -30,7 +29,7 @@ type ProviderRegisterData struct {
 	LiveTimeout int `json:"-"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the ProviderRegisterDataQuery when eager-loading is set.
-	Edges ProviderRegisterDataEdges `json:"-"`
+	Edges ProviderRegisterDataEdges `json:"connections"`
 }
 
 // ProviderRegisterDataEdges holds the relations/edges for other nodes in the graph.
@@ -169,18 +168,6 @@ func (prd *ProviderRegisterData) String() string {
 	builder.WriteString(fmt.Sprintf("%v", prd.LiveTimeout))
 	builder.WriteByte(')')
 	return builder.String()
-}
-
-// MarshalJSON implements the json.Marshaler interface.
-func (prd *ProviderRegisterData) MarshalJSON() ([]byte, error) {
-	type Alias ProviderRegisterData
-	return json.Marshal(&struct {
-		*Alias
-		ProviderRegisterDataEdges
-	}{
-		Alias:                     (*Alias)(prd),
-		ProviderRegisterDataEdges: prd.Edges,
-	})
 }
 
 // ProviderRegisterDataSlice is a parsable slice of ProviderRegisterData.

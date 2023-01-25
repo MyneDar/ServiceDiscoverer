@@ -3,7 +3,6 @@
 package ent
 
 import (
-	"encoding/json"
 	"fmt"
 	"servicediscoverer/ent/providerendpoint"
 	"servicediscoverer/ent/providerregisterdata"
@@ -27,7 +26,7 @@ type ProviderEndpoint struct {
 	Description string `json:"description,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the ProviderEndpointQuery when eager-loading is set.
-	Edges                            ProviderEndpointEdges `json:"-"`
+	Edges                            ProviderEndpointEdges `json:"data"`
 	provider_register_data_endpoints *int
 }
 
@@ -194,18 +193,6 @@ func (pe *ProviderEndpoint) String() string {
 	builder.WriteString(pe.Description)
 	builder.WriteByte(')')
 	return builder.String()
-}
-
-// MarshalJSON implements the json.Marshaler interface.
-func (pe *ProviderEndpoint) MarshalJSON() ([]byte, error) {
-	type Alias ProviderEndpoint
-	return json.Marshal(&struct {
-		*Alias
-		ProviderEndpointEdges
-	}{
-		Alias:                 (*Alias)(pe),
-		ProviderEndpointEdges: pe.Edges,
-	})
 }
 
 // ProviderEndpoints is a parsable slice of ProviderEndpoint.

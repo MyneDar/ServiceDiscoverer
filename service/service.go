@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 	"servicediscoverer/dev"
+	"servicediscoverer/ent"
 )
 
 type Service struct {
@@ -70,71 +71,30 @@ func (s *Service) GetDataHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func deleteDataHandler(w http.ResponseWriter, r *http.Request) {
-	//Authentication
-
-	//get command from JSON
-
-	//Use lexers, error handling
-
-	//Use parsers, error handling
-
-	//Call delete endpoint
-
-	//Give back the message of the endpoint
-}
-
-func insertDataHandler(w http.ResponseWriter, r *http.Request) {
-	//Authentication
-
-	//get command from JSON
-
-	//Use lexers, error handling
-
-	//Use parsers, error handling
-
-	//Call insert endpoint
-
-	//Give back the message of the endpoint
-}
-
-func updateDataHandler(w http.ResponseWriter, r *http.Request) {
-	//Authentication
-
-	//get command from JSON
-
-	//Use lexers, error handling
-
-	//Use parsers, error handling
-
-	//Call update endpoint
-
-	//Give back the message of the endpoint
-}
-
-func infoHandler(w http.ResponseWriter, r *http.Request) {
-	//Authentication
-
-	//get command from JSON
-
-	//Use lexers, error handling
-
-	//Use parsers, error handling
-
-	//Give back the needed information
-}
-
 func registerProviderHandler(w http.ResponseWriter, r *http.Request) {
 	//Authentication
 
-	//Process incoming data
-	//Under a name only one can be
+	if r.Method == http.MethodPost {
+		//Process incoming data
+		//Under a name only one can be
+		var provider ent.ProviderRegisterData
 
-	//Safety checks
+		err := json.NewDecoder(r.Body).Decode(&provider)
+		if err != nil {
+			log.Printf("")
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
+		//Safety checks
 
-	//Put it into the database and error handling
+		//Put it into the database and error handling
 
-	//Give back message about success
+		//Give back message about success
+	} else {
+		log.Printf("")
+		http.Error(w, "", http.StatusBadRequest)
+		return
+	}
 }
 
 func registerEndpointHandler(w http.ResponseWriter, r *http.Request) {

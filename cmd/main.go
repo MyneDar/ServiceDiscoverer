@@ -9,8 +9,13 @@ import (
 	"os"
 	"servicediscoverer/dev"
 	"servicediscoverer/ent"
+	"servicediscoverer/ent/ogent"
 	"servicediscoverer/ent/providerregisterdata"
 	service2 "servicediscoverer/service"
+
+	"context"
+
+	_ "github.com/mattn/go-sqlite3"
 )
 
 type client struct {
@@ -25,6 +30,15 @@ type client struct {
 type checkLive struct {
 	interval int `json:"interval"`
 	timeout  int `json:"timeout"`
+}
+
+type handler struct {
+	*ogent.OgentHandler
+	client *ent.Client
+}
+
+func (h handler) MarkDone(ctx context.Context, params ogent.MarkDoneParams) (ogent.MarkDoneNoContent, error) {
+	return ogent.MarkDoneNoContent{}, h.client.Todo.UpdateOneID(params.ID).SetDone(true).Exec(ctx)
 }
 
 func (c *client) call() *http.Response {
@@ -72,7 +86,8 @@ func DelTestData(writer http.ResponseWriter, request *http.Request) {
 		return
 	}
 }
-JSON->Unmarshal -> OBject
+
+// JSON->Unmarshal -> OBject
 func FillUpTestData(writer http.ResponseWriter, request *http.Request) {
 	serv, err := dev.LocalClient.ProviderRegisterData.
 		Create().

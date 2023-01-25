@@ -49,3 +49,7 @@ func TestTokenProcessEmptyDatabase(t *testing.T) {
 	assert.True(t, errors.As(err, &notfoundError), "There should be a NotFoundError")
 	assert.Nil(t, response, "Value should be nil")
 }
+
+//
+//
+//

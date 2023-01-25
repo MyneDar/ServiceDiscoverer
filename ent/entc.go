@@ -1,13 +1,17 @@
 //go:build ignore
 // +build ignore
 
-package main
+package ent
 
 import (
+	"log"
+
+	"ariga.io/ogent"
+	"entgo.io/contrib/entoas"
 	"entgo.io/ent/entc"
 	"entgo.io/ent/entc/gen"
 	"entgo.io/ent/schema/edge"
-	"log"
+	"github.com/ogen-go/ogen"
 )
 
 func main() {
@@ -16,10 +20,24 @@ func main() {
 			&EncodeExtension{},
 		),
 	}
-	err := entc.Generate("./ent/schema", &gen.Config{}, opts...)
+	err := entc.Generate("./schema", &gen.Config{}, opts...)
 	if err != nil {
 		log.Fatalf("running ent codegen: %v", err)
 	}
+	spec := new(ogen.Spec)
+	oas, err := entoas.NewExtension(entoas.Spec(spec))
+	if err != nil {
+		log.Fatalf("creating entoas extension: %v", err)
+	}
+	ogent, err := ogent.NewExtension(spec)
+	if err != nil {
+		log.Fatalf("creating ogent extension: %v", err)
+	}
+	err = entc.Generate("./schema", &gen.Config{}, entc.Extensions(ogent, oas))
+	if err != nil {
+		log.Fatalf("running ent codegen: %v", err)
+	}
+
 }
 
 // EncodeExtension is an implementation of entc.Extension that adds a MarshalJSON
