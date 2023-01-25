@@ -1,0 +1,1934 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Ent Schema API",
+    "description": "This is an auto generated API description made out of an Ent schema definition",
+    "version": "0.1.0"
+  },
+  "paths": {
+    "/endpoint-data": {
+      "get": {
+        "tags": [
+          "EndpointData"
+        ],
+        "summary": "List EndpointData",
+        "description": "List EndpointData.",
+        "operationId": "listEndpointData",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "description": "what page to render",
+            "schema": {
+              "type": "integer",
+              "minimum": 1
+            }
+          },
+          {
+            "name": "itemsPerPage",
+            "in": "query",
+            "description": "item count to render per page",
+            "schema": {
+              "type": "integer",
+              "maximum": 255,
+              "minimum": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "result EndpointData list",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/EndpointDataList"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "409": {
+            "$ref": "#/components/responses/409"
+          },
+          "500": {
+            "$ref": "#/components/responses/500"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "EndpointData"
+        ],
+        "summary": "Create a new EndpointData",
+        "description": "Creates a new EndpointData and persists it to storage.",
+        "operationId": "createEndpointData",
+        "requestBody": {
+          "description": "EndpointData to create",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "dataName": {
+                    "type": "string"
+                  },
+                  "description": {
+                    "type": "string"
+                  },
+                  "type": {
+                    "type": "string"
+                  },
+                  "endpoint_required": {
+                    "type": "integer"
+                  },
+                  "endpoint_provided": {
+                    "type": "integer"
+                  }
+                },
+                "required": [
+                  "dataName",
+                  "description",
+                  "type"
+                ]
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "EndpointData created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EndpointDataCreate"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "409": {
+            "$ref": "#/components/responses/409"
+          },
+          "500": {
+            "$ref": "#/components/responses/500"
+          }
+        }
+      }
+    },
+    "/endpoint-data/{id}": {
+      "get": {
+        "tags": [
+          "EndpointData"
+        ],
+        "summary": "Find a EndpointData by ID",
+        "description": "Finds the EndpointData with the requested ID and returns it.",
+        "operationId": "readEndpointData",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of the EndpointData",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "EndpointData with requested ID was found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EndpointDataRead"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "409": {
+            "$ref": "#/components/responses/409"
+          },
+          "500": {
+            "$ref": "#/components/responses/500"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "EndpointData"
+        ],
+        "summary": "Deletes a EndpointData by ID",
+        "description": "Deletes the EndpointData with the requested ID.",
+        "operationId": "deleteEndpointData",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of the EndpointData",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "EndpointData with requested ID was deleted"
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "409": {
+            "$ref": "#/components/responses/409"
+          },
+          "500": {
+            "$ref": "#/components/responses/500"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "EndpointData"
+        ],
+        "summary": "Updates a EndpointData",
+        "description": "Updates a EndpointData and persists changes to storage.",
+        "operationId": "updateEndpointData",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of the EndpointData",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "EndpointData properties to update",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "dataName": {
+                    "type": "string"
+                  },
+                  "description": {
+                    "type": "string"
+                  },
+                  "type": {
+                    "type": "string"
+                  },
+                  "endpoint_required": {
+                    "type": "integer"
+                  },
+                  "endpoint_provided": {
+                    "type": "integer"
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "EndpointData updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EndpointDataUpdate"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "409": {
+            "$ref": "#/components/responses/409"
+          },
+          "500": {
+            "$ref": "#/components/responses/500"
+          }
+        }
+      }
+    },
+    "/endpoint-data/{id}/endpoint-provided": {
+      "get": {
+        "tags": [
+          "EndpointData"
+        ],
+        "summary": "Find the attached ProviderEndpoint",
+        "description": "Find the attached ProviderEndpoint of the EndpointData with the given ID",
+        "operationId": "readEndpointDataEndpointProvided",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of the EndpointData",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ProviderEndpoint attached to EndpointData with requested ID was found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EndpointData_EndpointProvidedRead"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "409": {
+            "$ref": "#/components/responses/409"
+          },
+          "500": {
+            "$ref": "#/components/responses/500"
+          }
+        }
+      }
+    },
+    "/endpoint-data/{id}/endpoint-required": {
+      "get": {
+        "tags": [
+          "EndpointData"
+        ],
+        "summary": "Find the attached ProviderEndpoint",
+        "description": "Find the attached ProviderEndpoint of the EndpointData with the given ID",
+        "operationId": "readEndpointDataEndpointRequired",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of the EndpointData",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ProviderEndpoint attached to EndpointData with requested ID was found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EndpointData_EndpointRequiredRead"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "409": {
+            "$ref": "#/components/responses/409"
+          },
+          "500": {
+            "$ref": "#/components/responses/500"
+          }
+        }
+      }
+    },
+    "/provider-endpoints": {
+      "get": {
+        "tags": [
+          "ProviderEndpoint"
+        ],
+        "summary": "List ProviderEndpoints",
+        "description": "List ProviderEndpoints.",
+        "operationId": "listProviderEndpoint",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "description": "what page to render",
+            "schema": {
+              "type": "integer",
+              "minimum": 1
+            }
+          },
+          {
+            "name": "itemsPerPage",
+            "in": "query",
+            "description": "item count to render per page",
+            "schema": {
+              "type": "integer",
+              "maximum": 255,
+              "minimum": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "result ProviderEndpoint list",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ProviderEndpointList"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "409": {
+            "$ref": "#/components/responses/409"
+          },
+          "500": {
+            "$ref": "#/components/responses/500"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "ProviderEndpoint"
+        ],
+        "summary": "Create a new ProviderEndpoint",
+        "description": "Creates a new ProviderEndpoint and persists it to storage.",
+        "operationId": "createProviderEndpoint",
+        "requestBody": {
+          "description": "ProviderEndpoint to create",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "path": {
+                    "type": "string"
+                  },
+                  "type": {
+                    "type": "string"
+                  },
+                  "description": {
+                    "type": "string"
+                  },
+                  "required_data": {
+                    "type": "array",
+                    "items": {
+                      "type": "integer"
+                    }
+                  },
+                  "provided_data": {
+                    "type": "array",
+                    "items": {
+                      "type": "integer"
+                    }
+                  },
+                  "provider": {
+                    "type": "integer"
+                  }
+                },
+                "required": [
+                  "name",
+                  "path",
+                  "type",
+                  "description"
+                ]
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "ProviderEndpoint created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProviderEndpointCreate"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "409": {
+            "$ref": "#/components/responses/409"
+          },
+          "500": {
+            "$ref": "#/components/responses/500"
+          }
+        }
+      }
+    },
+    "/provider-endpoints/{id}": {
+      "get": {
+        "tags": [
+          "ProviderEndpoint"
+        ],
+        "summary": "Find a ProviderEndpoint by ID",
+        "description": "Finds the ProviderEndpoint with the requested ID and returns it.",
+        "operationId": "readProviderEndpoint",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of the ProviderEndpoint",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ProviderEndpoint with requested ID was found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProviderEndpointRead"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "409": {
+            "$ref": "#/components/responses/409"
+          },
+          "500": {
+            "$ref": "#/components/responses/500"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "ProviderEndpoint"
+        ],
+        "summary": "Deletes a ProviderEndpoint by ID",
+        "description": "Deletes the ProviderEndpoint with the requested ID.",
+        "operationId": "deleteProviderEndpoint",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of the ProviderEndpoint",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "ProviderEndpoint with requested ID was deleted"
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "409": {
+            "$ref": "#/components/responses/409"
+          },
+          "500": {
+            "$ref": "#/components/responses/500"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "ProviderEndpoint"
+        ],
+        "summary": "Updates a ProviderEndpoint",
+        "description": "Updates a ProviderEndpoint and persists changes to storage.",
+        "operationId": "updateProviderEndpoint",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of the ProviderEndpoint",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "ProviderEndpoint properties to update",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "path": {
+                    "type": "string"
+                  },
+                  "type": {
+                    "type": "string"
+                  },
+                  "description": {
+                    "type": "string"
+                  },
+                  "required_data": {
+                    "type": "array",
+                    "items": {
+                      "type": "integer"
+                    }
+                  },
+                  "provided_data": {
+                    "type": "array",
+                    "items": {
+                      "type": "integer"
+                    }
+                  },
+                  "provider": {
+                    "type": "integer"
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "ProviderEndpoint updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProviderEndpointUpdate"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "409": {
+            "$ref": "#/components/responses/409"
+          },
+          "500": {
+            "$ref": "#/components/responses/500"
+          }
+        }
+      }
+    },
+    "/provider-endpoints/{id}/provided-data": {
+      "get": {
+        "tags": [
+          "ProviderEndpoint"
+        ],
+        "summary": "List attached ProvidedData",
+        "description": "List attached ProvidedData.",
+        "operationId": "listProviderEndpointProvidedData",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of the ProviderEndpoint",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "what page to render",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "itemsPerPage",
+            "in": "query",
+            "description": "item count to render per page",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "result ProviderEndpoints list",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ProviderEndpoint_ProvidedDataList"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "409": {
+            "$ref": "#/components/responses/409"
+          },
+          "500": {
+            "$ref": "#/components/responses/500"
+          }
+        }
+      }
+    },
+    "/provider-endpoints/{id}/provider": {
+      "get": {
+        "tags": [
+          "ProviderEndpoint"
+        ],
+        "summary": "Find the attached ProviderRegisterData",
+        "description": "Find the attached ProviderRegisterData of the ProviderEndpoint with the given ID",
+        "operationId": "readProviderEndpointProvider",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of the ProviderEndpoint",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ProviderRegisterData attached to ProviderEndpoint with requested ID was found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProviderEndpoint_ProviderRead"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "409": {
+            "$ref": "#/components/responses/409"
+          },
+          "500": {
+            "$ref": "#/components/responses/500"
+          }
+        }
+      }
+    },
+    "/provider-endpoints/{id}/required-data": {
+      "get": {
+        "tags": [
+          "ProviderEndpoint"
+        ],
+        "summary": "List attached RequiredData",
+        "description": "List attached RequiredData.",
+        "operationId": "listProviderEndpointRequiredData",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of the ProviderEndpoint",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "what page to render",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "itemsPerPage",
+            "in": "query",
+            "description": "item count to render per page",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "result ProviderEndpoints list",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ProviderEndpoint_RequiredDataList"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "409": {
+            "$ref": "#/components/responses/409"
+          },
+          "500": {
+            "$ref": "#/components/responses/500"
+          }
+        }
+      }
+    },
+    "/provider-register-data": {
+      "get": {
+        "tags": [
+          "ProviderRegisterData"
+        ],
+        "summary": "List ProviderRegisterData",
+        "description": "List ProviderRegisterData.",
+        "operationId": "listProviderRegisterData",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "description": "what page to render",
+            "schema": {
+              "type": "integer",
+              "minimum": 1
+            }
+          },
+          {
+            "name": "itemsPerPage",
+            "in": "query",
+            "description": "item count to render per page",
+            "schema": {
+              "type": "integer",
+              "maximum": 255,
+              "minimum": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "result ProviderRegisterData list",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ProviderRegisterDataList"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "409": {
+            "$ref": "#/components/responses/409"
+          },
+          "500": {
+            "$ref": "#/components/responses/500"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "ProviderRegisterData"
+        ],
+        "summary": "Create a new ProviderRegisterData",
+        "description": "Creates a new ProviderRegisterData and persists it to storage.",
+        "operationId": "createProviderRegisterData",
+        "requestBody": {
+          "description": "ProviderRegisterData to create",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "port": {
+                    "type": "string"
+                  },
+                  "address": {
+                    "type": "string"
+                  },
+                  "description": {
+                    "type": "string"
+                  },
+                  "liveInterval": {
+                    "type": "integer"
+                  },
+                  "liveTimeout": {
+                    "type": "integer"
+                  },
+                  "endpoints": {
+                    "type": "array",
+                    "items": {
+                      "type": "integer"
+                    }
+                  }
+                },
+                "required": [
+                  "name",
+                  "port",
+                  "address",
+                  "description",
+                  "liveInterval",
+                  "liveTimeout"
+                ]
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "ProviderRegisterData created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProviderRegisterDataCreate"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "409": {
+            "$ref": "#/components/responses/409"
+          },
+          "500": {
+            "$ref": "#/components/responses/500"
+          }
+        }
+      }
+    },
+    "/provider-register-data/{id}": {
+      "get": {
+        "tags": [
+          "ProviderRegisterData"
+        ],
+        "summary": "Find a ProviderRegisterData by ID",
+        "description": "Finds the ProviderRegisterData with the requested ID and returns it.",
+        "operationId": "readProviderRegisterData",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of the ProviderRegisterData",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ProviderRegisterData with requested ID was found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProviderRegisterDataRead"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "409": {
+            "$ref": "#/components/responses/409"
+          },
+          "500": {
+            "$ref": "#/components/responses/500"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "ProviderRegisterData"
+        ],
+        "summary": "Deletes a ProviderRegisterData by ID",
+        "description": "Deletes the ProviderRegisterData with the requested ID.",
+        "operationId": "deleteProviderRegisterData",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of the ProviderRegisterData",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "ProviderRegisterData with requested ID was deleted"
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "409": {
+            "$ref": "#/components/responses/409"
+          },
+          "500": {
+            "$ref": "#/components/responses/500"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "ProviderRegisterData"
+        ],
+        "summary": "Updates a ProviderRegisterData",
+        "description": "Updates a ProviderRegisterData and persists changes to storage.",
+        "operationId": "updateProviderRegisterData",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of the ProviderRegisterData",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "ProviderRegisterData properties to update",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "port": {
+                    "type": "string"
+                  },
+                  "address": {
+                    "type": "string"
+                  },
+                  "description": {
+                    "type": "string"
+                  },
+                  "liveInterval": {
+                    "type": "integer"
+                  },
+                  "liveTimeout": {
+                    "type": "integer"
+                  },
+                  "endpoints": {
+                    "type": "array",
+                    "items": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "ProviderRegisterData updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProviderRegisterDataUpdate"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "409": {
+            "$ref": "#/components/responses/409"
+          },
+          "500": {
+            "$ref": "#/components/responses/500"
+          }
+        }
+      }
+    },
+    "/provider-register-data/{id}/endpoints": {
+      "get": {
+        "tags": [
+          "ProviderRegisterData"
+        ],
+        "summary": "List attached Endpoints",
+        "description": "List attached Endpoints.",
+        "operationId": "listProviderRegisterDataEndpoints",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of the ProviderRegisterData",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "what page to render",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "itemsPerPage",
+            "in": "query",
+            "description": "item count to render per page",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "result ProviderRegisterData list",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ProviderRegisterData_EndpointsList"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "409": {
+            "$ref": "#/components/responses/409"
+          },
+          "500": {
+            "$ref": "#/components/responses/500"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "EndpointData": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "dataName": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "endpoint_required": {
+            "$ref": "#/components/schemas/ProviderEndpoint"
+          },
+          "endpoint_provided": {
+            "$ref": "#/components/schemas/ProviderEndpoint"
+          }
+        },
+        "required": [
+          "id",
+          "dataName",
+          "description",
+          "type"
+        ]
+      },
+      "EndpointDataCreate": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "dataName": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "dataName",
+          "description",
+          "type"
+        ]
+      },
+      "EndpointDataList": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "dataName": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "dataName",
+          "description",
+          "type"
+        ]
+      },
+      "EndpointDataRead": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "dataName": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "dataName",
+          "description",
+          "type"
+        ]
+      },
+      "EndpointDataUpdate": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "dataName": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "dataName",
+          "description",
+          "type"
+        ]
+      },
+      "EndpointData_EndpointProvidedRead": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "string"
+          },
+          "path": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "path",
+          "type",
+          "description"
+        ]
+      },
+      "EndpointData_EndpointRequiredRead": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "string"
+          },
+          "path": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "path",
+          "type",
+          "description"
+        ]
+      },
+      "ProviderEndpoint": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "string"
+          },
+          "path": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "required_data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EndpointData"
+            }
+          },
+          "provided_data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EndpointData"
+            }
+          },
+          "provider": {
+            "$ref": "#/components/schemas/ProviderRegisterData"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "path",
+          "type",
+          "description"
+        ]
+      },
+      "ProviderEndpointCreate": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "string"
+          },
+          "path": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "path",
+          "type",
+          "description"
+        ]
+      },
+      "ProviderEndpointList": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "string"
+          },
+          "path": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "path",
+          "type",
+          "description"
+        ]
+      },
+      "ProviderEndpointRead": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "string"
+          },
+          "path": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "path",
+          "type",
+          "description"
+        ]
+      },
+      "ProviderEndpointUpdate": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "string"
+          },
+          "path": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "path",
+          "type",
+          "description"
+        ]
+      },
+      "ProviderEndpoint_ProvidedDataList": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "dataName": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "dataName",
+          "description",
+          "type"
+        ]
+      },
+      "ProviderEndpoint_ProviderRead": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "string"
+          },
+          "port": {
+            "type": "string"
+          },
+          "address": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "liveInterval": {
+            "type": "integer"
+          },
+          "liveTimeout": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "port",
+          "address",
+          "description",
+          "liveInterval",
+          "liveTimeout"
+        ]
+      },
+      "ProviderEndpoint_RequiredDataList": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "dataName": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "dataName",
+          "description",
+          "type"
+        ]
+      },
+      "ProviderRegisterData": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "string"
+          },
+          "port": {
+            "type": "string"
+          },
+          "address": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "liveInterval": {
+            "type": "integer"
+          },
+          "liveTimeout": {
+            "type": "integer"
+          },
+          "endpoints": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProviderEndpoint"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "port",
+          "address",
+          "description",
+          "liveInterval",
+          "liveTimeout"
+        ]
+      },
+      "ProviderRegisterDataCreate": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "string"
+          },
+          "port": {
+            "type": "string"
+          },
+          "address": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "liveInterval": {
+            "type": "integer"
+          },
+          "liveTimeout": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "port",
+          "address",
+          "description",
+          "liveInterval",
+          "liveTimeout"
+        ]
+      },
+      "ProviderRegisterDataList": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "string"
+          },
+          "port": {
+            "type": "string"
+          },
+          "address": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "liveInterval": {
+            "type": "integer"
+          },
+          "liveTimeout": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "port",
+          "address",
+          "description",
+          "liveInterval",
+          "liveTimeout"
+        ]
+      },
+      "ProviderRegisterDataRead": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "string"
+          },
+          "port": {
+            "type": "string"
+          },
+          "address": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "liveInterval": {
+            "type": "integer"
+          },
+          "liveTimeout": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "port",
+          "address",
+          "description",
+          "liveInterval",
+          "liveTimeout"
+        ]
+      },
+      "ProviderRegisterDataUpdate": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "string"
+          },
+          "port": {
+            "type": "string"
+          },
+          "address": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "liveInterval": {
+            "type": "integer"
+          },
+          "liveTimeout": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "port",
+          "address",
+          "description",
+          "liveInterval",
+          "liveTimeout"
+        ]
+      },
+      "ProviderRegisterData_EndpointsList": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "string"
+          },
+          "path": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "path",
+          "type",
+          "description"
+        ]
+      }
+    },
+    "responses": {
+      "400": {
+        "description": "invalid input, data invalid",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "code": {
+                  "type": "integer"
+                },
+                "status": {
+                  "type": "string"
+                },
+                "errors": {}
+              },
+              "required": [
+                "code",
+                "status"
+              ]
+            }
+          }
+        }
+      },
+      "403": {
+        "description": "insufficient permissions",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "code": {
+                  "type": "integer"
+                },
+                "status": {
+                  "type": "string"
+                },
+                "errors": {}
+              },
+              "required": [
+                "code",
+                "status"
+              ]
+            }
+          }
+        }
+      },
+      "404": {
+        "description": "resource not found",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "code": {
+                  "type": "integer"
+                },
+                "status": {
+                  "type": "string"
+                },
+                "errors": {}
+              },
+              "required": [
+                "code",
+                "status"
+              ]
+            }
+          }
+        }
+      },
+      "409": {
+        "description": "conflicting resources",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "code": {
+                  "type": "integer"
+                },
+                "status": {
+                  "type": "string"
+                },
+                "errors": {}
+              },
+              "required": [
+                "code",
+                "status"
+              ]
+            }
+          }
+        }
+      },
+      "500": {
+        "description": "unexpected error",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "code": {
+                  "type": "integer"
+                },
+                "status": {
+                  "type": "string"
+                },
+                "errors": {}
+              },
+              "required": [
+                "code",
+                "status"
+              ]
+            }
+          }
+        }
+      }
+    }
+  }
+}

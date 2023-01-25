@@ -12,10 +12,6 @@ import (
 	"servicediscoverer/ent/ogent"
 	"servicediscoverer/ent/providerregisterdata"
 	service2 "servicediscoverer/service"
-
-	"context"
-
-	_ "github.com/mattn/go-sqlite3"
 )
 
 type client struct {
@@ -35,10 +31,6 @@ type checkLive struct {
 type handler struct {
 	*ogent.OgentHandler
 	client *ent.Client
-}
-
-func (h handler) MarkDone(ctx context.Context, params ogent.MarkDoneParams) (ogent.MarkDoneNoContent, error) {
-	return ogent.MarkDoneNoContent{}, h.client.Todo.UpdateOneID(params.ID).SetDone(true).Exec(ctx)
 }
 
 func (c *client) call() *http.Response {
@@ -63,12 +55,22 @@ func main() {
 		errDb := LocalClient.Close()
 		log.Fatal(errDb)
 	}(dev.LocalClient)
+
+	serv, err := ogent.NewServer(ogent.NewOgentHandler(dev.LocalClient))
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	mux := http.NewServeMux()
 	mux.HandleFunc("/test", service.GetDataHandler)
 	mux.HandleFunc("/fillUpTest", FillUpTestData)
 	mux.HandleFunc("/DelTest", DelTestData)
 
-	err := http.ListenAndServe(":3333", mux)
+	fs := http.FileServer(http.Dir("doc/swagger"))
+	mux.Handle("/swagger/", http.StripPrefix("/swagger/", fs))
+	mux.Handle("/api/", http.StripPrefix("/api/", serv))
+
+	err = http.ListenAndServe(":3333", mux)
 
 	if errors.Is(err, http.ErrServerClosed) {
 		fmt.Printf("server closed\n")
