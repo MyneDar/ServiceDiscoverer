@@ -12,127 +12,127 @@ type Handler interface {
 	//
 	// Creates a new EndpointData and persists it to storage.
 	//
-	// POST /endpoint-data
+	// POST /admin/endpoint-data
 	CreateEndpointData(ctx context.Context, req *CreateEndpointDataReq) (CreateEndpointDataRes, error)
 	// CreateProviderEndpoint implements createProviderEndpoint operation.
 	//
 	// Creates a new ProviderEndpoint and persists it to storage.
 	//
-	// POST /provider-endpoints
+	// POST /admin/provider-endpoints
 	CreateProviderEndpoint(ctx context.Context, req *CreateProviderEndpointReq) (CreateProviderEndpointRes, error)
 	// CreateProviderRegisterData implements createProviderRegisterData operation.
 	//
 	// Creates a new ProviderRegisterData and persists it to storage.
 	//
-	// POST /provider-register-data
+	// POST /admin/provider-register-data
 	CreateProviderRegisterData(ctx context.Context, req *CreateProviderRegisterDataReq) (CreateProviderRegisterDataRes, error)
 	// DeleteEndpointData implements deleteEndpointData operation.
 	//
 	// Deletes the EndpointData with the requested ID.
 	//
-	// DELETE /endpoint-data/{id}
+	// DELETE /admin/endpoint-data/{id}
 	DeleteEndpointData(ctx context.Context, params DeleteEndpointDataParams) (DeleteEndpointDataRes, error)
 	// DeleteProviderEndpoint implements deleteProviderEndpoint operation.
 	//
 	// Deletes the ProviderEndpoint with the requested ID.
 	//
-	// DELETE /provider-endpoints/{id}
+	// DELETE /admin/provider-endpoints/{id}
 	DeleteProviderEndpoint(ctx context.Context, params DeleteProviderEndpointParams) (DeleteProviderEndpointRes, error)
 	// DeleteProviderRegisterData implements deleteProviderRegisterData operation.
 	//
 	// Deletes the ProviderRegisterData with the requested ID.
 	//
-	// DELETE /provider-register-data/{id}
+	// DELETE /admin/provider-register-data/{id}
 	DeleteProviderRegisterData(ctx context.Context, params DeleteProviderRegisterDataParams) (DeleteProviderRegisterDataRes, error)
 	// ListEndpointData implements listEndpointData operation.
 	//
 	// List EndpointData.
 	//
-	// GET /endpoint-data
+	// GET /admin/endpoint-data
 	ListEndpointData(ctx context.Context, params ListEndpointDataParams) (ListEndpointDataRes, error)
 	// ListProviderEndpoint implements listProviderEndpoint operation.
 	//
 	// List ProviderEndpoints.
 	//
-	// GET /provider-endpoints
+	// GET /admin/provider-endpoints
 	ListProviderEndpoint(ctx context.Context, params ListProviderEndpointParams) (ListProviderEndpointRes, error)
 	// ListProviderEndpointProvidedData implements listProviderEndpointProvidedData operation.
 	//
 	// List attached ProvidedData.
 	//
-	// GET /provider-endpoints/{id}/provided-data
+	// GET /admin/provider-endpoints/{id}/provided-data
 	ListProviderEndpointProvidedData(ctx context.Context, params ListProviderEndpointProvidedDataParams) (ListProviderEndpointProvidedDataRes, error)
 	// ListProviderEndpointRequiredData implements listProviderEndpointRequiredData operation.
 	//
 	// List attached RequiredData.
 	//
-	// GET /provider-endpoints/{id}/required-data
+	// GET /admin/provider-endpoints/{id}/required-data
 	ListProviderEndpointRequiredData(ctx context.Context, params ListProviderEndpointRequiredDataParams) (ListProviderEndpointRequiredDataRes, error)
 	// ListProviderRegisterData implements listProviderRegisterData operation.
 	//
 	// List ProviderRegisterData.
 	//
-	// GET /provider-register-data
+	// GET /admin/provider-register-data
 	ListProviderRegisterData(ctx context.Context, params ListProviderRegisterDataParams) (ListProviderRegisterDataRes, error)
 	// ListProviderRegisterDataEndpoints implements listProviderRegisterDataEndpoints operation.
 	//
 	// List attached Endpoints.
 	//
-	// GET /provider-register-data/{id}/endpoints
+	// GET /admin/provider-register-data/{id}/endpoints
 	ListProviderRegisterDataEndpoints(ctx context.Context, params ListProviderRegisterDataEndpointsParams) (ListProviderRegisterDataEndpointsRes, error)
 	// ReadEndpointData implements readEndpointData operation.
 	//
 	// Finds the EndpointData with the requested ID and returns it.
 	//
-	// GET /endpoint-data/{id}
+	// GET /admin/endpoint-data/{id}
 	ReadEndpointData(ctx context.Context, params ReadEndpointDataParams) (ReadEndpointDataRes, error)
 	// ReadEndpointDataEndpointProvided implements readEndpointDataEndpointProvided operation.
 	//
 	// Find the attached ProviderEndpoint of the EndpointData with the given ID.
 	//
-	// GET /endpoint-data/{id}/endpoint-provided
+	// GET /admin/endpoint-data/{id}/endpoint-provided
 	ReadEndpointDataEndpointProvided(ctx context.Context, params ReadEndpointDataEndpointProvidedParams) (ReadEndpointDataEndpointProvidedRes, error)
 	// ReadEndpointDataEndpointRequired implements readEndpointDataEndpointRequired operation.
 	//
 	// Find the attached ProviderEndpoint of the EndpointData with the given ID.
 	//
-	// GET /endpoint-data/{id}/endpoint-required
+	// GET /admin/endpoint-data/{id}/endpoint-required
 	ReadEndpointDataEndpointRequired(ctx context.Context, params ReadEndpointDataEndpointRequiredParams) (ReadEndpointDataEndpointRequiredRes, error)
 	// ReadProviderEndpoint implements readProviderEndpoint operation.
 	//
 	// Finds the ProviderEndpoint with the requested ID and returns it.
 	//
-	// GET /provider-endpoints/{id}
+	// GET /admin/provider-endpoints/{id}
 	ReadProviderEndpoint(ctx context.Context, params ReadProviderEndpointParams) (ReadProviderEndpointRes, error)
 	// ReadProviderEndpointProvider implements readProviderEndpointProvider operation.
 	//
 	// Find the attached ProviderRegisterData of the ProviderEndpoint with the given ID.
 	//
-	// GET /provider-endpoints/{id}/provider
+	// GET /admin/provider-endpoints/{id}/provider
 	ReadProviderEndpointProvider(ctx context.Context, params ReadProviderEndpointProviderParams) (ReadProviderEndpointProviderRes, error)
 	// ReadProviderRegisterData implements readProviderRegisterData operation.
 	//
 	// Finds the ProviderRegisterData with the requested ID and returns it.
 	//
-	// GET /provider-register-data/{id}
+	// GET /admin/provider-register-data/{id}
 	ReadProviderRegisterData(ctx context.Context, params ReadProviderRegisterDataParams) (ReadProviderRegisterDataRes, error)
 	// UpdateEndpointData implements updateEndpointData operation.
 	//
 	// Updates a EndpointData and persists changes to storage.
 	//
-	// PATCH /endpoint-data/{id}
+	// PATCH /admin/endpoint-data/{id}
 	UpdateEndpointData(ctx context.Context, req *UpdateEndpointDataReq, params UpdateEndpointDataParams) (UpdateEndpointDataRes, error)
 	// UpdateProviderEndpoint implements updateProviderEndpoint operation.
 	//
 	// Updates a ProviderEndpoint and persists changes to storage.
 	//
-	// PATCH /provider-endpoints/{id}
+	// PATCH /admin/provider-endpoints/{id}
 	UpdateProviderEndpoint(ctx context.Context, req *UpdateProviderEndpointReq, params UpdateProviderEndpointParams) (UpdateProviderEndpointRes, error)
 	// UpdateProviderRegisterData implements updateProviderRegisterData operation.
 	//
 	// Updates a ProviderRegisterData and persists changes to storage.
 	//
-	// PATCH /provider-register-data/{id}
+	// PATCH /admin/provider-register-data/{id}
 	UpdateProviderRegisterData(ctx context.Context, req *UpdateProviderRegisterDataReq, params UpdateProviderRegisterDataParams) (UpdateProviderRegisterDataRes, error)
 }
 

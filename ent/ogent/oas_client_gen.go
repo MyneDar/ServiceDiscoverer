@@ -63,7 +63,7 @@ func (c *Client) requestURL(ctx context.Context) *url.URL {
 //
 // Creates a new EndpointData and persists it to storage.
 //
-// POST /endpoint-data
+// POST /admin/endpoint-data
 func (c *Client) CreateEndpointData(ctx context.Context, request *CreateEndpointDataReq) (CreateEndpointDataRes, error) {
 	res, err := c.sendCreateEndpointData(ctx, request)
 	_ = res
@@ -103,7 +103,7 @@ func (c *Client) sendCreateEndpointData(ctx context.Context, request *CreateEndp
 
 	stage = "BuildURL"
 	u := uri.Clone(c.requestURL(ctx))
-	u.Path += "/endpoint-data"
+	u.Path += "/admin/endpoint-data"
 
 	stage = "EncodeRequest"
 	r, err := ht.NewRequest(ctx, "POST", u, nil)
@@ -134,7 +134,7 @@ func (c *Client) sendCreateEndpointData(ctx context.Context, request *CreateEndp
 //
 // Creates a new ProviderEndpoint and persists it to storage.
 //
-// POST /provider-endpoints
+// POST /admin/provider-endpoints
 func (c *Client) CreateProviderEndpoint(ctx context.Context, request *CreateProviderEndpointReq) (CreateProviderEndpointRes, error) {
 	res, err := c.sendCreateProviderEndpoint(ctx, request)
 	_ = res
@@ -174,7 +174,7 @@ func (c *Client) sendCreateProviderEndpoint(ctx context.Context, request *Create
 
 	stage = "BuildURL"
 	u := uri.Clone(c.requestURL(ctx))
-	u.Path += "/provider-endpoints"
+	u.Path += "/admin/provider-endpoints"
 
 	stage = "EncodeRequest"
 	r, err := ht.NewRequest(ctx, "POST", u, nil)
@@ -205,7 +205,7 @@ func (c *Client) sendCreateProviderEndpoint(ctx context.Context, request *Create
 //
 // Creates a new ProviderRegisterData and persists it to storage.
 //
-// POST /provider-register-data
+// POST /admin/provider-register-data
 func (c *Client) CreateProviderRegisterData(ctx context.Context, request *CreateProviderRegisterDataReq) (CreateProviderRegisterDataRes, error) {
 	res, err := c.sendCreateProviderRegisterData(ctx, request)
 	_ = res
@@ -245,7 +245,7 @@ func (c *Client) sendCreateProviderRegisterData(ctx context.Context, request *Cr
 
 	stage = "BuildURL"
 	u := uri.Clone(c.requestURL(ctx))
-	u.Path += "/provider-register-data"
+	u.Path += "/admin/provider-register-data"
 
 	stage = "EncodeRequest"
 	r, err := ht.NewRequest(ctx, "POST", u, nil)
@@ -276,7 +276,7 @@ func (c *Client) sendCreateProviderRegisterData(ctx context.Context, request *Cr
 //
 // Deletes the EndpointData with the requested ID.
 //
-// DELETE /endpoint-data/{id}
+// DELETE /admin/endpoint-data/{id}
 func (c *Client) DeleteEndpointData(ctx context.Context, params DeleteEndpointDataParams) (DeleteEndpointDataRes, error) {
 	res, err := c.sendDeleteEndpointData(ctx, params)
 	_ = res
@@ -316,7 +316,7 @@ func (c *Client) sendDeleteEndpointData(ctx context.Context, params DeleteEndpoi
 
 	stage = "BuildURL"
 	u := uri.Clone(c.requestURL(ctx))
-	u.Path += "/endpoint-data/"
+	u.Path += "/admin/endpoint-data/"
 	{
 		// Encode "id" parameter.
 		e := uri.NewPathEncoder(uri.PathEncoderConfig{
@@ -358,7 +358,7 @@ func (c *Client) sendDeleteEndpointData(ctx context.Context, params DeleteEndpoi
 //
 // Deletes the ProviderEndpoint with the requested ID.
 //
-// DELETE /provider-endpoints/{id}
+// DELETE /admin/provider-endpoints/{id}
 func (c *Client) DeleteProviderEndpoint(ctx context.Context, params DeleteProviderEndpointParams) (DeleteProviderEndpointRes, error) {
 	res, err := c.sendDeleteProviderEndpoint(ctx, params)
 	_ = res
@@ -398,7 +398,7 @@ func (c *Client) sendDeleteProviderEndpoint(ctx context.Context, params DeletePr
 
 	stage = "BuildURL"
 	u := uri.Clone(c.requestURL(ctx))
-	u.Path += "/provider-endpoints/"
+	u.Path += "/admin/provider-endpoints/"
 	{
 		// Encode "id" parameter.
 		e := uri.NewPathEncoder(uri.PathEncoderConfig{
@@ -440,7 +440,7 @@ func (c *Client) sendDeleteProviderEndpoint(ctx context.Context, params DeletePr
 //
 // Deletes the ProviderRegisterData with the requested ID.
 //
-// DELETE /provider-register-data/{id}
+// DELETE /admin/provider-register-data/{id}
 func (c *Client) DeleteProviderRegisterData(ctx context.Context, params DeleteProviderRegisterDataParams) (DeleteProviderRegisterDataRes, error) {
 	res, err := c.sendDeleteProviderRegisterData(ctx, params)
 	_ = res
@@ -480,7 +480,7 @@ func (c *Client) sendDeleteProviderRegisterData(ctx context.Context, params Dele
 
 	stage = "BuildURL"
 	u := uri.Clone(c.requestURL(ctx))
-	u.Path += "/provider-register-data/"
+	u.Path += "/admin/provider-register-data/"
 	{
 		// Encode "id" parameter.
 		e := uri.NewPathEncoder(uri.PathEncoderConfig{
@@ -522,7 +522,7 @@ func (c *Client) sendDeleteProviderRegisterData(ctx context.Context, params Dele
 //
 // List EndpointData.
 //
-// GET /endpoint-data
+// GET /admin/endpoint-data
 func (c *Client) ListEndpointData(ctx context.Context, params ListEndpointDataParams) (ListEndpointDataRes, error) {
 	res, err := c.sendListEndpointData(ctx, params)
 	_ = res
@@ -562,7 +562,7 @@ func (c *Client) sendListEndpointData(ctx context.Context, params ListEndpointDa
 
 	stage = "BuildURL"
 	u := uri.Clone(c.requestURL(ctx))
-	u.Path += "/endpoint-data"
+	u.Path += "/admin/endpoint-data"
 
 	stage = "EncodeQueryParams"
 	q := uri.NewQueryEncoder()
@@ -628,7 +628,7 @@ func (c *Client) sendListEndpointData(ctx context.Context, params ListEndpointDa
 //
 // List ProviderEndpoints.
 //
-// GET /provider-endpoints
+// GET /admin/provider-endpoints
 func (c *Client) ListProviderEndpoint(ctx context.Context, params ListProviderEndpointParams) (ListProviderEndpointRes, error) {
 	res, err := c.sendListProviderEndpoint(ctx, params)
 	_ = res
@@ -668,7 +668,7 @@ func (c *Client) sendListProviderEndpoint(ctx context.Context, params ListProvid
 
 	stage = "BuildURL"
 	u := uri.Clone(c.requestURL(ctx))
-	u.Path += "/provider-endpoints"
+	u.Path += "/admin/provider-endpoints"
 
 	stage = "EncodeQueryParams"
 	q := uri.NewQueryEncoder()
@@ -734,7 +734,7 @@ func (c *Client) sendListProviderEndpoint(ctx context.Context, params ListProvid
 //
 // List attached ProvidedData.
 //
-// GET /provider-endpoints/{id}/provided-data
+// GET /admin/provider-endpoints/{id}/provided-data
 func (c *Client) ListProviderEndpointProvidedData(ctx context.Context, params ListProviderEndpointProvidedDataParams) (ListProviderEndpointProvidedDataRes, error) {
 	res, err := c.sendListProviderEndpointProvidedData(ctx, params)
 	_ = res
@@ -774,7 +774,7 @@ func (c *Client) sendListProviderEndpointProvidedData(ctx context.Context, param
 
 	stage = "BuildURL"
 	u := uri.Clone(c.requestURL(ctx))
-	u.Path += "/provider-endpoints/"
+	u.Path += "/admin/provider-endpoints/"
 	{
 		// Encode "id" parameter.
 		e := uri.NewPathEncoder(uri.PathEncoderConfig{
@@ -855,7 +855,7 @@ func (c *Client) sendListProviderEndpointProvidedData(ctx context.Context, param
 //
 // List attached RequiredData.
 //
-// GET /provider-endpoints/{id}/required-data
+// GET /admin/provider-endpoints/{id}/required-data
 func (c *Client) ListProviderEndpointRequiredData(ctx context.Context, params ListProviderEndpointRequiredDataParams) (ListProviderEndpointRequiredDataRes, error) {
 	res, err := c.sendListProviderEndpointRequiredData(ctx, params)
 	_ = res
@@ -895,7 +895,7 @@ func (c *Client) sendListProviderEndpointRequiredData(ctx context.Context, param
 
 	stage = "BuildURL"
 	u := uri.Clone(c.requestURL(ctx))
-	u.Path += "/provider-endpoints/"
+	u.Path += "/admin/provider-endpoints/"
 	{
 		// Encode "id" parameter.
 		e := uri.NewPathEncoder(uri.PathEncoderConfig{
@@ -976,7 +976,7 @@ func (c *Client) sendListProviderEndpointRequiredData(ctx context.Context, param
 //
 // List ProviderRegisterData.
 //
-// GET /provider-register-data
+// GET /admin/provider-register-data
 func (c *Client) ListProviderRegisterData(ctx context.Context, params ListProviderRegisterDataParams) (ListProviderRegisterDataRes, error) {
 	res, err := c.sendListProviderRegisterData(ctx, params)
 	_ = res
@@ -1016,7 +1016,7 @@ func (c *Client) sendListProviderRegisterData(ctx context.Context, params ListPr
 
 	stage = "BuildURL"
 	u := uri.Clone(c.requestURL(ctx))
-	u.Path += "/provider-register-data"
+	u.Path += "/admin/provider-register-data"
 
 	stage = "EncodeQueryParams"
 	q := uri.NewQueryEncoder()
@@ -1082,7 +1082,7 @@ func (c *Client) sendListProviderRegisterData(ctx context.Context, params ListPr
 //
 // List attached Endpoints.
 //
-// GET /provider-register-data/{id}/endpoints
+// GET /admin/provider-register-data/{id}/endpoints
 func (c *Client) ListProviderRegisterDataEndpoints(ctx context.Context, params ListProviderRegisterDataEndpointsParams) (ListProviderRegisterDataEndpointsRes, error) {
 	res, err := c.sendListProviderRegisterDataEndpoints(ctx, params)
 	_ = res
@@ -1122,7 +1122,7 @@ func (c *Client) sendListProviderRegisterDataEndpoints(ctx context.Context, para
 
 	stage = "BuildURL"
 	u := uri.Clone(c.requestURL(ctx))
-	u.Path += "/provider-register-data/"
+	u.Path += "/admin/provider-register-data/"
 	{
 		// Encode "id" parameter.
 		e := uri.NewPathEncoder(uri.PathEncoderConfig{
@@ -1203,7 +1203,7 @@ func (c *Client) sendListProviderRegisterDataEndpoints(ctx context.Context, para
 //
 // Finds the EndpointData with the requested ID and returns it.
 //
-// GET /endpoint-data/{id}
+// GET /admin/endpoint-data/{id}
 func (c *Client) ReadEndpointData(ctx context.Context, params ReadEndpointDataParams) (ReadEndpointDataRes, error) {
 	res, err := c.sendReadEndpointData(ctx, params)
 	_ = res
@@ -1243,7 +1243,7 @@ func (c *Client) sendReadEndpointData(ctx context.Context, params ReadEndpointDa
 
 	stage = "BuildURL"
 	u := uri.Clone(c.requestURL(ctx))
-	u.Path += "/endpoint-data/"
+	u.Path += "/admin/endpoint-data/"
 	{
 		// Encode "id" parameter.
 		e := uri.NewPathEncoder(uri.PathEncoderConfig{
@@ -1285,7 +1285,7 @@ func (c *Client) sendReadEndpointData(ctx context.Context, params ReadEndpointDa
 //
 // Find the attached ProviderEndpoint of the EndpointData with the given ID.
 //
-// GET /endpoint-data/{id}/endpoint-provided
+// GET /admin/endpoint-data/{id}/endpoint-provided
 func (c *Client) ReadEndpointDataEndpointProvided(ctx context.Context, params ReadEndpointDataEndpointProvidedParams) (ReadEndpointDataEndpointProvidedRes, error) {
 	res, err := c.sendReadEndpointDataEndpointProvided(ctx, params)
 	_ = res
@@ -1325,7 +1325,7 @@ func (c *Client) sendReadEndpointDataEndpointProvided(ctx context.Context, param
 
 	stage = "BuildURL"
 	u := uri.Clone(c.requestURL(ctx))
-	u.Path += "/endpoint-data/"
+	u.Path += "/admin/endpoint-data/"
 	{
 		// Encode "id" parameter.
 		e := uri.NewPathEncoder(uri.PathEncoderConfig{
@@ -1368,7 +1368,7 @@ func (c *Client) sendReadEndpointDataEndpointProvided(ctx context.Context, param
 //
 // Find the attached ProviderEndpoint of the EndpointData with the given ID.
 //
-// GET /endpoint-data/{id}/endpoint-required
+// GET /admin/endpoint-data/{id}/endpoint-required
 func (c *Client) ReadEndpointDataEndpointRequired(ctx context.Context, params ReadEndpointDataEndpointRequiredParams) (ReadEndpointDataEndpointRequiredRes, error) {
 	res, err := c.sendReadEndpointDataEndpointRequired(ctx, params)
 	_ = res
@@ -1408,7 +1408,7 @@ func (c *Client) sendReadEndpointDataEndpointRequired(ctx context.Context, param
 
 	stage = "BuildURL"
 	u := uri.Clone(c.requestURL(ctx))
-	u.Path += "/endpoint-data/"
+	u.Path += "/admin/endpoint-data/"
 	{
 		// Encode "id" parameter.
 		e := uri.NewPathEncoder(uri.PathEncoderConfig{
@@ -1451,7 +1451,7 @@ func (c *Client) sendReadEndpointDataEndpointRequired(ctx context.Context, param
 //
 // Finds the ProviderEndpoint with the requested ID and returns it.
 //
-// GET /provider-endpoints/{id}
+// GET /admin/provider-endpoints/{id}
 func (c *Client) ReadProviderEndpoint(ctx context.Context, params ReadProviderEndpointParams) (ReadProviderEndpointRes, error) {
 	res, err := c.sendReadProviderEndpoint(ctx, params)
 	_ = res
@@ -1491,7 +1491,7 @@ func (c *Client) sendReadProviderEndpoint(ctx context.Context, params ReadProvid
 
 	stage = "BuildURL"
 	u := uri.Clone(c.requestURL(ctx))
-	u.Path += "/provider-endpoints/"
+	u.Path += "/admin/provider-endpoints/"
 	{
 		// Encode "id" parameter.
 		e := uri.NewPathEncoder(uri.PathEncoderConfig{
@@ -1533,7 +1533,7 @@ func (c *Client) sendReadProviderEndpoint(ctx context.Context, params ReadProvid
 //
 // Find the attached ProviderRegisterData of the ProviderEndpoint with the given ID.
 //
-// GET /provider-endpoints/{id}/provider
+// GET /admin/provider-endpoints/{id}/provider
 func (c *Client) ReadProviderEndpointProvider(ctx context.Context, params ReadProviderEndpointProviderParams) (ReadProviderEndpointProviderRes, error) {
 	res, err := c.sendReadProviderEndpointProvider(ctx, params)
 	_ = res
@@ -1573,7 +1573,7 @@ func (c *Client) sendReadProviderEndpointProvider(ctx context.Context, params Re
 
 	stage = "BuildURL"
 	u := uri.Clone(c.requestURL(ctx))
-	u.Path += "/provider-endpoints/"
+	u.Path += "/admin/provider-endpoints/"
 	{
 		// Encode "id" parameter.
 		e := uri.NewPathEncoder(uri.PathEncoderConfig{
@@ -1616,7 +1616,7 @@ func (c *Client) sendReadProviderEndpointProvider(ctx context.Context, params Re
 //
 // Finds the ProviderRegisterData with the requested ID and returns it.
 //
-// GET /provider-register-data/{id}
+// GET /admin/provider-register-data/{id}
 func (c *Client) ReadProviderRegisterData(ctx context.Context, params ReadProviderRegisterDataParams) (ReadProviderRegisterDataRes, error) {
 	res, err := c.sendReadProviderRegisterData(ctx, params)
 	_ = res
@@ -1656,7 +1656,7 @@ func (c *Client) sendReadProviderRegisterData(ctx context.Context, params ReadPr
 
 	stage = "BuildURL"
 	u := uri.Clone(c.requestURL(ctx))
-	u.Path += "/provider-register-data/"
+	u.Path += "/admin/provider-register-data/"
 	{
 		// Encode "id" parameter.
 		e := uri.NewPathEncoder(uri.PathEncoderConfig{
@@ -1698,7 +1698,7 @@ func (c *Client) sendReadProviderRegisterData(ctx context.Context, params ReadPr
 //
 // Updates a EndpointData and persists changes to storage.
 //
-// PATCH /endpoint-data/{id}
+// PATCH /admin/endpoint-data/{id}
 func (c *Client) UpdateEndpointData(ctx context.Context, request *UpdateEndpointDataReq, params UpdateEndpointDataParams) (UpdateEndpointDataRes, error) {
 	res, err := c.sendUpdateEndpointData(ctx, request, params)
 	_ = res
@@ -1738,7 +1738,7 @@ func (c *Client) sendUpdateEndpointData(ctx context.Context, request *UpdateEndp
 
 	stage = "BuildURL"
 	u := uri.Clone(c.requestURL(ctx))
-	u.Path += "/endpoint-data/"
+	u.Path += "/admin/endpoint-data/"
 	{
 		// Encode "id" parameter.
 		e := uri.NewPathEncoder(uri.PathEncoderConfig{
@@ -1783,7 +1783,7 @@ func (c *Client) sendUpdateEndpointData(ctx context.Context, request *UpdateEndp
 //
 // Updates a ProviderEndpoint and persists changes to storage.
 //
-// PATCH /provider-endpoints/{id}
+// PATCH /admin/provider-endpoints/{id}
 func (c *Client) UpdateProviderEndpoint(ctx context.Context, request *UpdateProviderEndpointReq, params UpdateProviderEndpointParams) (UpdateProviderEndpointRes, error) {
 	res, err := c.sendUpdateProviderEndpoint(ctx, request, params)
 	_ = res
@@ -1823,7 +1823,7 @@ func (c *Client) sendUpdateProviderEndpoint(ctx context.Context, request *Update
 
 	stage = "BuildURL"
 	u := uri.Clone(c.requestURL(ctx))
-	u.Path += "/provider-endpoints/"
+	u.Path += "/admin/provider-endpoints/"
 	{
 		// Encode "id" parameter.
 		e := uri.NewPathEncoder(uri.PathEncoderConfig{
@@ -1868,7 +1868,7 @@ func (c *Client) sendUpdateProviderEndpoint(ctx context.Context, request *Update
 //
 // Updates a ProviderRegisterData and persists changes to storage.
 //
-// PATCH /provider-register-data/{id}
+// PATCH /admin/provider-register-data/{id}
 func (c *Client) UpdateProviderRegisterData(ctx context.Context, request *UpdateProviderRegisterDataReq, params UpdateProviderRegisterDataParams) (UpdateProviderRegisterDataRes, error) {
 	res, err := c.sendUpdateProviderRegisterData(ctx, request, params)
 	_ = res
@@ -1908,7 +1908,7 @@ func (c *Client) sendUpdateProviderRegisterData(ctx context.Context, request *Up
 
 	stage = "BuildURL"
 	u := uri.Clone(c.requestURL(ctx))
-	u.Path += "/provider-register-data/"
+	u.Path += "/admin/provider-register-data/"
 	{
 		// Encode "id" parameter.
 		e := uri.NewPathEncoder(uri.PathEncoderConfig{

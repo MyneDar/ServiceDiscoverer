@@ -6,7 +6,7 @@
     "version": "0.1.0"
   },
   "paths": {
-    "/endpoint-data": {
+    "/admin/endpoint-data": {
       "get": {
         "tags": [
           "EndpointData"
@@ -126,7 +126,7 @@
         }
       }
     },
-    "/endpoint-data/{id}": {
+    "/admin/endpoint-data/{id}": {
       "get": {
         "tags": [
           "EndpointData"
@@ -278,7 +278,7 @@
         }
       }
     },
-    "/endpoint-data/{id}/endpoint-provided": {
+    "/admin/endpoint-data/{id}/endpoint-provided": {
       "get": {
         "tags": [
           "EndpointData"
@@ -323,7 +323,7 @@
         }
       }
     },
-    "/endpoint-data/{id}/endpoint-required": {
+    "/admin/endpoint-data/{id}/endpoint-required": {
       "get": {
         "tags": [
           "EndpointData"
@@ -368,7 +368,7 @@
         }
       }
     },
-    "/provider-endpoints": {
+    "/admin/provider-endpoints": {
       "get": {
         "tags": [
           "ProviderEndpoint"
@@ -501,7 +501,7 @@
         }
       }
     },
-    "/provider-endpoints/{id}": {
+    "/admin/provider-endpoints/{id}": {
       "get": {
         "tags": [
           "ProviderEndpoint"
@@ -665,7 +665,7 @@
         }
       }
     },
-    "/provider-endpoints/{id}/provided-data": {
+    "/admin/provider-endpoints/{id}/provided-data": {
       "get": {
         "tags": [
           "ProviderEndpoint"
@@ -729,7 +729,7 @@
         }
       }
     },
-    "/provider-endpoints/{id}/provider": {
+    "/admin/provider-endpoints/{id}/provider": {
       "get": {
         "tags": [
           "ProviderEndpoint"
@@ -774,7 +774,7 @@
         }
       }
     },
-    "/provider-endpoints/{id}/required-data": {
+    "/admin/provider-endpoints/{id}/required-data": {
       "get": {
         "tags": [
           "ProviderEndpoint"
@@ -838,7 +838,7 @@
         }
       }
     },
-    "/provider-register-data": {
+    "/admin/provider-register-data": {
       "get": {
         "tags": [
           "ProviderRegisterData"
@@ -970,7 +970,7 @@
         }
       }
     },
-    "/provider-register-data/{id}": {
+    "/admin/provider-register-data/{id}": {
       "get": {
         "tags": [
           "ProviderRegisterData"
@@ -1131,7 +1131,7 @@
         }
       }
     },
-    "/provider-register-data/{id}/endpoints": {
+    "/admin/provider-register-data/{id}/endpoints": {
       "get": {
         "tags": [
           "ProviderRegisterData"

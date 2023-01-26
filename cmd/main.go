@@ -60,7 +60,6 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-
 	mux := http.NewServeMux()
 	mux.HandleFunc("/test", service.GetDataHandler)
 	mux.HandleFunc("/fillUpTest", FillUpTestData)
@@ -68,8 +67,7 @@ func main() {
 
 	fs := http.FileServer(http.Dir("doc/swagger"))
 	mux.Handle("/swagger/", http.StripPrefix("/swagger/", fs))
-	mux.Handle("/api/", http.StripPrefix("/api/", serv))
-
+	mux.Handle("/admin/", serv)
 	err = http.ListenAndServe(":3333", mux)
 
 	if errors.Is(err, http.ErrServerClosed) {

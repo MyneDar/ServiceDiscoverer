@@ -25,7 +25,17 @@ func main() {
 		log.Fatalf("running ent codegen: %v", err)
 	}
 	spec := new(ogen.Spec)
-	oas, err := entoas.NewExtension(entoas.Spec(spec))
+	oas, err := entoas.NewExtension(
+		entoas.Spec(spec),
+		entoas.Mutations(func(graph *gen.Graph, spec *ogen.Spec) error {
+			p := make(ogen.Paths)
+			for k, v := range spec.Paths {
+				p["/admin"+k] = v
+			}
+			spec.Paths = p
+			return nil
+		}),
+	)
 	if err != nil {
 		log.Fatalf("creating entoas extension: %v", err)
 	}

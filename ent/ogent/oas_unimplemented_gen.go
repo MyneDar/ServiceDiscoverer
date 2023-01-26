@@ -17,7 +17,7 @@ var _ Handler = UnimplementedHandler{}
 //
 // Creates a new EndpointData and persists it to storage.
 //
-// POST /endpoint-data
+// POST /admin/endpoint-data
 func (UnimplementedHandler) CreateEndpointData(ctx context.Context, req *CreateEndpointDataReq) (r CreateEndpointDataRes, _ error) {
 	return r, ht.ErrNotImplemented
 }
@@ -26,7 +26,7 @@ func (UnimplementedHandler) CreateEndpointData(ctx context.Context, req *CreateE
 //
 // Creates a new ProviderEndpoint and persists it to storage.
 //
-// POST /provider-endpoints
+// POST /admin/provider-endpoints
 func (UnimplementedHandler) CreateProviderEndpoint(ctx context.Context, req *CreateProviderEndpointReq) (r CreateProviderEndpointRes, _ error) {
 	return r, ht.ErrNotImplemented
 }
@@ -35,7 +35,7 @@ func (UnimplementedHandler) CreateProviderEndpoint(ctx context.Context, req *Cre
 //
 // Creates a new ProviderRegisterData and persists it to storage.
 //
-// POST /provider-register-data
+// POST /admin/provider-register-data
 func (UnimplementedHandler) CreateProviderRegisterData(ctx context.Context, req *CreateProviderRegisterDataReq) (r CreateProviderRegisterDataRes, _ error) {
 	return r, ht.ErrNotImplemented
 }
@@ -44,7 +44,7 @@ func (UnimplementedHandler) CreateProviderRegisterData(ctx context.Context, req 
 //
 // Deletes the EndpointData with the requested ID.
 //
-// DELETE /endpoint-data/{id}
+// DELETE /admin/endpoint-data/{id}
 func (UnimplementedHandler) DeleteEndpointData(ctx context.Context, params DeleteEndpointDataParams) (r DeleteEndpointDataRes, _ error) {
 	return r, ht.ErrNotImplemented
 }
@@ -53,7 +53,7 @@ func (UnimplementedHandler) DeleteEndpointData(ctx context.Context, params Delet
 //
 // Deletes the ProviderEndpoint with the requested ID.
 //
-// DELETE /provider-endpoints/{id}
+// DELETE /admin/provider-endpoints/{id}
 func (UnimplementedHandler) DeleteProviderEndpoint(ctx context.Context, params DeleteProviderEndpointParams) (r DeleteProviderEndpointRes, _ error) {
 	return r, ht.ErrNotImplemented
 }
@@ -62,7 +62,7 @@ func (UnimplementedHandler) DeleteProviderEndpoint(ctx context.Context, params D
 //
 // Deletes the ProviderRegisterData with the requested ID.
 //
-// DELETE /provider-register-data/{id}
+// DELETE /admin/provider-register-data/{id}
 func (UnimplementedHandler) DeleteProviderRegisterData(ctx context.Context, params DeleteProviderRegisterDataParams) (r DeleteProviderRegisterDataRes, _ error) {
 	return r, ht.ErrNotImplemented
 }
@@ -71,7 +71,7 @@ func (UnimplementedHandler) DeleteProviderRegisterData(ctx context.Context, para
 //
 // List EndpointData.
 //
-// GET /endpoint-data
+// GET /admin/endpoint-data
 func (UnimplementedHandler) ListEndpointData(ctx context.Context, params ListEndpointDataParams) (r ListEndpointDataRes, _ error) {
 	return r, ht.ErrNotImplemented
 }
@@ -80,7 +80,7 @@ func (UnimplementedHandler) ListEndpointData(ctx context.Context, params ListEnd
 //
 // List ProviderEndpoints.
 //
-// GET /provider-endpoints
+// GET /admin/provider-endpoints
 func (UnimplementedHandler) ListProviderEndpoint(ctx context.Context, params ListProviderEndpointParams) (r ListProviderEndpointRes, _ error) {
 	return r, ht.ErrNotImplemented
 }
@@ -89,7 +89,7 @@ func (UnimplementedHandler) ListProviderEndpoint(ctx context.Context, params Lis
 //
 // List attached ProvidedData.
 //
-// GET /provider-endpoints/{id}/provided-data
+// GET /admin/provider-endpoints/{id}/provided-data
 func (UnimplementedHandler) ListProviderEndpointProvidedData(ctx context.Context, params ListProviderEndpointProvidedDataParams) (r ListProviderEndpointProvidedDataRes, _ error) {
 	return r, ht.ErrNotImplemented
 }
@@ -98,7 +98,7 @@ func (UnimplementedHandler) ListProviderEndpointProvidedData(ctx context.Context
 //
 // List attached RequiredData.
 //
-// GET /provider-endpoints/{id}/required-data
+// GET /admin/provider-endpoints/{id}/required-data
 func (UnimplementedHandler) ListProviderEndpointRequiredData(ctx context.Context, params ListProviderEndpointRequiredDataParams) (r ListProviderEndpointRequiredDataRes, _ error) {
 	return r, ht.ErrNotImplemented
 }
@@ -107,7 +107,7 @@ func (UnimplementedHandler) ListProviderEndpointRequiredData(ctx context.Context
 //
 // List ProviderRegisterData.
 //
-// GET /provider-register-data
+// GET /admin/provider-register-data
 func (UnimplementedHandler) ListProviderRegisterData(ctx context.Context, params ListProviderRegisterDataParams) (r ListProviderRegisterDataRes, _ error) {
 	return r, ht.ErrNotImplemented
 }
@@ -116,7 +116,7 @@ func (UnimplementedHandler) ListProviderRegisterData(ctx context.Context, params
 //
 // List attached Endpoints.
 //
-// GET /provider-register-data/{id}/endpoints
+// GET /admin/provider-register-data/{id}/endpoints
 func (UnimplementedHandler) ListProviderRegisterDataEndpoints(ctx context.Context, params ListProviderRegisterDataEndpointsParams) (r ListProviderRegisterDataEndpointsRes, _ error) {
 	return r, ht.ErrNotImplemented
 }
@@ -125,7 +125,7 @@ func (UnimplementedHandler) ListProviderRegisterDataEndpoints(ctx context.Contex
 //
 // Finds the EndpointData with the requested ID and returns it.
 //
-// GET /endpoint-data/{id}
+// GET /admin/endpoint-data/{id}
 func (UnimplementedHandler) ReadEndpointData(ctx context.Context, params ReadEndpointDataParams) (r ReadEndpointDataRes, _ error) {
 	return r, ht.ErrNotImplemented
 }
@@ -134,7 +134,7 @@ func (UnimplementedHandler) ReadEndpointData(ctx context.Context, params ReadEnd
 //
 // Find the attached ProviderEndpoint of the EndpointData with the given ID.
 //
-// GET /endpoint-data/{id}/endpoint-provided
+// GET /admin/endpoint-data/{id}/endpoint-provided
 func (UnimplementedHandler) ReadEndpointDataEndpointProvided(ctx context.Context, params ReadEndpointDataEndpointProvidedParams) (r ReadEndpointDataEndpointProvidedRes, _ error) {
 	return r, ht.ErrNotImplemented
 }
@@ -143,7 +143,7 @@ func (UnimplementedHandler) ReadEndpointDataEndpointProvided(ctx context.Context
 //
 // Find the attached ProviderEndpoint of the EndpointData with the given ID.
 //
-// GET /endpoint-data/{id}/endpoint-required
+// GET /admin/endpoint-data/{id}/endpoint-required
 func (UnimplementedHandler) ReadEndpointDataEndpointRequired(ctx context.Context, params ReadEndpointDataEndpointRequiredParams) (r ReadEndpointDataEndpointRequiredRes, _ error) {
 	return r, ht.ErrNotImplemented
 }
@@ -152,7 +152,7 @@ func (UnimplementedHandler) ReadEndpointDataEndpointRequired(ctx context.Context
 //
 // Finds the ProviderEndpoint with the requested ID and returns it.
 //
-// GET /provider-endpoints/{id}
+// GET /admin/provider-endpoints/{id}
 func (UnimplementedHandler) ReadProviderEndpoint(ctx context.Context, params ReadProviderEndpointParams) (r ReadProviderEndpointRes, _ error) {
 	return r, ht.ErrNotImplemented
 }
@@ -161,7 +161,7 @@ func (UnimplementedHandler) ReadProviderEndpoint(ctx context.Context, params Rea
 //
 // Find the attached ProviderRegisterData of the ProviderEndpoint with the given ID.
 //
-// GET /provider-endpoints/{id}/provider
+// GET /admin/provider-endpoints/{id}/provider
 func (UnimplementedHandler) ReadProviderEndpointProvider(ctx context.Context, params ReadProviderEndpointProviderParams) (r ReadProviderEndpointProviderRes, _ error) {
 	return r, ht.ErrNotImplemented
 }
@@ -170,7 +170,7 @@ func (UnimplementedHandler) ReadProviderEndpointProvider(ctx context.Context, pa
 //
 // Finds the ProviderRegisterData with the requested ID and returns it.
 //
-// GET /provider-register-data/{id}
+// GET /admin/provider-register-data/{id}
 func (UnimplementedHandler) ReadProviderRegisterData(ctx context.Context, params ReadProviderRegisterDataParams) (r ReadProviderRegisterDataRes, _ error) {
 	return r, ht.ErrNotImplemented
 }
@@ -179,7 +179,7 @@ func (UnimplementedHandler) ReadProviderRegisterData(ctx context.Context, params
 //
 // Updates a EndpointData and persists changes to storage.
 //
-// PATCH /endpoint-data/{id}
+// PATCH /admin/endpoint-data/{id}
 func (UnimplementedHandler) UpdateEndpointData(ctx context.Context, req *UpdateEndpointDataReq, params UpdateEndpointDataParams) (r UpdateEndpointDataRes, _ error) {
 	return r, ht.ErrNotImplemented
 }
@@ -188,7 +188,7 @@ func (UnimplementedHandler) UpdateEndpointData(ctx context.Context, req *UpdateE
 //
 // Updates a ProviderEndpoint and persists changes to storage.
 //
-// PATCH /provider-endpoints/{id}
+// PATCH /admin/provider-endpoints/{id}
 func (UnimplementedHandler) UpdateProviderEndpoint(ctx context.Context, req *UpdateProviderEndpointReq, params UpdateProviderEndpointParams) (r UpdateProviderEndpointRes, _ error) {
 	return r, ht.ErrNotImplemented
 }
@@ -197,7 +197,7 @@ func (UnimplementedHandler) UpdateProviderEndpoint(ctx context.Context, req *Upd
 //
 // Updates a ProviderRegisterData and persists changes to storage.
 //
-// PATCH /provider-register-data/{id}
+// PATCH /admin/provider-register-data/{id}
 func (UnimplementedHandler) UpdateProviderRegisterData(ctx context.Context, req *UpdateProviderRegisterDataReq, params UpdateProviderRegisterDataParams) (r UpdateProviderRegisterDataRes, _ error) {
 	return r, ht.ErrNotImplemented
 }

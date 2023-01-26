@@ -20,7 +20,7 @@ import (
 //
 // Creates a new EndpointData and persists it to storage.
 //
-// POST /endpoint-data
+// POST /admin/endpoint-data
 func (s *Server) handleCreateEndpointDataRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("createEndpointData"),
@@ -120,7 +120,7 @@ func (s *Server) handleCreateEndpointDataRequest(args [0]string, w http.Response
 //
 // Creates a new ProviderEndpoint and persists it to storage.
 //
-// POST /provider-endpoints
+// POST /admin/provider-endpoints
 func (s *Server) handleCreateProviderEndpointRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("createProviderEndpoint"),
@@ -220,7 +220,7 @@ func (s *Server) handleCreateProviderEndpointRequest(args [0]string, w http.Resp
 //
 // Creates a new ProviderRegisterData and persists it to storage.
 //
-// POST /provider-register-data
+// POST /admin/provider-register-data
 func (s *Server) handleCreateProviderRegisterDataRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("createProviderRegisterData"),
@@ -320,7 +320,7 @@ func (s *Server) handleCreateProviderRegisterDataRequest(args [0]string, w http.
 //
 // Deletes the EndpointData with the requested ID.
 //
-// DELETE /endpoint-data/{id}
+// DELETE /admin/endpoint-data/{id}
 func (s *Server) handleDeleteEndpointDataRequest(args [1]string, w http.ResponseWriter, r *http.Request) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("deleteEndpointData"),
@@ -420,7 +420,7 @@ func (s *Server) handleDeleteEndpointDataRequest(args [1]string, w http.Response
 //
 // Deletes the ProviderEndpoint with the requested ID.
 //
-// DELETE /provider-endpoints/{id}
+// DELETE /admin/provider-endpoints/{id}
 func (s *Server) handleDeleteProviderEndpointRequest(args [1]string, w http.ResponseWriter, r *http.Request) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("deleteProviderEndpoint"),
@@ -520,7 +520,7 @@ func (s *Server) handleDeleteProviderEndpointRequest(args [1]string, w http.Resp
 //
 // Deletes the ProviderRegisterData with the requested ID.
 //
-// DELETE /provider-register-data/{id}
+// DELETE /admin/provider-register-data/{id}
 func (s *Server) handleDeleteProviderRegisterDataRequest(args [1]string, w http.ResponseWriter, r *http.Request) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("deleteProviderRegisterData"),
@@ -620,7 +620,7 @@ func (s *Server) handleDeleteProviderRegisterDataRequest(args [1]string, w http.
 //
 // List EndpointData.
 //
-// GET /endpoint-data
+// GET /admin/endpoint-data
 func (s *Server) handleListEndpointDataRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("listEndpointData"),
@@ -724,7 +724,7 @@ func (s *Server) handleListEndpointDataRequest(args [0]string, w http.ResponseWr
 //
 // List ProviderEndpoints.
 //
-// GET /provider-endpoints
+// GET /admin/provider-endpoints
 func (s *Server) handleListProviderEndpointRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("listProviderEndpoint"),
@@ -828,7 +828,7 @@ func (s *Server) handleListProviderEndpointRequest(args [0]string, w http.Respon
 //
 // List attached ProvidedData.
 //
-// GET /provider-endpoints/{id}/provided-data
+// GET /admin/provider-endpoints/{id}/provided-data
 func (s *Server) handleListProviderEndpointProvidedDataRequest(args [1]string, w http.ResponseWriter, r *http.Request) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("listProviderEndpointProvidedData"),
@@ -936,7 +936,7 @@ func (s *Server) handleListProviderEndpointProvidedDataRequest(args [1]string, w
 //
 // List attached RequiredData.
 //
-// GET /provider-endpoints/{id}/required-data
+// GET /admin/provider-endpoints/{id}/required-data
 func (s *Server) handleListProviderEndpointRequiredDataRequest(args [1]string, w http.ResponseWriter, r *http.Request) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("listProviderEndpointRequiredData"),
@@ -1044,7 +1044,7 @@ func (s *Server) handleListProviderEndpointRequiredDataRequest(args [1]string, w
 //
 // List ProviderRegisterData.
 //
-// GET /provider-register-data
+// GET /admin/provider-register-data
 func (s *Server) handleListProviderRegisterDataRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("listProviderRegisterData"),
@@ -1148,7 +1148,7 @@ func (s *Server) handleListProviderRegisterDataRequest(args [0]string, w http.Re
 //
 // List attached Endpoints.
 //
-// GET /provider-register-data/{id}/endpoints
+// GET /admin/provider-register-data/{id}/endpoints
 func (s *Server) handleListProviderRegisterDataEndpointsRequest(args [1]string, w http.ResponseWriter, r *http.Request) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("listProviderRegisterDataEndpoints"),
@@ -1256,7 +1256,7 @@ func (s *Server) handleListProviderRegisterDataEndpointsRequest(args [1]string, 
 //
 // Finds the EndpointData with the requested ID and returns it.
 //
-// GET /endpoint-data/{id}
+// GET /admin/endpoint-data/{id}
 func (s *Server) handleReadEndpointDataRequest(args [1]string, w http.ResponseWriter, r *http.Request) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("readEndpointData"),
@@ -1356,7 +1356,7 @@ func (s *Server) handleReadEndpointDataRequest(args [1]string, w http.ResponseWr
 //
 // Find the attached ProviderEndpoint of the EndpointData with the given ID.
 //
-// GET /endpoint-data/{id}/endpoint-provided
+// GET /admin/endpoint-data/{id}/endpoint-provided
 func (s *Server) handleReadEndpointDataEndpointProvidedRequest(args [1]string, w http.ResponseWriter, r *http.Request) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("readEndpointDataEndpointProvided"),
@@ -1456,7 +1456,7 @@ func (s *Server) handleReadEndpointDataEndpointProvidedRequest(args [1]string, w
 //
 // Find the attached ProviderEndpoint of the EndpointData with the given ID.
 //
-// GET /endpoint-data/{id}/endpoint-required
+// GET /admin/endpoint-data/{id}/endpoint-required
 func (s *Server) handleReadEndpointDataEndpointRequiredRequest(args [1]string, w http.ResponseWriter, r *http.Request) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("readEndpointDataEndpointRequired"),
@@ -1556,7 +1556,7 @@ func (s *Server) handleReadEndpointDataEndpointRequiredRequest(args [1]string, w
 //
 // Finds the ProviderEndpoint with the requested ID and returns it.
 //
-// GET /provider-endpoints/{id}
+// GET /admin/provider-endpoints/{id}
 func (s *Server) handleReadProviderEndpointRequest(args [1]string, w http.ResponseWriter, r *http.Request) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("readProviderEndpoint"),
@@ -1656,7 +1656,7 @@ func (s *Server) handleReadProviderEndpointRequest(args [1]string, w http.Respon
 //
 // Find the attached ProviderRegisterData of the ProviderEndpoint with the given ID.
 //
-// GET /provider-endpoints/{id}/provider
+// GET /admin/provider-endpoints/{id}/provider
 func (s *Server) handleReadProviderEndpointProviderRequest(args [1]string, w http.ResponseWriter, r *http.Request) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("readProviderEndpointProvider"),
@@ -1756,7 +1756,7 @@ func (s *Server) handleReadProviderEndpointProviderRequest(args [1]string, w htt
 //
 // Finds the ProviderRegisterData with the requested ID and returns it.
 //
-// GET /provider-register-data/{id}
+// GET /admin/provider-register-data/{id}
 func (s *Server) handleReadProviderRegisterDataRequest(args [1]string, w http.ResponseWriter, r *http.Request) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("readProviderRegisterData"),
@@ -1856,7 +1856,7 @@ func (s *Server) handleReadProviderRegisterDataRequest(args [1]string, w http.Re
 //
 // Updates a EndpointData and persists changes to storage.
 //
-// PATCH /endpoint-data/{id}
+// PATCH /admin/endpoint-data/{id}
 func (s *Server) handleUpdateEndpointDataRequest(args [1]string, w http.ResponseWriter, r *http.Request) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("updateEndpointData"),
@@ -1971,7 +1971,7 @@ func (s *Server) handleUpdateEndpointDataRequest(args [1]string, w http.Response
 //
 // Updates a ProviderEndpoint and persists changes to storage.
 //
-// PATCH /provider-endpoints/{id}
+// PATCH /admin/provider-endpoints/{id}
 func (s *Server) handleUpdateProviderEndpointRequest(args [1]string, w http.ResponseWriter, r *http.Request) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("updateProviderEndpoint"),
@@ -2086,7 +2086,7 @@ func (s *Server) handleUpdateProviderEndpointRequest(args [1]string, w http.Resp
 //
 // Updates a ProviderRegisterData and persists changes to storage.
 //
-// PATCH /provider-register-data/{id}
+// PATCH /admin/provider-register-data/{id}
 func (s *Server) handleUpdateProviderRegisterDataRequest(args [1]string, w http.ResponseWriter, r *http.Request) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("updateProviderRegisterData"),
