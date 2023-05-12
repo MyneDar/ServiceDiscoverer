@@ -8,10 +8,12 @@ import (
 	"strings"
 )
 
+// Tokenizer is a struct that contains the lexers that are used to tokenize the input.
 type Tokenizer struct {
 	tokenizerLexers []interfaces.Lexer
 }
 
+// NewTokenizer creates a new Tokenizer with the default set of lexers.
 func NewTokenizer() *Tokenizer {
 	var appendLexers = []interfaces.Lexer{
 		&lexers.FromLex{},
@@ -25,6 +27,7 @@ func NewTokenizer() *Tokenizer {
 	return &Tokenizer{tokenizerLexers: appendLexers}
 }
 
+// CommandProcess is a function that tokenizes the input command.
 func (t *Tokenizer) CommandProcess(command string) (err error, tokens map[models.ServiceToken][]models.TokenStruct) {
 	tokens = make(map[models.ServiceToken][]models.TokenStruct)
 

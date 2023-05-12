@@ -12,6 +12,7 @@ import (
 //
 //
 
+// TestDeleteProcessSimpleQuery tests if the lexer can process a simple query
 func TestDeleteProcessSimpleQuery(t *testing.T) {
 	//test initialization
 	var deleteSimpleQuery = []string{
@@ -36,6 +37,7 @@ func TestDeleteProcessSimpleQuery(t *testing.T) {
 //
 //
 
+// TestDeleteProcessManyArgumentsQuery tests if the lexer can process a query with many arguments
 func TestDeleteProcessManyArgumentsQuery(t *testing.T) {
 	//test initialization
 	var deleteManyArgumentsQuery = []string{

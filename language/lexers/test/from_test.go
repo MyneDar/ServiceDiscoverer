@@ -12,6 +12,7 @@ import (
 //
 //
 
+// TestFromProcessSimpleQuery tests if the lexer can process a simple query
 func TestFromProcessSimpleQuery(t *testing.T) {
 	//test initialization
 	var fromSimpleQuery = []string{
@@ -39,6 +40,7 @@ func TestFromProcessSimpleQuery(t *testing.T) {
 //
 //
 
+// TestFromProcessMoreKeyWordsQuery tests if the lexer can process a query with more keywords
 func TestFromProcessMoreKeyWordsQuery(t *testing.T) {
 	//test initialization
 	var fromMoreKeyWordsQuery = []string{
@@ -68,6 +70,7 @@ func TestFromProcessMoreKeyWordsQuery(t *testing.T) {
 //
 //
 
+// TestFromProcessManyArgumentsQuery tests if the lexer can process a query with many arguments
 func TestFromProcessOtherCommandWordQuery(t *testing.T) {
 	//test initialization
 	var fromOtherCommandWordQuery = []string{
@@ -93,6 +96,7 @@ func TestFromProcessOtherCommandWordQuery(t *testing.T) {
 //
 //
 
+// TestFromProcessNoArgumentsQuery tests if the lexer can process a query with wrong arguments
 func TestFromProcessWrongTargetQuery(t *testing.T) {
 	//test initialization
 	var fromWrongTargetQuery = []string{

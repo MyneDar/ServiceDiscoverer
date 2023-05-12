@@ -12,6 +12,7 @@ import (
 //
 //
 
+// TestInfoProcessSimpleQuery tests if the lexer can process a simple query with *
 func TestInfoProcessAsteriskQuery(t *testing.T) {
 	//test initialization
 	var infoAsteriskQuery = []string{
@@ -38,6 +39,7 @@ func TestInfoProcessAsteriskQuery(t *testing.T) {
 //
 //
 
+// TestInfoProcessSimpleQuery tests if the lexer can process a simple query with Ident.*
 func TestInfoProcessIdentDotAsteriskQuery(t *testing.T) {
 	//test initialization
 	var infoIdentDotAsteriskQuery = []string{
@@ -65,6 +67,7 @@ func TestInfoProcessIdentDotAsteriskQuery(t *testing.T) {
 //
 //
 
+// TestInfoProcessSimpleQuery tests if the lexer can process a simple query with Ident.Ident
 func TestInfoProcessGoodIdentDotIdentQuery(t *testing.T) {
 	//test initialization
 	var infoIdentDotIdentQuery = []string{
@@ -92,6 +95,7 @@ func TestInfoProcessGoodIdentDotIdentQuery(t *testing.T) {
 //
 //
 
+// TestInfoProcessSimpleQuery tests if the lexer can process a simple query with more keywords
 func TestInfoProcessMoreKeyWordsQuery(t *testing.T) {
 	//test initialization
 	var infoMoreKeyWordsQuery = []string{
@@ -121,6 +125,7 @@ func TestInfoProcessMoreKeyWordsQuery(t *testing.T) {
 //
 //
 
+// TestInfoProcessSimpleQuery tests if the lexer can process a simple query with other keyword than INFO.
 func TestInfoProcessOtherCommandWordQuery(t *testing.T) {
 	//test initialization
 	var infoOtherCommandWordQuery = []string{
@@ -146,6 +151,7 @@ func TestInfoProcessOtherCommandWordQuery(t *testing.T) {
 //
 //
 
+// TestInfoProcessSimpleQuery tests if the lexer can process a simple query with wrong target.
 func TestInfoProcessWrongTargetQuery(t *testing.T) {
 	//test initialization
 	var infoWrongTargetQuery = []string{
