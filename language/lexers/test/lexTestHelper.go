@@ -29,7 +29,7 @@ func goodOutputCheck(t *testing.T, err error, query []string, expectedQuerySize 
 //
 //
 
-// goodNoOutputCheck checks the cases what are good but give back no output.
+// goodNoOutputCheck checks the cases, where the function runs as it should and gives back no output (as intended).
 func goodNoOutputCheck(t *testing.T, err error, query []string, expectedQuerySize int, expectedOutput []models.TokenStruct, actualOutput []models.TokenStruct) {
 	assert.Nilf(t, err, "Error is not nil: %s", err)
 	assert.Equal(t, len(expectedOutput), len(actualOutput), "Wrong token number")
