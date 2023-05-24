@@ -8,18 +8,24 @@ import (
 	"servicediscoverer/models"
 )
 
-type InfoParser struct {
-}
+// InfoParser is a parser for info keyword and for the arguments that shows us what information needed to be returned
+type InfoParser struct{}
 
+// NewInfoParser is a function that returns a pointer to a new InfoParser struct
 func NewInfoParser() *InfoParser {
 	return &InfoParser{}
 }
 
+// Process is a function that checks what information should be returned
 func (l *InfoParser) Process(tok []models.TokenStruct, information map[string]interface{}) error {
+	// initialize the variables
 	var err error
 	var provider interface{}
 	var temp *ent.ProviderRegisterData
+
+	// Check if the token/s length is only 1 or not
 	if len(tok) == 1 {
+		// If it is
 		provider, err = dev.LocalClient.ProviderRegisterData.
 			Query().
 			WithEndpoints(
@@ -72,9 +78,12 @@ func (l *InfoParser) Process(tok []models.TokenStruct, information map[string]in
 		}
 	}
 
+	// If the error is not nil, return it
 	if err != nil {
 		return err
 	}
+
+	// Put the provider in the information map
 	information["Info_Data"] = provider
 	return err
 }

@@ -49,27 +49,39 @@ func getTest(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
+	// service initialization
 	service := service2.Service{}
 	service.Init()
+
+	//setup LocalClient
 	defer func(LocalClient *ent.Client) {
 		errDb := LocalClient.Close()
 		log.Fatal(errDb)
 	}(dev.LocalClient)
 
+	//setup ogent server
 	serv, err := ogent.NewServer(ogent.NewOgentHandler(dev.LocalClient))
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	//setup http server
 	mux := http.NewServeMux()
+
+	//set up the test routes
 	mux.HandleFunc("/test", service.GetDataHandler)
 	mux.HandleFunc("/fillUpTest", FillUpTestData)
 	mux.HandleFunc("/DelTest", DelTestData)
 
+	//set up the swagger
 	fs := http.FileServer(http.Dir("doc/swagger"))
 	mux.Handle("/swagger/", http.StripPrefix("/swagger/", fs))
 	mux.Handle("/admin/", serv)
+
+	//start the http server
 	err = http.ListenAndServe(":3333", mux)
 
+	//handle the errors
 	if errors.Is(err, http.ErrServerClosed) {
 		fmt.Printf("server closed\n")
 	} else if err != nil {
