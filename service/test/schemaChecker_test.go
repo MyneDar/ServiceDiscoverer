@@ -9,29 +9,35 @@ import (
 	"testing"
 )
 
+// generateGoodSchemas generates good schemas for testing.
+func generateGoodSchemas() []map[models.ServiceToken][]models.TokenStruct {
+	goodStepLists := service.GenerateGoodStepLists()
+	var goodSchemas []map[models.ServiceToken][]models.TokenStruct
+
+	for _, goodStepList := range goodStepLists {
+		goodSchema := make(map[models.ServiceToken][]models.TokenStruct)
+		for _, goodStep := range goodStepList {
+			goodSchema[goodStep] = nil
+		}
+
+		goodSchemas = append(goodSchemas, goodSchema)
+	}
+
+	log.Println("goodSchemas: ", goodSchemas)
+
+	return goodSchemas
+}
+
 //
 //
 // Good cases
 //
 //
 
-// goodSchemas is an array of good schemas, where the errors should be always nil.
-var goodSchemas = []map[models.ServiceToken][]models.TokenStruct{
-	{
-		models.FROM:   nil,
-		models.SELECT: nil,
-	},
-	{
-		models.FROM:   nil,
-		models.SELECT: nil,
-	},
-	{
-		models.FROM:   nil,
-		models.SELECT: nil,
-	},
-}
-
+// TestSchemaCheckGoodFromSelectSchema tests good schemas.
 func TestSchemaCheckGoodFromSelectSchema(t *testing.T) {
+	goodSchemas := generateGoodSchemas()
+
 	for i := 0; i < len(goodSchemas); i++ {
 		err := service.SchemaCheck(goodSchemas[i])
 		assert.Nil(t, err, "Error should be nil")
@@ -45,23 +51,29 @@ func TestSchemaCheckGoodFromSelectSchema(t *testing.T) {
 //
 //
 
-// badSchemas is an array of bad schemas, where always should be an error
-var badSchemas = []map[models.ServiceToken][]models.TokenStruct{
-	{
-		models.SELECT: nil,
-		models.FROM:   nil,
-	},
-	{
-		models.SELECT: nil,
-		models.FROM:   nil,
-	},
-	{
-		models.SELECT: nil,
-		models.FROM:   nil,
-	},
+// generateBadSchemas generates bad schemas for testing.
+func generateBadSchemas() []map[models.ServiceToken][]models.TokenStruct {
+	badStepLists := service.GenerateBadStepLists()
+	var badSchemas []map[models.ServiceToken][]models.TokenStruct
+
+	for _, badStepList := range badStepLists {
+		badSchema := make(map[models.ServiceToken][]models.TokenStruct)
+		for _, badStep := range badStepList {
+			badSchema[badStep] = nil
+		}
+
+		badSchemas = append(badSchemas, badSchema)
+	}
+
+	log.Println("badSchemas: ", badSchemas)
+
+	return badSchemas
 }
 
+// TestSchemaCheckBadSchemas tests bad schemas.
 func TestSchemaCheckBadSchemas(t *testing.T) {
+	badSchemas := generateBadSchemas()
+
 	for i := 0; i < len(badSchemas); i++ {
 		err := service.SchemaCheck(badSchemas[i])
 		assert.NotNil(t, err, "Error should be not nil")
